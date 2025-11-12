@@ -1,0 +1,43 @@
+{
+    ".url": {
+        "code.editor.Main": {
+            "title": "代码编辑器",
+            "icon": "images/icon_{0}.png",
+            "type": "iframe",
+            "protocol": "http",
+            "port": "17746",
+            "url": "/",
+            "allUsers": true,
+            "noDisplay": false,
+            "fileTypes": [
+                "text",
+                "txt",
+                "js",
+                "ts",
+                "html",
+                "htm",
+                "css",
+                "scss",
+                "less",
+                "json",
+                "md",
+                "py",
+                "java",
+                "c",
+                "cpp",
+                "cc",
+                "cxx",
+                "go",
+                "rs",
+                "php",
+                "rb",
+                "sh",
+                "sql",
+                "xml",
+                "yaml",
+                "yml",
+                "vue"
+            ]
+        }
+    }
+}

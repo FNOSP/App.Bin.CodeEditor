@@ -42,7 +42,8 @@ output.tar.gz
 dist
 
 runtime/
-app/
+
+code.editor/app/server/
 
 config.development.js
 adapter.development.js

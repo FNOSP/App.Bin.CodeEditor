@@ -1,0 +1,26 @@
+[
+    {
+        "stepTitle": "安全设置",
+        "items": [
+            {
+                "type": "password",
+                "field": "wizard_web_password",
+                "label": "访问密钥",
+                "rules": [
+                    {
+                        "required": true,
+                        "message": "请输入访问密钥"
+                    },
+                    {
+                        "min": 8,
+                        "message": "访问密钥长度不能少于8位"
+                    },
+                    {
+                        "pattern": "^[a-zA-Z0-9]+$",
+                        "message": "访问密钥只能包含字母和数字"
+                    }
+                ]
+            }
+        ]
+    }
+]

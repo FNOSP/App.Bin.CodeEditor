@@ -1,0 +1,13 @@
+{
+  "name": "code.editor",
+  "scripts": {
+    "dev": "node src/app.js",
+    "install": "npm i --prefix=backend && npm i --prefix=frontend",
+    "dev:frontend": "npm run dev --prefix=frontend",
+    "dev:backend": "npm run dev --prefix=backend",
+    "build:frontend": "npm run build --prefix=frontend",
+    "build:backend": "npm run build --prefix=backend",
+    "build:app": "npm run build:frontend && npm run build:backend",
+    "build": "npm run build:app && fnpack build code.editor"
+  }
+}

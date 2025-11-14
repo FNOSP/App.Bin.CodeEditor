@@ -68,7 +68,7 @@ const getPath = async (): Promise<string> => {
     return query
   }
 
-  return await ElMessageBox.prompt('请输入文件路径', '提示', {
+  return await ElMessageBox.prompt('部分文件可在文件管理中双击文件进行编辑，详见应用介绍', '请输入文件路径', {
     confirmButtonText: '确认',
     cancelButtonText: '取消',
   }).then(({ value }) => {

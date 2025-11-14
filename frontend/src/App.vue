@@ -1,12 +1,27 @@
 <template>
-  <MonacoEditor
-    v-if="defInfo.path"
-    :key="defInfo.path"
-    :path="defInfo.path"
-    :like="like"
-    @like="open = !open"
-    @reset="inputPath"
-  />
+  <el-tabs
+    class="view"
+    v-model="active"
+    type="card"
+    addable
+    :closable="view.length > 1"
+    @edit="viewEdit"
+  >
+    <el-tab-pane v-for="item in view" :key="item.path" :name="item.path">
+      <template #label>
+        <el-tooltip :content="item.path">
+          <div>{{ item.path.split('/').pop() }}</div>
+        </el-tooltip>
+      </template>
+
+      <MonacoEditor
+        :path="item.path"
+        :like="like"
+        @like="() => (open = !open)"
+        @diff="(v) => (item.diff = v)"
+      />
+    </el-tab-pane>
+  </el-tabs>
 
   <el-dialog v-model="open" title="偏好设置" width="300">
     <div class="like-dialog">
@@ -52,46 +67,22 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, reactive } from 'vue'
-import { ElMessageBox } from 'element-plus'
-
 import MonacoEditor from './components/MonacoEditor.vue'
 
 import { THEME_OPTIONS } from '@/utils/option'
 
 import useLike from '@/hooks/useLike'
+import usePath from '@/hooks/usePath'
 
 const { open, like, resetLike } = useLike()
+const { view, active, add, remove } = usePath()
 
-const defInfo = reactive({ path: '' })
-
-onBeforeMount(() => {
-  const query = new URLSearchParams(window.location.search).get('path') || ''
-  if (query) {
-    defInfo.path = query
+const viewEdit = (v: string, action: 'remove' | 'add') => {
+  if (action === 'add') {
+    add()
   } else {
-    inputPath(true)
+    remove(v)
   }
-})
-
-const inputPath = async (force?: boolean) => {
-  return await ElMessageBox.prompt(
-    '部分文件可在文件管理中双击文件进行编辑，详见应用介绍',
-    '请输入文件路径',
-    {
-      showClose: false,
-      closeOnClickModal: false,
-      closeOnPressEscape: false,
-      closeOnHashChange: false,
-      showCancelButton: !force,
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-    },
-  ).then(({ value }) => {
-    if (value) {
-      defInfo.path = value
-    }
-  })
 }
 </script>
 
@@ -99,68 +90,39 @@ const inputPath = async (force?: boolean) => {
 html,
 body,
 #app {
+  position: relative;
   height: 100%;
-}
 
-html {
-  &.dark {
-    #app {
-      > .header,
-      > .footer {
-        background-color: #1c1c1c;
+  > .view {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    > .el-tabs__header {
+      height: 40px;
+      padding-right: 56px;
+      margin: 0;
+
+      .el-tabs__nav {
+        border-top: none;
+        border-radius: 0;
+      }
+
+      .el-tabs__new-tab {
+        width: 22px;
+        height: 22px;
       }
     }
-  }
-}
 
-#app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+    > .el-tabs__content {
+      flex: 1;
 
-  > .header,
-  > .footer {
-    height: 32px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 0 12px;
-
-    > * {
-      margin: 0;
-    }
-  }
-
-  > .header {
-    border-bottom: solid 1px var(--el-border-color);
-
-    > .title {
-      font-size: 14px;
-      line-height: 32px;
-      color: var(--el-text-color-primary);
-    }
-  }
-
-  > .footer {
-    border-top: solid 1px var(--el-border-color);
-
-    > .developed {
-      font-size: 12px;
-      line-height: 32px;
-      color: var(--el-text-color-placeholder);
-    }
-  }
-
-  > .editor {
-    position: relative;
-    flex: 1;
-
-    > .content {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 100%;
+      > .el-tab-pane {
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
     }
   }
 }

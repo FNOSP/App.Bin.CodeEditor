@@ -1,26 +1,12 @@
 <template>
-  <div class="header">
-    <div class="title">{{ $props.path }}</div>
-
-    <el-button size="small" @click="$emit('reset')">切换文件</el-button>
-
-    <div style="flex: 1"></div>
-
-    <el-button size="small" @click="$emit('like')">偏好</el-button>
-
-    <el-button size="small" :disabled="code.value === code.org" @click="save()">保存</el-button>
-  </div>
-
-  <div class="editor">
-    <div class="content" v-if="code.lang">
-      <MonacoEditor
-        v-model:value="code.value"
-        :language="code.lang"
-        :theme="like.theme"
-        :options="{ fontSize: 14, automaticLayout: true }"
-        @editorDidMount="editorDidMount"
-      />
-    </div>
+  <div v-if="code.lang" style="flex: 1">
+    <MonacoEditor
+      v-model:value="code.value"
+      :language="code.lang"
+      :theme="like.theme"
+      :options="{ fontSize: 14, automaticLayout: true }"
+      @editorDidMount="editorDidMount"
+    />
   </div>
 
   <div class="footer">
@@ -59,6 +45,8 @@
         :value="item.value"
       />
     </el-select>
+
+    <el-button size="small" :icon="Setting" @click="$emit('like')"></el-button>
   </div>
 </template>
 
@@ -66,6 +54,7 @@
 import { reactive, watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
 import * as iconv from 'iconv-lite'
+import { Setting } from '@element-plus/icons-vue'
 
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
 
@@ -74,7 +63,26 @@ import useCode from '../hooks/useCode'
 import useEditor from '../hooks/useEditor'
 
 const $props = defineProps<{ path: string; like: LikeModel }>()
-const $emit = defineEmits<{ like: []; reset: [] }>()
+const $emit = defineEmits<{ like: []; diff: [v: boolean] }>()
+
+defineExpose({
+  save: () => save(),
+})
+
+const editorLike = reactive({ ...$props.like })
+
+const { code, save } = useCode({
+  path: $props.path,
+  confirm: () => editorLike.confirm,
+  onSave: () => $emit('diff', false),
+})
+
+const { editorDidMount, changeLang, changeTheme, changeSize } = useEditor({ onSave: save })
+
+const changeEncode = async (v: string) => {
+  const buffer = await code.blob.arrayBuffer()
+  code.org = code.value = iconv.decode(new Uint8Array(buffer), v)
+}
 
 watch(
   () => $props.like.confirm,
@@ -96,15 +104,32 @@ watch(
     changeSize(v)
   },
 )
-
-const editorLike = reactive({ ...$props.like })
-
-const { code, save } = useCode({ path: $props.path, confirm: () => editorLike.confirm })
-
-const { editorDidMount, changeLang, changeTheme, changeSize } = useEditor({ onSave: save })
-
-const changeEncode = async (v: string) => {
-  const buffer = await code.blob.arrayBuffer()
-  code.org = code.value = iconv.decode(new Uint8Array(buffer), v)
-}
+watch(
+  () => code.value,
+  (v) => {
+    $emit('diff', v !== code.org)
+  },
+)
 </script>
+
+<style lang="scss" scoped>
+.footer {
+  height: 32px;
+  border-top: solid 1px var(--el-border-color);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  background-color: var(--el-bg-color);
+
+  > * {
+    margin: 0;
+  }
+
+  > .developed {
+    font-size: 12px;
+    line-height: 32px;
+    color: var(--el-text-color-placeholder);
+  }
+}
+</style>

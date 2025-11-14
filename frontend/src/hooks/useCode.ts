@@ -13,7 +13,11 @@ interface CodeModel {
   encode: string
 }
 
-export default function useCode(option: { path: string; confirm: () => boolean }) {
+export default function useCode(option: {
+  path: string
+  confirm: () => boolean
+  onSave: () => void
+}) {
   const code = reactive<CodeModel>({ blob: [], org: '', value: '', lang: '', encode: 'utf8' })
 
   const load = async (path: string) => {
@@ -78,6 +82,8 @@ export default function useCode(option: { path: string; confirm: () => boolean }
         ElMessage({ type: 'success', message: '操作成功' })
 
         code.org = code.value
+
+        option.onSave()
       } else {
         ElMessage({ type: 'error', message: value.msg })
       }

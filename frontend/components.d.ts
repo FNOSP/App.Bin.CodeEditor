@@ -18,6 +18,9 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
   }
 }
@@ -30,5 +33,8 @@ declare global {
   const ElOption: typeof import('element-plus/es')['ElOption']
   const ElSelect: typeof import('element-plus/es')['ElSelect']
   const ElSwitch: typeof import('element-plus/es')['ElSwitch']
+  const ElTabPane: typeof import('element-plus/es')['ElTabPane']
+  const ElTabs: typeof import('element-plus/es')['ElTabs']
+  const ElTooltip: typeof import('element-plus/es')['ElTooltip']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
 }

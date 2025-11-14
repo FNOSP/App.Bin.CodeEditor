@@ -10,7 +10,7 @@
     <el-tab-pane v-for="item in view" :key="item.path" :name="item.path">
       <template #label>
         <el-tooltip :content="item.path">
-          <div>{{ item.path.split('/').pop() }}</div>
+          <div class="label" :class="item.diff ? 'diff' : ''">{{ item.path.split('/').pop() }}</div>
         </el-tooltip>
       </template>
 
@@ -106,6 +106,25 @@ body,
       .el-tabs__nav {
         border-top: none;
         border-radius: 0;
+
+        .el-tabs__item {
+          .label {
+            &::after {
+              content: '';
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              border-radius: 50%;
+              margin-left: 4px;
+            }
+
+            &.diff {
+              &::after {
+                background-color: var(--el-text-color-placeholder);
+              }
+            }
+          }
+        }
       }
 
       .el-tabs__new-tab {

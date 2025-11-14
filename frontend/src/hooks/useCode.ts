@@ -24,9 +24,8 @@ export default function useCode(option: { path: string; confirm: () => boolean }
       }
 
       const { data } = await axios.get(HOST, {
-        params: { path },
+        params: { _api: 'read', path },
         responseType: 'blob',
-        headers: { 'api-path': 'read' },
       })
 
       code.blob = data
@@ -72,9 +71,7 @@ export default function useCode(option: { path: string; confirm: () => boolean }
           value: code.value,
           path: option.path,
         },
-        {
-          headers: { 'api-path': 'save' },
-        },
+        { params: { _api: 'save' } },
       )
 
       if (value.code === 200) {

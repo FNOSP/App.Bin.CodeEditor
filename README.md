@@ -12,7 +12,7 @@
 
 VS Code 同源库，支持多种编码文件的操作，更有语法高亮、代码补全。
 
-![示例](./docs/example.png)
+![示例](docs/example.png)
 
 ## 本地运行
 

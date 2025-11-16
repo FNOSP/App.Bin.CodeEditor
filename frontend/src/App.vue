@@ -48,7 +48,7 @@
       <div class="item">
         <div class="label">主题样式</div>
         <div class="value">
-          <el-select v-model="like.theme" style="width: 150px" size="small">
+          <el-select v-model="like.theme" size="small">
             <el-option
               v-for="item in THEME_OPTIONS"
               :key="item.value"
@@ -62,7 +62,7 @@
       <div class="item">
         <div class="label">字体大小</div>
         <div class="value">
-          <el-input-number v-model="like.fontSize" :min="8" :max="100" />
+          <el-input-number v-model="like.fontSize" :min="8" :max="100" size="small" />
         </div>
       </div>
     </div>
@@ -100,8 +100,11 @@ const editorRef = ref<any[]>([])
 html,
 body,
 #app {
-  position: relative;
   height: 100%;
+}
+
+#app {
+  position: relative;
 
   > .view {
     height: 100%;
@@ -183,16 +186,20 @@ body,
   > .item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 
     > .label {
       font-size: 14px;
       line-height: 24px;
-      width: 100px;
+      width: 70px;
     }
 
     > .value {
       flex: 1;
+
+      > * {
+        width: 100%;
+      }
     }
   }
 }

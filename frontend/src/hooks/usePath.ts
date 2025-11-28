@@ -26,6 +26,7 @@ export default function usePath() {
         showCancelButton: !force,
         confirmButtonText: '确认',
         cancelButtonText: '取消',
+        inputPlaceholder: '不存在的文件路径在编辑后可新增并保存',
       },
     )
       .then(({ value }) => value)

@@ -66,7 +66,7 @@ export default function useCode(option: {
     }
   }
 
-  const upload = async () => {
+  const upload = async (force?: 1) => {
     try {
       const { data: value }: any = await axios.post(
         HOST,
@@ -74,6 +74,7 @@ export default function useCode(option: {
           encode: code.encode,
           value: code.value,
           path: option.path,
+          force,
         },
         { params: { _api: 'save' } },
       )
@@ -85,7 +86,15 @@ export default function useCode(option: {
 
         option.onSave()
       } else {
-        ElMessage({ type: 'error', message: value.msg })
+        if (value.code === 404) {
+          ElMessageBox.confirm('文件不存在，是否创建并保存？', '提示', {
+            confirmButtonText: '继续',
+            cancelButtonText: '取消',
+            type: 'info',
+          }).then(() => upload(1))
+        } else {
+          ElMessage({ type: 'error', message: value.msg })
+        }
       }
     } catch {
       ElMessage({ type: 'error', message: '操作失败' })

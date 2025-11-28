@@ -1,11 +1,11 @@
 const fs = require("fs");
 
 module.exports = async function read({ query }) {
-  const { path } = query;
-
-  if (!path) {
+  if (!query.path) {
     return { code: 400, msg: "缺少文件路径参数", data: query };
   }
+
+  const path = query.path[0] === "/" ? query.path : `/${query.path}`;
 
   try {
     if (!fs.existsSync(path)) {

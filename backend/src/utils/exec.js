@@ -1,6 +1,7 @@
 const getType = require("./type");
 
 const router = {
+  assets: { type: "file", run: require("../router/read") },
   read: { type: "file", run: require("../router/read") },
   save: { run: require("../router/save") },
 };

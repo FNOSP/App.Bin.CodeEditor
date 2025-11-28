@@ -4,7 +4,7 @@
             "title": "代码编辑器",
             "icon": "images/icon_{0}.png",
             "type": "iframe",
-            "url": "/cgi/ThirdParty/code.editor/index.cgi",
+            "url": "/cgi/ThirdParty/code.editor/api.cgi/",
             "allUsers": true,
             "noDisplay": false,
             "fileTypes": [
@@ -35,6 +35,7 @@
                 "yaml",
                 "yml",
                 "vue",
+                "env",
                 "cgi"
             ]
         }

@@ -6,6 +6,21 @@ const exec = require("./utils/exec");
 async function getData() {
   const env = process.env;
 
+  const assets = env.PATH_INFO.replace(
+    "/cgi/ThirdParty/code.editor/api.cgi",
+    ""
+  );
+
+  if (assets) {
+    const path = assets === "/" ? "/index.html" : assets;
+
+    return {
+      api: "assets",
+      query: { path: `/var/apps/code.editor/target/server/dist${path}` },
+      body: {},
+    };
+  }
+
   const result = {
     api: env.HTTP_API_PATH || "",
     query: querystring.parse(env.QUERY_STRING || ""),
@@ -58,9 +73,6 @@ async function main() {
     if (type) {
       console.log(`Content-Type: ${type}`);
       console.log(`Content-Length: ${body.size}`);
-      console.log(
-        `Content-Disposition: attachment; filename="${body.filename}"`
-      );
       console.log("");
       body.stream.pipe(process.stdout);
     } else {

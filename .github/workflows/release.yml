@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-release:
+    name: Build Project and Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.0
+
+      - name: Node
+        uses: actions/setup-node@v6.0.0
+        with:
+          node-version: "20.19.6"
+
+      - name: Install
+        run: npm install
+
+      - name: Build Server
+        run: npm run build:server
+
+      - name: Get version
+        id: read_version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version in manifest file
+        run: |
+          sed -i "s/version=1.0.0/version=${{ steps.read_version.outputs.version }}/" app/manifest
+
+      - name: Build Package
+        run: |
+          chmod +x ./build/fnpack-1.0.4-linux-amd64
+          ./build/fnpack-1.0.4-linux-amd64 build app
+
+      - name: Release
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          tag: v${{ steps.read_version.outputs.version}}
+          name: v${{ steps.read_version.outputs.version}}
+          body: |
+            [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
+          artifacts: "code.editor.fpk"
+          token: ${{ secrets.GITHUB_TOKEN }}

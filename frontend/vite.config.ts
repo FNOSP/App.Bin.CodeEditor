@@ -10,7 +10,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-const CGI_PATH = '/cgi/ThirdParty/code.editor/api.cgi/'
+const CGI_PATH = '/cgi/ThirdParty/code.editor/index.cgi/'
 
 export default defineConfig({
   base: CGI_PATH,

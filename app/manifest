@@ -1,8 +1,8 @@
 appname=code.editor
-version=1.0.0
+version=0.0.1
 desc=`<div>VS Code 同源库，支持多种编码文件的操作，更有语法高亮、代码补全。</div>
 <div>text、txt、js、ts、html、htm、css、scss、less、json、md、py、java、c、cpp、cc、cxx、go、rs、php、rb、sh、sql、xml、yaml、yml、vue 后缀文件直接双击文件或右键选择代码编辑器打开。</div><div>非上述后缀文件，右键【详细信息】-【复制原始路径】，点击桌面图标访问后粘贴路径打开。</div>
-<div>提示：编辑用户目录中的文件需【系统设置】-【应用】-【代码编辑器】进行文件夹授权，应用文件夹中目录下可直接编辑；</div><div>提示：移动端暂未做 UI 适配，访问可能布局错乱；访问二进制文件将显示乱码，请谨慎操作。</div>`
+<div>提示：移动端暂未做 UI 适配，访问可能布局错乱；访问二进制文件将显示乱码，请谨慎操作。</div>`
 arch=x86_64
 display_name=代码编辑器
 maintainer=Flex_7746

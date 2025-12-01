@@ -7,7 +7,7 @@ async function getData() {
   const env = process.env;
 
   const assets = env.PATH_INFO.replace(
-    "/cgi/ThirdParty/code.editor/api.cgi",
+    "/cgi/ThirdParty/code.editor/index.cgi",
     ""
   );
 

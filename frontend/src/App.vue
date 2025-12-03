@@ -13,7 +13,7 @@
         ref="editorRef"
         :path="item.path"
         :like="like"
-        @like="() => (open = !open)"
+        @like="() => (likeOpen = true)"
         @diff="(v) => (item.diff = v)"
       />
     </el-tab-pane>
@@ -36,61 +36,20 @@
     保存
   </el-button>
 
-  <el-dialog v-model="open" title="偏好设置" width="300">
-    <div class="like-dialog">
-      <div class="item">
-        <div class="label">保存确认</div>
-        <div class="value">
-          <el-switch v-model="like.confirm" inline-prompt />
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="label">主题样式</div>
-        <div class="value">
-          <el-select v-model="like.theme" size="small">
-            <el-option
-              v-for="item in THEME_OPTIONS"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="label">字体大小</div>
-        <div class="value">
-          <el-input-number v-model="like.fontSize" :min="8" :max="100" size="small" />
-        </div>
-      </div>
-    </div>
-
-    <template #footer>
-      <div style="display: flex; align-items: center; margin-top: 32px">
-        <el-button size="small" type="danger" @click="resetLike()">恢复默认</el-button>
-
-        <div style="flex: 1"></div>
-
-        <div style="font-size: 12px; color: #999">修改实时生效，且进行缓存</div>
-      </div>
-    </template>
-  </el-dialog>
+  <LikeDialog v-model:open="likeOpen" v-model:like="like" @reset="resetLike()" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 
-import MonacoEditor from './components/MonacoEditor.vue'
-
-import { THEME_OPTIONS } from '@/utils/option'
+import MonacoEditor from '@/components/MonacoEditor.vue'
+import LikeDialog from '@/components/LikeDialog.vue'
 
 import useLike from '@/hooks/useLike'
 import usePath from '@/hooks/usePath'
 
-const { open, like, resetLike } = useLike()
+const { open: likeOpen, like, resetLike } = useLike()
 const { view, active, add, remove } = usePath()
 
 const editorRef = ref<any[]>([])

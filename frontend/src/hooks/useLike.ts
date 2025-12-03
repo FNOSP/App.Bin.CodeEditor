@@ -1,4 +1,4 @@
-import { onMounted, reactive, ref, toRaw, watch, watchEffect } from 'vue'
+import { reactive, ref, toRaw, watch, watchEffect } from 'vue'
 
 import localStorage from '@/utils/localStorage'
 import { THEME_OPTIONS } from '@/utils/option'
@@ -20,7 +20,7 @@ const key = 'like_v1'
 export default function useCode() {
   const open = ref(false)
 
-  const like = reactive<LikeModel>(Object.assign(defLike, localStorage.get(key)))
+  const like = reactive<LikeModel>(Object.assign({}, defLike, localStorage.get(key)))
 
   watch(like, () => {
     localStorage.set(key, toRaw(like))
@@ -34,8 +34,6 @@ export default function useCode() {
   const resetLike = () => {
     Object.assign(like, { ...defLike })
   }
-
-  onMounted(() => {})
 
   return { open, like, resetLike }
 }

@@ -36,7 +36,7 @@
 
         <div style="flex: 1"></div>
 
-        <div style="font-size: 12px; color: #999">修改实时生效，且进行缓存</div>
+        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">修改实时生效，且进行缓存</div>
       </div>
     </template>
   </el-dialog>

@@ -15,6 +15,7 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
@@ -22,7 +23,9 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    LikeDialog: typeof import('./src/components/LikeDialog.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+    PathDialog: typeof import('./src/components/PathDialog.vue')['default']
   }
 }
 
@@ -31,6 +34,7 @@ declare global {
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']
+  const ElInput: typeof import('element-plus/es')['ElInput']
   const ElInputNumber: typeof import('element-plus/es')['ElInputNumber']
   const ElOption: typeof import('element-plus/es')['ElOption']
   const ElSelect: typeof import('element-plus/es')['ElSelect']
@@ -38,5 +42,7 @@ declare global {
   const ElTabPane: typeof import('element-plus/es')['ElTabPane']
   const ElTabs: typeof import('element-plus/es')['ElTabs']
   const ElTooltip: typeof import('element-plus/es')['ElTooltip']
+  const LikeDialog: typeof import('./src/components/LikeDialog.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+  const PathDialog: typeof import('./src/components/PathDialog.vue')['default']
 }

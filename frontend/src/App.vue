@@ -20,7 +20,7 @@
 
     <el-tab-pane :name="-1" disabled>
       <template #label>
-        <div class="add" @click="add()">
+        <div class="add" @click="() => (pathOpen = true)">
           <el-icon><Plus /></el-icon>
         </div>
       </template>
@@ -37,6 +37,8 @@
   </el-button>
 
   <LikeDialog v-model:open="likeOpen" v-model:like="like" @reset="resetLike()" />
+
+  <PathDialog v-model:open="pathOpen" :history="history.value" @open="add" />
 </template>
 
 <script setup lang="ts">
@@ -45,12 +47,13 @@ import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import LikeDialog from '@/components/LikeDialog.vue'
+import PathDialog from '@/components/PathDialog.vue'
 
 import useLike from '@/hooks/useLike'
 import usePath from '@/hooks/usePath'
 
 const { open: likeOpen, like, resetLike } = useLike()
-const { view, active, add, remove } = usePath()
+const { open: pathOpen, view, active, add, remove, history } = usePath()
 
 const editorRef = ref<any[]>([])
 </script>

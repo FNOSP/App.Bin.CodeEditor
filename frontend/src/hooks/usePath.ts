@@ -1,45 +1,36 @@
 import { ElMessageBox } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
 
+import useHistory from '@/hooks/useHistory'
+
 export default function usePath() {
+  const open = ref(false)
   const view = reactive<{ path: string; diff: boolean }[]>([])
   const active = ref(0)
+
+  const history = useHistory<{ path: string }>({ key: 'PATH_HISTORY', id: 'path' })
 
   onMounted(async () => {
     const query = new URLSearchParams(window.location.search).get('path') || ''
     if (query) {
-      view.push({ path: query, diff: false })
+      add(query)
     } else {
-      add(true)
+      open.value = true
     }
   })
 
-  const add = async (force?: boolean) => {
-    const value = await ElMessageBox.prompt(
-      '部分文件可在文件管理中双击文件进行编辑，详见应用介绍',
-      '请输入文件路径',
-      {
-        showClose: false,
-        closeOnClickModal: false,
-        closeOnPressEscape: false,
-        closeOnHashChange: false,
-        showCancelButton: !force,
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
-        inputPlaceholder: '不存在的文件路径在编辑后可新增并保存',
-      },
-    )
-      .then(({ value }) => value)
-      .catch(() => '')
-
-    if (value) {
-      const index = view.findIndex((i) => i.path === value)
+  const add = async (path: string) => {
+    if (path) {
+      const index = view.findIndex((i) => i.path === path)
       if (index > -1) {
         active.value = index
       } else {
-        active.value = view.push({ path: value, diff: false }) - 1
+        active.value = view.push({ path, diff: false }) - 1
       }
+      history.add({ path })
     }
+
+    open.value = false
   }
 
   const remove = async (index: number) => {
@@ -67,5 +58,5 @@ export default function usePath() {
     }
   }
 
-  return { view, active, add, remove }
+  return { open, view, active, history, add, remove }
 }

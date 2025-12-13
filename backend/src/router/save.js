@@ -10,8 +10,6 @@ module.exports = async function read({ body }) {
   }
 
   try {
-    const fileExists = fs.existsSync(path);
-
     if (fs.existsSync(path)) {
       const stat = fs.statSync(path);
       if (!stat.isFile()) {

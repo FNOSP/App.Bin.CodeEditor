@@ -67,3 +67,31 @@ const open = defineModel('open')
 
 const like = defineModel<LikeModel>('like')
 </script>
+
+<style lang="scss" scoped>
+.like-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  > .item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    > .label {
+      font-size: 14px;
+      line-height: 24px;
+      width: 70px;
+    }
+
+    > .value {
+      flex: 1;
+
+      > * {
+        width: 100%;
+      }
+    }
+  }
+}
+</style>

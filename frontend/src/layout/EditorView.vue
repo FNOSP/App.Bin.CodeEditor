@@ -10,13 +10,7 @@
           <div v-show="item.diff" class="diff"></div>
         </template>
 
-        <MonacoEditor
-          ref="editorRef"
-          :path="item.path"
-          :like="like"
-          @like="() => (likeOpen = true)"
-          @diff="(v) => (item.diff = v)"
-        />
+        <MonacoEditor ref="editorRef" :path="item.path" @diff="(v) => (item.diff = v)" />
       </el-tab-pane>
 
       <el-tab-pane :name="-1" disabled>
@@ -37,8 +31,6 @@
       保存
     </el-button>
 
-    <LikeDialog v-model:open="likeOpen" v-model:like="like" @reset="resetLike()" />
-
     <PathDialog
       v-model:open="pathOpen"
       :history="history.value"
@@ -54,13 +46,10 @@ import { ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
-import LikeDialog from '@/components/LikeDialog.vue'
 import PathDialog from '@/components/PathDialog.vue'
 
-import useLike from '@/hooks/useLike'
 import usePath from '@/hooks/usePath'
 
-const { open: likeOpen, like, resetLike } = useLike()
 const { open: pathOpen, view, active, add, remove, history } = usePath()
 
 const editorRef = ref<any[]>([])

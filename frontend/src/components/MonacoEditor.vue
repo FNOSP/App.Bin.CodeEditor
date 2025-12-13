@@ -4,8 +4,8 @@
       v-if="code.lang"
       v-model:value="code.value"
       :language="code.lang"
-      :theme="like.theme"
-      :options="{ automaticLayout: true, ...editorLike.editorOption }"
+      :theme="like.cfg.theme"
+      :options="{ automaticLayout: true, ...like.cfg.editorOption }"
       @editorDidMount="editorDidMount"
     />
   </div>
@@ -47,34 +47,35 @@
       />
     </el-select>
 
-    <el-button size="small" :icon="Setting" @click="$emit('like')"></el-button>
+    <el-button size="small" :icon="Setting" @click="like.open = true"></el-button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
 import * as iconv from 'iconv-lite'
 import { Setting } from '@element-plus/icons-vue'
 
+import { useLikeStore } from '@/store/like'
+
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
 
-import { type LikeModel } from '../hooks/useLike'
 import useCode from '../hooks/useCode'
 import useEditor from '../hooks/useEditor'
 
-const $props = defineProps<{ path: string; like: LikeModel }>()
-const $emit = defineEmits<{ like: []; diff: [v: boolean] }>()
+const $props = defineProps<{ path: string }>()
+const $emit = defineEmits<{ diff: [v: boolean] }>()
+
+const like = useLikeStore()
 
 defineExpose({
   save: () => save(),
 })
 
-const editorLike = reactive({ ...$props.like })
-
 const { code, save } = useCode({
   path: $props.path,
-  confirm: () => editorLike.confirm,
+  confirm: () => like.cfg.confirm,
   onSave: () => $emit('diff', false),
 })
 
@@ -86,28 +87,20 @@ const changeEncode = async (v: string) => {
 }
 
 watch(
-  () => $props.like.confirm,
-  (v) => {
-    editorLike.confirm = v
-  },
-)
-watch(
-  () => $props.like.theme,
-  (v) => {
-    editorLike.theme = v
-    changeTheme(v)
-  },
-)
-watch(
   () => code.value,
   (v) => {
     $emit('diff', v !== code.org)
   },
 )
 watch(
-  () => $props.like.editorOption,
+  () => like.cfg.theme,
   (v) => {
-    editorLike.editorOption = v
+    changeTheme(v)
+  },
+)
+watch(
+  () => like.cfg.editorOption,
+  (v) => {
     changeOption(v)
   },
 )

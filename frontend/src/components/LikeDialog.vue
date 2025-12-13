@@ -25,7 +25,19 @@
       <div class="item">
         <div class="label">字体大小</div>
         <div class="value">
-          <el-input-number v-model="like.fontSize" :min="8" :max="100" size="small" />
+          <el-input-number v-model="like.editorOption.fontSize" :min="8" :max="100" size="small" />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">自动换行</div>
+        <div class="value">
+          <el-switch
+            v-model="like.editorOption.wordWrap"
+            inline-prompt
+            active-value="on"
+            inactive-value="off"
+          />
         </div>
       </div>
     </div>
@@ -36,7 +48,9 @@
 
         <div style="flex: 1"></div>
 
-        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">修改实时生效，且进行缓存</div>
+        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">
+          修改实时生效，且进行缓存
+        </div>
       </div>
     </template>
   </el-dialog>

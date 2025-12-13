@@ -5,7 +5,7 @@
       v-model:value="code.value"
       :language="code.lang"
       :theme="like.theme"
-      :options="{ fontSize: 14, automaticLayout: true }"
+      :options="{ automaticLayout: true, ...editorLike.editorOption }"
       @editorDidMount="editorDidMount"
     />
   </div>
@@ -78,7 +78,7 @@ const { code, save } = useCode({
   onSave: () => $emit('diff', false),
 })
 
-const { editorDidMount, changeLang, changeTheme, changeSize } = useEditor({ onSave: save })
+const { editorDidMount, changeLang, changeTheme, changeOption } = useEditor({ onSave: save })
 
 const changeEncode = async (v: string) => {
   const buffer = await code.blob.arrayBuffer()
@@ -99,16 +99,16 @@ watch(
   },
 )
 watch(
-  () => $props.like.fontSize,
-  (v) => {
-    editorLike.fontSize = v
-    changeSize(v)
-  },
-)
-watch(
   () => code.value,
   (v) => {
     $emit('diff', v !== code.org)
+  },
+)
+watch(
+  () => $props.like.editorOption,
+  (v) => {
+    editorLike.editorOption = v
+    changeOption(v)
   },
 )
 </script>

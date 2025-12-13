@@ -5,14 +5,20 @@ import { THEME_OPTIONS } from '@/utils/option'
 
 export interface LikeModel {
   theme: string
-  fontSize: number
   confirm: boolean
+  editorOption: {
+    fontSize: number
+    wordWrap: 'off' | 'on'
+  }
 }
 
 const defLike: LikeModel = {
   theme: 'vs-dark',
-  fontSize: 14,
   confirm: true,
+  editorOption: {
+    fontSize: 14,
+    wordWrap: 'off',
+  },
 }
 
 const key = 'like_v1'

@@ -24,18 +24,18 @@ export default function useEditor(option: { onSave: () => void }) {
     monaco.editor.setModelLanguage(toRaw(editorInstance.value.getModel()), v)
   }
 
-  const changeSize = (size: number) => {
-    editorInstance.value.updateOptions({ fontSize: size })
-  }
-
   const changeTheme = (v: string) => {
     monaco.editor.setTheme(v)
+  }
+
+  const changeOption = (opt: any) => {
+    editorInstance.value.updateOptions(opt)
   }
 
   return {
     editorDidMount,
     changeLang,
-    changeSize,
     changeTheme,
+    changeOption,
   }
 }

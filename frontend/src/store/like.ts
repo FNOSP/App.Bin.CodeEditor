@@ -1,9 +1,8 @@
-import { ref, type Ref } from 'vue'
+import { reactive, ref, type Reactive } from 'vue'
 import { defineStore } from 'pinia'
 
 import localStorage from '@/utils/localStorage'
-import { THEME_OPTIONS } from '@/utils/option'
-import { ref2model } from '@/utils/store2model'
+import { ref2model, reactive2model } from '@/utils/store2model'
 
 interface LikeModel {
   theme: string
@@ -28,40 +27,29 @@ const key = 'like_v1'
 export const useLikeStore = defineStore('like', () => {
   const open = ref(false)
 
-  const cfg: Ref<LikeModel> = ref(Object.assign({}, def, localStorage.get(key)))
-
-  const changeTheme = () => {
-    document.documentElement.className = THEME_OPTIONS.find((i) => i.value === cfg.value.theme)
-      ?.dark
-      ? 'dark'
-      : ''
-  }
-
-  const changeCfg = (opt: Partial<LikeModel>) => {
-    cfg.value = Object.assign(cfg.value, opt)
-
-    // 手动设置，避免脏数据
-    localStorage.set(key, {
-      theme: cfg.value.theme,
-      confirm: cfg.value.confirm,
-      editorOption: {
-        fontSize: cfg.value.editorOption.fontSize,
-        wordWrap: cfg.value.editorOption.wordWrap,
-      },
-    })
-  }
+  const cfg: Reactive<LikeModel> = reactive(Object.assign({}, def, localStorage.get(key)))
 
   const resetCfg = () => {
-    changeCfg(def)
+    Object.assign(cfg, def)
   }
 
   return {
     open: ref2model(open),
 
-    cfg,
+    cfg: reactive2model(cfg, {
+      onSet: () => {
+        // 手动设置，避免脏数据
+        localStorage.set(key, {
+          theme: cfg.theme,
+          confirm: cfg.confirm,
+          editorOption: {
+            fontSize: cfg.editorOption.fontSize,
+            wordWrap: cfg.editorOption.wordWrap,
+          },
+        })
+      },
+    }),
 
-    changeTheme,
-    changeCfg,
     resetCfg,
   }
 })

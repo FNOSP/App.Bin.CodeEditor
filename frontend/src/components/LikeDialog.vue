@@ -4,14 +4,14 @@
       <div class="item">
         <div class="label">保存确认</div>
         <div class="value">
-          <el-switch v-model="confirm" inline-prompt />
+          <el-switch v-model="like.cfg.confirm" inline-prompt />
         </div>
       </div>
 
       <div class="item">
         <div class="label">主题样式</div>
         <div class="value">
-          <el-select v-model="theme" size="small">
+          <el-select v-model="like.cfg.theme" size="small">
             <el-option
               v-for="item in THEME_OPTIONS"
               :key="item.value"
@@ -25,7 +25,12 @@
       <div class="item">
         <div class="label">字体大小</div>
         <div class="value">
-          <el-input-number v-model="editorFontSize" :min="8" :max="100" size="small" />
+          <el-input-number
+            v-model="like.cfg.editorOption.fontSize"
+            :min="8"
+            :max="100"
+            size="small"
+          />
         </div>
       </div>
 
@@ -33,7 +38,7 @@
         <div class="label">自动换行</div>
         <div class="value">
           <el-switch
-            v-model="editorWordWrap"
+            v-model="like.cfg.editorOption.wordWrap"
             inline-prompt
             active-value="on"
             inactive-value="off"
@@ -57,33 +62,13 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, watchEffect } from 'vue'
+import { watchEffect } from 'vue'
 
 import { THEME_OPTIONS } from '@/utils/option'
 
 import { useLikeStore } from '@/store/like'
 
 const like = useLikeStore()
-
-const confirm = computed({
-  get: () => like.cfg.confirm,
-  set: (v) => like.changeCfg({ confirm: v }),
-})
-
-const theme = computed({
-  get: () => like.cfg.theme,
-  set: (v) => like.changeCfg({ theme: v }),
-})
-
-const editorFontSize = computed({
-  get: () => like.cfg.editorOption.fontSize,
-  set: (v) => like.changeCfg({ editorOption: { ...like.cfg.editorOption, fontSize: v } }),
-})
-
-const editorWordWrap = computed({
-  get: () => like.cfg.editorOption.wordWrap,
-  set: (v) => like.changeCfg({ editorOption: { ...like.cfg.editorOption, wordWrap: v } }),
-})
 
 watchEffect(() => {
   document.documentElement.className = THEME_OPTIONS.find((i) => i.value === like.cfg.theme)?.dark

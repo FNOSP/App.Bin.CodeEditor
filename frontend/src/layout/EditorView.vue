@@ -1,35 +1,37 @@
 <template>
   <div id="editor-view">
-    <el-tabs class="view" v-model="active" type="card" closable @tab-remove="editor.view.remove">
-      <el-tab-pane v-for="(item, i) in editor.view.value" :key="item.path" :name="i">
-        <template #label>
-          <el-tooltip :content="item.path">
-            <div>{{ item.path.split('/').pop() }}</div>
-          </el-tooltip>
+    <div class="content">
+      <el-tabs class="view" v-model="active" type="card" closable @tab-remove="editor.view.remove">
+        <el-tab-pane v-for="(item, i) in editor.view.value" :key="item.path" :name="i">
+          <template #label>
+            <el-tooltip :content="item.path">
+              <div>{{ item.path.split('/').pop() }}</div>
+            </el-tooltip>
 
-          <div v-show="item.diff" class="diff"></div>
-        </template>
+            <div v-show="item.diff" class="diff"></div>
+          </template>
 
-        <MonacoEditor ref="editorRef" :path="item.path" @diff="(v) => (item.diff = v)" />
-      </el-tab-pane>
+          <MonacoEditor ref="editorRef" :path="item.path" @diff="(v) => (item.diff = v)" />
+        </el-tab-pane>
 
-      <el-tab-pane :name="-1" disabled>
-        <template #label>
-          <div class="add" @click="open.show = true">
-            <el-icon><Plus /></el-icon>
-          </div>
-        </template>
-      </el-tab-pane>
-    </el-tabs>
+        <el-tab-pane :name="-1" disabled>
+          <template #label>
+            <div class="add" @click="open.show = true">
+              <el-icon><Plus /></el-icon>
+            </div>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
 
-    <el-button
-      size="small"
-      class="save"
-      v-bind="editor.view.value[active]?.diff ? { type: 'primary' } : { disabled: true }"
-      @click="editorRef[active]?.save"
-    >
-      保存
-    </el-button>
+      <el-button
+        size="small"
+        class="save"
+        v-bind="editor.view.value[active]?.diff ? { type: 'primary' } : { disabled: true }"
+        @click="editorRef[active]?.save"
+      >
+        保存
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -56,75 +58,86 @@ const editorRef = ref<{ save: () => void }[]>([])
   position: relative;
   flex: 1;
 
-  > .view {
+  > .content {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
 
-    > .el-tabs__header {
-      height: 40px;
-      padding-right: 56px;
-      margin: 0;
+    > .view {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
 
-      .el-tabs__nav {
-        border-radius: 0;
+      > .el-tabs__header {
+        height: 40px;
+        padding-right: 56px;
+        margin: 0;
 
-        .el-tabs__item {
-          position: relative;
-          display: flex;
-          align-items: center;
-          gap: 6px;
+        .el-tabs__nav {
+          border-radius: 0;
+          border: none;
 
-          &.is-disabled {
-            > .add {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              cursor: pointer;
-              pointer-events: all;
+          .el-tabs__item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: none;
+
+            &.is-disabled {
+              > .add {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                pointer-events: all;
+              }
+            }
+
+            .diff {
+              width: 6px;
+              height: 6px;
+              border-radius: 50%;
+              background-color: var(--el-text-color-placeholder);
+            }
+
+            > * {
+              margin: 0;
             }
           }
+        }
 
-          .diff {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--el-text-color-placeholder);
-          }
-
-          > * {
-            margin: 0;
-          }
+        .el-tabs__new-tab {
+          width: 22px;
+          height: 22px;
         }
       }
 
-      .el-tabs__new-tab {
-        width: 22px;
-        height: 22px;
+      > .el-tabs__content {
+        flex: 1;
+
+        > .el-tab-pane {
+          position: relative;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
       }
     }
 
-    > .el-tabs__content {
-      flex: 1;
-
-      > .el-tab-pane {
-        position: relative;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
+    > .save {
+      position: absolute;
+      right: 8px;
+      top: 8px;
     }
-  }
-
-  > .save {
-    position: absolute;
-    right: 8px;
-    top: 8px;
   }
 }
 </style>

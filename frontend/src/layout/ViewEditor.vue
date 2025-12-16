@@ -14,7 +14,12 @@
           </template>
 
           <div class="img" v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'">
-            <img class="i" :src="getFullPath(item.path)" />
+            <el-image
+              style="width: 80%; height: 80%"
+              :src="getFullPath(item.path)"
+              fit="contain"
+              :preview-src-list="[getFullPath(item.path)]"
+            />
           </div>
 
           <div class="no-open" v-else-if="FILE_MAP[getFileSuffix(item.path)]">
@@ -170,11 +175,6 @@ watch(
             display: flex;
             align-items: center;
             justify-content: center;
-
-            > .i {
-              max-height: 90%;
-              max-width: 90%;
-            }
           }
 
           > .no-open {

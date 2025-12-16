@@ -1,17 +1,31 @@
 <template>
   <div id="editor-view">
     <div class="content">
-      <el-tabs class="view" v-model="active" type="card" closable @tab-remove="editor.view.remove">
-        <el-tab-pane v-for="(item, i) in editor.view.value" :key="item.path" :name="i">
+      <el-tabs class="view" v-model="active" type="card" closable @tab-remove="editor.remove">
+        <el-tab-pane v-for="item in editor.view" :key="item.path" :name="item.path">
           <template #label>
             <el-tooltip :content="item.path">
-              <div>{{ item.path.split('/').pop() }}</div>
+              <div :style="item.keep ? {} : { fontStyle: 'italic' }" @dblclick="item.keep = true">
+                {{ item.path.split('/').pop() }}
+              </div>
             </el-tooltip>
 
             <div v-show="item.diff" class="diff"></div>
           </template>
 
-          <MonacoEditor ref="editorRef" :path="item.path" @diff="(v) => (item.diff = v)" />
+          <MonacoEditor
+            ref="editorRef"
+            :path="item.path"
+            @diff="
+              (v) => {
+                item.diff = v
+
+                if (!item.keep && v) {
+                  item.keep = true
+                }
+              }
+            "
+          />
         </el-tab-pane>
 
         <el-tab-pane :name="-1" disabled>
@@ -26,8 +40,8 @@
       <el-button
         size="small"
         class="save"
-        v-bind="editor.view.value[active]?.diff ? { type: 'primary' } : { disabled: true }"
-        @click="editorRef[active]?.save"
+        v-bind="editor.view[editor.index]?.diff ? { type: 'primary' } : { disabled: true }"
+        @click="editorRef[editor.index]?.save"
       >
         保存
       </el-button>
@@ -36,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
@@ -51,6 +65,14 @@ const editor = useEditorStore()
 const { active } = storeToRefs(editor)
 
 const editorRef = ref<{ save: () => void }[]>([])
+
+watch(
+  () => active.value,
+  () =>
+    editor.view.forEach(
+      (item) => active.value !== item.path && !item.keep && editor.remove(item.path),
+    ),
+)
 </script>
 
 <style lang="scss">

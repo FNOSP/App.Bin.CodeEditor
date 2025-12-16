@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessageBox } from 'element-plus'
 
@@ -7,33 +7,38 @@ import { useOpenStore } from './open'
 interface ViewModel {
   path: string
   diff: boolean
+  keep: boolean
 }
 
 export const useEditorStore = defineStore('editor', () => {
   const open = useOpenStore()
 
-  const active = ref(0)
-
   const view = reactive<ViewModel[]>([])
 
-  const add = (path: ViewModel['path']) => {
+  const active = ref('')
+
+  const index = computed(() => view.findIndex((i) => i.path === active.value))
+
+  const add = (path: ViewModel['path'], keep = true) => {
     if (!path) {
       return
     }
 
     const index = view.findIndex((i) => i.path === path)
 
-    if (index > -1) {
-      active.value = index
-    } else {
-      active.value = view.push({ path, diff: false }) - 1
+    if (index === -1) {
+      view.push({ path, diff: false, keep })
     }
 
-    open.history.add({ path })
+    active.value = path
+
+    open.addHistory({ path })
 
     open.show = false
   }
-  const remove = async (index: number) => {
+
+  const remove = async (path: string) => {
+    const index = view.findIndex((i) => i.path === path)
     const item = view[index]
     if (item) {
       if (item.diff) {
@@ -48,19 +53,17 @@ export const useEditorStore = defineStore('editor', () => {
         }
       }
 
-      if (index === active.value) {
-        active.value += view[index + 1] ? 0 : -1
-      } else if (index < active.value) {
-        active.value--
-      }
-
       view.splice(index, 1)
+
+      if (path === active.value) {
+        if (view[index]) {
+          active.value = view[index].path
+        } else {
+          active.value = view[view.length - 1]?.path || ''
+        }
+      }
     }
   }
 
-  return {
-    active,
-
-    view: { value: view, add, remove },
-  }
+  return { active, index, view, add, remove }
 })

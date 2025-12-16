@@ -3,7 +3,7 @@
     :props="props"
     :load="loadNode"
     lazy
-    @node-click="(v: { leaf: boolean; value: string }) => v.leaf && editor.view.add(v.value)"
+    @node-click="(v: { leaf: boolean; value: string }) => v.leaf && editor.add(v.value, false)"
   >
     <template #default="{ node, data }">
       <div class="node-item">

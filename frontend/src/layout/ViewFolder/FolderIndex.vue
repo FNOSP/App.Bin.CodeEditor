@@ -3,9 +3,7 @@
     <div class="head">
       <div class="title">目录</div>
 
-      <el-tooltip content="打开目录" placement="bottom">
-        <el-icon class="icon"><FolderOpened /></el-icon>
-      </el-tooltip>
+      <!-- <el-icon class="icon"><Setting /></el-icon> -->
     </div>
 
     <div class="content">
@@ -19,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FolderOpened } from '@element-plus/icons-vue'
+// import { Setting } from '@element-plus/icons-vue'
 
 import ClickMove from '@/components/ClickMove.vue'
 import FolderTree from './FolderTree.vue'

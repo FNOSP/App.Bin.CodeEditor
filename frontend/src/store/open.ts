@@ -14,18 +14,18 @@ export const useOpenStore = defineStore('open', () => {
   const input = ref('')
   const history = reactive<HistoryModel[]>(localStorage.get(key) || [])
 
-  const add = (val: HistoryModel) => {
+  const addHistory = (val: HistoryModel) => {
     if (!val) {
       return
     }
 
-    remove(val)
+    removeHistory(val)
 
     history.unshift(val)
 
     localStorage.set(key, toRaw(history))
   }
-  const remove = (val: HistoryModel) => {
+  const removeHistory = (val: HistoryModel) => {
     if (!val) {
       return
     }
@@ -38,17 +38,11 @@ export const useOpenStore = defineStore('open', () => {
       localStorage.set(key, toRaw(history))
     }
   }
-  const clear = () => {
+  const clearHistory = () => {
     history.splice(0, history.length)
 
     localStorage.set(key, toRaw(history))
   }
 
-  return {
-    show,
-
-    input,
-
-    history: { value: history, add, remove, clear },
-  }
+  return { show, input, history, addHistory, removeHistory, clearHistory }
 })

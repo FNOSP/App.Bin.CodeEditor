@@ -36,7 +36,8 @@
                 "yml",
                 "vue",
                 "env",
-                "cgi"
+                "cgi",
+                "log"
             ]
         }
     }

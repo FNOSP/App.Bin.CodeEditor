@@ -5,26 +5,26 @@
         <div class="view-dialog">
           <el-input v-model="input" placeholder="请输入文件路径（不存在的文件编辑后可直接新增）">
             <template #append>
-              <el-button @click="editor.view.add(input)">确认</el-button>
+              <el-button @click="editor.add(input)">确认</el-button>
             </template>
           </el-input>
 
-          <template v-if="open.history.value.length">
+          <template v-if="open.history.length">
             <div class="title">
               <div class="t">历史记录</div>
-              <el-button size="small" @click="open.history.clear()">清除全部</el-button>
+              <el-button size="small" @click="open.clearHistory()">清除全部</el-button>
             </div>
 
             <div class="history">
               <div
                 class="item"
-                v-for="item in open.history.value"
+                v-for="item in open.history"
                 :key="item.path"
-                @click="editor.view.add(item.path)"
+                @click="editor.add(item.path)"
               >
                 <div class="t">{{ item.path }}</div>
                 <div style="flex: 1"></div>
-                <el-icon class="i" @click.stop="open.history.remove(item)"><Close /></el-icon>
+                <el-icon class="i" @click.stop="open.removeHistory(item)"><Close /></el-icon>
               </div>
             </div>
           </template>
@@ -50,7 +50,7 @@ const { show, input } = storeToRefs(open)
 onMounted(async () => {
   const query = new URLSearchParams(window.location.search).get('path') || ''
   if (query) {
-    editor.view.add(query)
+    editor.add(query)
   } else {
     show.value = true
   }

@@ -56,6 +56,7 @@ const editorRef = ref<{ save: () => void }[]>([])
 <style lang="scss">
 #editor-view {
   position: relative;
+  z-index: 1;
   flex: 1;
 
   > .content {

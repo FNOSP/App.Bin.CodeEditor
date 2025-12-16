@@ -19,6 +19,8 @@ const menu = useMenuStore()
 
 <style lang="scss">
 #ment-view {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   width: 40px;
@@ -31,7 +33,8 @@ const menu = useMenuStore()
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--el-text-color-primary);
+    color: var(--el-text-color-regular);
+    transition: all 0.3s;
 
     &:hover {
       color: var(--el-color-primary-light-5);

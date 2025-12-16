@@ -12,6 +12,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ClickMove: typeof import('./src/components/ClickMove.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -23,15 +24,13 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    LikeDialog: typeof import('./src/components/LikeDialog.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
-    OpenDialog: typeof import('./src/components/OpenDialog.vue')['default']
-    PathDialog: typeof import('./src/components/PathDialog.vue')['default']
   }
 }
 
 // For TSX support
 declare global {
+  const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -43,8 +42,5 @@ declare global {
   const ElTabPane: typeof import('element-plus/es')['ElTabPane']
   const ElTabs: typeof import('element-plus/es')['ElTabs']
   const ElTooltip: typeof import('element-plus/es')['ElTooltip']
-  const LikeDialog: typeof import('./src/components/LikeDialog.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
-  const OpenDialog: typeof import('./src/components/OpenDialog.vue')['default']
-  const PathDialog: typeof import('./src/components/PathDialog.vue')['default']
 }

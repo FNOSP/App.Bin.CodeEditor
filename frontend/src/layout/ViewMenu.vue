@@ -1,10 +1,6 @@
 <template>
   <div id="ment-view">
-    <div
-      class="item"
-      :class="{ active: menu.open.folder }"
-      @click="menu.open.folder = !menu.open.folder"
-    >
+    <div class="item" :class="{ active: menu.open.folder }" @click="menu.toggle('folder')">
       <el-icon><Folder /></el-icon>
     </div>
   </div>

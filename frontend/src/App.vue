@@ -1,7 +1,7 @@
 <template>
   <ViewMenu />
 
-  <ViewFolder v-show="menu.open.folder" />
+  <ViewFolder v-if="menu.initialized.folder" v-show="menu.open.folder" />
 
   <ViewEditor />
 

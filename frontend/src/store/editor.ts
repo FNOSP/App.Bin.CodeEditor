@@ -22,26 +22,38 @@ export const useEditorStore = defineStore('editor', () => {
 
   const index = computed(() => view.findIndex((i) => i.path === active.value))
 
-  const add = (path: ViewModel['path'], opt: { keep: boolean } = { keep: true }) => {
+  const add = (
+    path: ViewModel['path'],
+    opt: { keep?: boolean; history?: boolean } = { keep: true, history: true },
+  ) => {
     if (!path) {
       return
     }
 
+    const keep = opt.keep === undefined ? true : opt.keep
+    const history = opt.history === undefined ? true : opt.history
+
     const index = view.findIndex((i) => i.path === path)
 
     if (index === -1) {
-      view.push({ path, diff: false, keep: opt.keep })
+      view.push({ path, diff: false, keep })
     }
 
     active.value = path
 
     open.show = false
 
+    if (history) {
+      open.addHistory({ path })
+    }
+
     const fileType = FILE_MAP[getFileSuffix(path)]
 
-    if (fileType === 'img') {
-      open.addHistory({ path })
-    } else {
+    if (fileType) {
+      if (fileType === 'img') {
+        return
+      }
+
       open.removeHistory(path)
     }
   }

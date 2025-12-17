@@ -53,8 +53,6 @@ export default function useCode(option: OptionModel) {
         return
       }
 
-      open.addHistory({ path })
-
       code.blob = data
 
       code.path = path

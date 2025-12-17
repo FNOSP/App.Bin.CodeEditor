@@ -20,7 +20,7 @@ export const useMenuStore = defineStore('menu', () => {
         initialized.value[key] = true
       }
 
-      open.value = key
+      open.value = open.value === key ? undefined : key
     },
   }
 })

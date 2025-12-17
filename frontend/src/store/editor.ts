@@ -41,7 +41,7 @@ export const useEditorStore = defineStore('editor', () => {
 
     active.value = path
 
-    open.show = false
+    open.show = undefined
 
     if (history) {
       open.addHistory({ path })

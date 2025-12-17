@@ -8,6 +8,8 @@
       <el-icon><Timer /></el-icon>
     </div>
 
+    <div style="flex: 1"></div>
+
     <div class="item" :class="{ active: like.open }" @click="like.open = true">
       <el-icon><Setting /></el-icon>
     </div>

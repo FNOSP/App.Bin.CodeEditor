@@ -48,7 +48,7 @@
 
         <el-tab-pane :name="-1" disabled>
           <template #label>
-            <div class="add" @click="open.show = true">
+            <div class="add" @click="open.show = 'file'">
               <el-icon><Plus /></el-icon>
             </div>
           </template>
@@ -74,10 +74,11 @@ import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
 
-import { useOpenStore } from '@/store/open'
-import { useEditorStore } from '@/store/editor'
 import { FILE_MAP } from '@/utils/option'
 import { getFileName, getFileSuffix, getFullPath } from '@/utils/file'
+
+import { useOpenStore } from '@/store/open'
+import { useEditorStore } from '@/store/editor'
 
 const open = useOpenStore()
 const editor = useEditorStore()

@@ -7,12 +7,10 @@ import localStorage from '@/utils/localStorage'
 interface LikeModel {
   theme: string
   leftWidth: number
-
   confirm: boolean
-
-  folderDefOpen: boolean
+  folderActive: string
+  folderDefOpen: string
   folderHidePrefix: string[]
-
   editorOption: {
     fontSize: number
     wordWrap: 'off' | 'on'
@@ -28,7 +26,8 @@ const getDef = (): LikeModel => ({
   confirm: true, // 保存二次确认
 
   // 目录
-  folderDefOpen: false, // 默认开启目录
+  folderActive: '', // 当前打开的目录
+  folderDefOpen: '', // 默认开启目录
   folderHidePrefix: ['.'], // 隐藏的文件前缀
 
   // 编辑器

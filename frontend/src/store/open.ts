@@ -9,8 +9,10 @@ interface HistoryModel {
   path: string
 }
 
+type OpenType = 'file' | 'dir'
+
 export const useOpenStore = defineStore('open', () => {
-  const show = ref(false)
+  const show = ref<OpenType>()
   const input = ref('')
   const history = reactive<HistoryModel[]>(localStorage.get(key) || [])
 
@@ -44,5 +46,5 @@ export const useOpenStore = defineStore('open', () => {
     localStorage.set(key, toRaw(history))
   }
 
-  return { show, input, history, addHistory, removeHistory, clearHistory }
+  return { input, show, history, addHistory, removeHistory, clearHistory }
 })

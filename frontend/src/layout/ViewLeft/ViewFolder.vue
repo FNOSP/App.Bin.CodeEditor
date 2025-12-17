@@ -3,13 +3,14 @@
     <div class="head">
       <div class="title">目录</div>
 
-      <!-- <el-icon class="icon"><Setting /></el-icon> -->
+      <el-icon class="icon" @click="openDir()"><Files /></el-icon>
     </div>
 
     <div class="content">
       <div class="list">
         <el-tree
-          :props="props"
+          :key="like.cfg.folderActive"
+          :props="{ label: 'label', isLeaf: 'leaf' }"
           :load="loadNode"
           lazy
           @node-click="
@@ -38,33 +39,53 @@
 
 <script lang="ts" setup>
 import axios from 'axios'
-import { Folder, FolderOpened } from '@element-plus/icons-vue'
+import { Files, Folder, FolderOpened } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
 
+import { HOST } from '@/utils/env'
+
 import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
-
-import { HOST } from '@/utils/env'
+import { useOpenStore } from '@/store/open'
 
 import type { LoadFunction } from 'element-plus'
 
 const editor = useEditorStore()
 const like = useLikeStore()
+const open = useOpenStore()
 
-const props = { label: 'label', children: 'zones', isLeaf: 'leaf' }
+const openDir = async () => {
+  open.show = 'dir'
+}
 
 const loadNode: LoadFunction = async (node, resolve) => {
-  const root = node.data.value || '/Users/flex/Downloads'
+  const root = node.data.value || like.cfg.folderActive
 
-  const { data } = await axios.get<{ data: { dirs: string[]; files: string[] } }>(HOST, {
+  if (!root) {
+    return resolve([])
+  }
+
+  const { data: result } = await axios.get<{
+    code: number
+    data: { dirs: string[]; files: string[] }
+  }>(HOST, {
     params: { _api: 'dir', path: root },
   })
 
+  if (result.code !== 200) {
+    return resolve([])
+  }
+
   resolve(
     [
-      ...data.data.dirs.map((i) => ({ label: i, value: `${root}/${i}`, leaf: false, dir: true })),
-      ...data.data.files.map((i) => ({ label: i, value: `${root}/${i}`, leaf: true, dir: false })),
+      ...result.data.dirs.map((i) => ({ label: i, value: `${root}/${i}`, leaf: false, dir: true })),
+      ...result.data.files.map((i) => ({
+        label: i,
+        value: `${root}/${i}`,
+        leaf: true,
+        dir: false,
+      })),
     ].filter((i) => !like.cfg.folderHidePrefix.some((x) => i.label.indexOf(x) === 0)),
   )
 }

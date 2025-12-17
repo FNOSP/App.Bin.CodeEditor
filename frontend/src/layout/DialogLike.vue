@@ -47,7 +47,14 @@
         <div class="item">
           <div class="label">默认打开</div>
           <div class="value">
-            <el-switch v-model="cfg.folderDefOpen" inline-prompt />
+            <el-select
+              v-model="cfg.folderDefOpen"
+              size="small"
+              clearable
+              placeholder="启动时默认打开某个目录"
+            >
+              <el-option v-for="item in user.cfg.dir" :key="item" :label="item" :value="item" />
+            </el-select>
           </div>
         </div>
 
@@ -89,8 +96,10 @@ import { storeToRefs } from 'pinia'
 
 import { THEME_OPTIONS } from '@/utils/option'
 
+import { useUserStore } from '@/store/user'
 import { useLikeStore } from '@/store/like'
 
+const user = useUserStore()
 const like = useLikeStore()
 
 const { open, cfg } = storeToRefs(like)

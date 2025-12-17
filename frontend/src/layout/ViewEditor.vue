@@ -26,7 +26,7 @@
             class="no-open"
             v-else-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]"
           >
-            <div class="t">{{ errorMap[item.path] || '编辑器不支持该文件' }}</div>
+            <div class="t">{{ errorMap[item.path] || '不支持二进制文件的编辑' }}</div>
           </div>
 
           <MonacoEditor

@@ -6,6 +6,8 @@ import { HOST } from '@/utils/env'
 import { LANG_MAP } from '@/utils/option'
 import { isBinaryContent } from '@/utils/file'
 
+import { useOpenStore } from '@/store/open'
+
 interface OptionModel {
   confirm: () => boolean
   onSave: () => void
@@ -22,6 +24,8 @@ interface CodeModel {
 }
 
 export default function useCode(option: OptionModel) {
+  const open = useOpenStore()
+
   const code = reactive<CodeModel>({
     path: '',
     blob: new Blob(),
@@ -44,9 +48,12 @@ export default function useCode(option: OptionModel) {
       })
 
       if (await isBinaryContent(data)) {
-        option.onError('暂不支持二进制文件的编辑')
+        option.onError('不支持二进制文件的编辑')
+        open.removeHistory(path)
         return
       }
+
+      open.addHistory({ path })
 
       code.blob = data
 

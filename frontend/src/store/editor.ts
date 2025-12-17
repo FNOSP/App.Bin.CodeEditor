@@ -2,6 +2,9 @@ import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { ElMessageBox } from 'element-plus'
 
+import { FILE_MAP } from '@/utils/option'
+import { getFileSuffix } from '@/utils/file'
+
 import { useOpenStore } from './open'
 
 interface ViewModel {
@@ -19,7 +22,7 @@ export const useEditorStore = defineStore('editor', () => {
 
   const index = computed(() => view.findIndex((i) => i.path === active.value))
 
-  const add = (path: ViewModel['path'], keep = true) => {
+  const add = (path: ViewModel['path'], opt: { keep: boolean } = { keep: true }) => {
     if (!path) {
       return
     }
@@ -27,14 +30,20 @@ export const useEditorStore = defineStore('editor', () => {
     const index = view.findIndex((i) => i.path === path)
 
     if (index === -1) {
-      view.push({ path, diff: false, keep })
+      view.push({ path, diff: false, keep: opt.keep })
     }
 
     active.value = path
 
-    open.addHistory({ path })
-
     open.show = false
+
+    const fileType = FILE_MAP[getFileSuffix(path)]
+
+    if (fileType === 'img') {
+      open.addHistory({ path })
+    } else {
+      open.removeHistory(path)
+    }
   }
 
   const remove = async (path: string) => {

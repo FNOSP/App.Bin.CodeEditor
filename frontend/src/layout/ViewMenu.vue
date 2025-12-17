@@ -1,7 +1,11 @@
 <template>
   <div id="ment-view">
-    <div class="item" :class="{ active: menu.open.folder }" @click="menu.toggle('folder')">
+    <div class="item" :class="{ active: menu.open === 'folder' }" @click="menu.toggle('folder')">
       <el-icon><Folder /></el-icon>
+    </div>
+
+    <div class="item" :class="{ active: menu.open === 'history' }" @click="menu.toggle('history')">
+      <el-icon><Timer /></el-icon>
     </div>
 
     <div class="item" :class="{ active: like.open }" @click="like.open = true">
@@ -11,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Folder, Setting } from '@element-plus/icons-vue'
+import { Folder, Timer, Setting } from '@element-plus/icons-vue'
 
 import { useLikeStore } from '@/store/like'
 import { useMenuStore } from '@/store/menu'
@@ -22,7 +26,7 @@ const like = useLikeStore()
 
 onMounted(() => {
   if (like.cfg.folderDefOpen) {
-    menu.toggle('folder', true)
+    menu.toggle('folder')
   }
 })
 </script>

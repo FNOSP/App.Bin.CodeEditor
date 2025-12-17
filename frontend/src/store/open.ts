@@ -19,18 +19,18 @@ export const useOpenStore = defineStore('open', () => {
       return
     }
 
-    removeHistory(val)
+    removeHistory(val.path)
 
     history.unshift(val)
 
     localStorage.set(key, toRaw(history))
   }
-  const removeHistory = (val: HistoryModel) => {
-    if (!val) {
+  const removeHistory = (path: string) => {
+    if (!path) {
       return
     }
 
-    const index = history.findIndex((i) => i.path === val.path)
+    const index = history.findIndex((i) => i.path === path)
 
     if (index > -1) {
       history.splice(index, 1)

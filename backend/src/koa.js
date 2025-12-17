@@ -22,7 +22,6 @@ app.use(async (ctx) => {
   if (type) {
     ctx.set("Content-Type", type);
     ctx.set("Content-Length", body.size);
-    ctx.set("Content-Disposition", `attachment; filename="${body.filename}"`);
     ctx.body = body.stream;
   } else {
     ctx.set("Content-Type", "application/json; charset=utf-8");

@@ -6,10 +6,13 @@ import localStorage from '@/utils/localStorage'
 
 interface LikeModel {
   theme: string
+  leftWidth: number
+
   confirm: boolean
-  folderWidth: number
+
   folderDefOpen: boolean
   folderHidePrefix: string[]
+
   editorOption: {
     fontSize: number
     wordWrap: 'off' | 'on'
@@ -19,12 +22,12 @@ interface LikeModel {
 const getDef = (): LikeModel => ({
   // 全局配置
   theme: 'vs-dark',
+  leftWidth: 300, // 侧边栏宽度
 
   // 安全性
   confirm: true, // 保存二次确认
 
   // 目录
-  folderWidth: 300, // 目录宽度
   folderDefOpen: false, // 默认开启目录
   folderHidePrefix: ['.'], // 隐藏的文件前缀
 
@@ -50,8 +53,8 @@ export const useLikeStore = defineStore('like', () => {
     saveCfg: debounce(() => {
       localStorage.set(key, {
         theme: cfg.value.theme,
+        leftWidth: cfg.value.leftWidth,
         confirm: cfg.value.confirm,
-        folderWidth: cfg.value.folderWidth,
         folderDefOpen: cfg.value.folderDefOpen,
         folderHidePrefix: cfg.value.folderHidePrefix,
         editorOption: {

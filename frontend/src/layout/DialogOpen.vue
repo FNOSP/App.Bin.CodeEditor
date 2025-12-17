@@ -24,7 +24,7 @@
               >
                 <div class="t">{{ item.path }}</div>
                 <div style="flex: 1"></div>
-                <el-icon class="i" @click.stop="open.removeHistory(item)"><Close /></el-icon>
+                <el-icon class="i" @click.stop="open.removeHistory(item.path)"><Close /></el-icon>
               </div>
             </div>
           </template>

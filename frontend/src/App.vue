@@ -1,8 +1,6 @@
 <template>
   <ViewMenu />
-
-  <ViewFolder v-if="menu.initialized.folder" v-show="menu.open.folder" />
-
+  <ViewLeft />
   <ViewEditor />
 
   <DialogLike />
@@ -11,14 +9,10 @@
 
 <script setup lang="ts">
 import ViewMenu from '@/layout/ViewMenu.vue'
-import ViewFolder from '@/layout/ViewFolder/FolderIndex.vue'
+import ViewLeft from '@/layout/ViewLeft/LeftBox.vue'
 import ViewEditor from '@/layout/ViewEditor.vue'
 import DialogLike from '@/layout/DialogLike.vue'
 import DialogOpen from '@/layout/DialogOpen.vue'
-
-import { useMenuStore } from './store/menu'
-
-const menu = useMenuStore()
 </script>
 
 <style lang="scss">

@@ -3,7 +3,9 @@ const iconv = require("iconv-lite");
 const { dirname } = require("path");
 
 module.exports = async function read({ body }) {
-  const { path, encode, value, force } = body;
+  const { encode, value, force } = body;
+
+  const path = body.path[0] === "/" ? body.path : `/${body.path}`;
 
   if (!path) {
     return { code: 400, msg: "缺少文件路径参数", data: body };

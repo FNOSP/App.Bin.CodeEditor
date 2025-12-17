@@ -1,6 +1,6 @@
 {
   "name": "code.editor",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "changelog": "<div>新增：目录管理，支持打开、切换目录，便于用户操作</div><div>新增：打开时展示历史记录，便于快速访问</div><div>新增：偏好设置中新增自动换行</div><div>新增：图片预览功能</div><div>修复：偏好设置恢复默认不生效的问题</div>",
   "scripts": {
     "dev": "node src/app.js",

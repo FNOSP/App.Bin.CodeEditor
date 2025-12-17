@@ -118,6 +118,7 @@ onMounted(async () => {
 const changeDir = (v: string) => {
   like.cfg.folderActive = v
   menu.open = 'folder'
+  menu.initialized.folder = true
   open.show = undefined
 }
 

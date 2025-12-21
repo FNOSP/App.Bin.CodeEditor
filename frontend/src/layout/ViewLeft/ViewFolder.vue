@@ -9,26 +9,28 @@
     <div class="content">
       <div class="list">
         <el-tree
+          ref="treeRef"
           :key="like.cfg.folderActive"
           :props="{ label: 'label', isLeaf: 'leaf' }"
           :load="loadNode"
           lazy
-          @node-click="
-            (v: { leaf: boolean; value: string }) => v.leaf && editor.add(v.value, { keep: false })
-          "
+          node-key="value"
+          @node-click="openNode"
         >
           <template #default="{ node, data }">
             <div class="node-item">
               <div class="icon">
                 <el-icon v-if="data.dir" size="18">
-                  <FolderOpened v-if="node.expanded" />
+                  <Refresh v-if="node.expanded" @click.stop="refreshNode(node)" />
                   <Folder v-else />
                 </el-icon>
 
                 <FileView v-else :path="data.value" />
               </div>
 
-              <div class="text">{{ node.label }}</div>
+              <div class="text">
+                <div class="t">{{ node.label }}</div>
+              </div>
             </div>
           </template>
         </el-tree>
@@ -38,8 +40,9 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import axios from 'axios'
-import { Files, Folder, FolderOpened } from '@element-plus/icons-vue'
+import { Files, Folder, Refresh } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
 
@@ -49,17 +52,23 @@ import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 
-import type { LoadFunction } from 'element-plus'
+import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
 const editor = useEditorStore()
 const like = useLikeStore()
 const open = useOpenStore()
 
+const treeRef = ref<TreeInstance>()
+
 const openDir = async () => {
   open.show = 'dir'
 }
 
-const loadNode: LoadFunction = async (node, resolve) => {
+const refreshNode = (node: RenderContentContext['node']) => {
+  loadNode(node, (data) => node.key && treeRef.value?.updateKeyChildren(node.key, data))
+}
+
+const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeData) => void) => {
   const root = node.data.value || like.cfg.folderActive
 
   if (!root) {
@@ -89,6 +98,12 @@ const loadNode: LoadFunction = async (node, resolve) => {
     ].filter((i) => !like.cfg.folderHidePrefix.some((x) => i.label.indexOf(x) === 0)),
   )
 }
+
+const openNode = (data: TreeNodeData) => {
+  if (data.leaf) {
+    editor.add(data.value, { keep: false })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -104,6 +119,22 @@ const loadNode: LoadFunction = async (node, resolve) => {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  > .text {
+    flex: 1;
+    position: relative;
+
+    > .t {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>

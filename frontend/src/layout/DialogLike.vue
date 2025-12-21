@@ -15,6 +15,13 @@
             </el-select>
           </div>
         </div>
+
+        <div class="item">
+          <div class="label">启动时询问</div>
+          <div class="value">
+            <el-switch v-model="cfg.startOpen" inline-prompt />
+          </div>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="编辑器" name="editor">
         <div class="item">

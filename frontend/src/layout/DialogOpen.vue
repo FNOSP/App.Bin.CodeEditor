@@ -111,7 +111,9 @@ onMounted(async () => {
   if (query) {
     editor.add(query)
   } else {
-    show.value = 'file'
+    if (like.cfg.startOpen) {
+      show.value = 'file'
+    }
   }
 })
 

@@ -6,6 +6,7 @@ import localStorage from '@/utils/localStorage'
 
 interface LikeModel {
   theme: string
+  startOpen: boolean
   leftWidth: number
   confirm: boolean
   folderActive: string
@@ -20,6 +21,7 @@ interface LikeModel {
 const getDef = (): LikeModel => ({
   // 全局配置
   theme: 'vs-dark',
+  startOpen: true,
   leftWidth: 300, // 侧边栏宽度
 
   // 安全性
@@ -52,6 +54,7 @@ export const useLikeStore = defineStore('like', () => {
     saveCfg: debounce(() => {
       localStorage.set(key, {
         theme: cfg.value.theme,
+        startOpen: cfg.value.startOpen,
         leftWidth: cfg.value.leftWidth,
         confirm: cfg.value.confirm,
         folderDefOpen: cfg.value.folderDefOpen,

@@ -28,7 +28,7 @@
           <template v-if="open.history.length">
             <div class="title">
               <div class="t">历史记录</div>
-              <el-button size="small" @click="open.clearHistory()">清除全部</el-button>
+              <el-button size="small" @click="open.clearHistory()">清空记录</el-button>
             </div>
 
             <div class="list">

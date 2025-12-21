@@ -3,7 +3,9 @@
     <div class="head">
       <div class="title">文件打开记录</div>
 
-      <el-icon class="icon" @click="open.clearHistory()"><Delete /></el-icon>
+      <el-tooltip content="清空记录" placement="bottom">
+        <el-icon class="icon" @click="open.clearHistory()"><Delete /></el-icon>
+      </el-tooltip>
     </div>
 
     <div class="content">

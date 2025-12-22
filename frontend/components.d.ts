@@ -29,6 +29,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     FileView: typeof import('./src/components/FileView.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+    PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
   }
 }
 
@@ -51,4 +52,5 @@ declare global {
   const ElTree: typeof import('element-plus/es')['ElTree']
   const FileView: typeof import('./src/components/FileView.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+  const PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
 }

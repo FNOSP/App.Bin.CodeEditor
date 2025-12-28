@@ -1,5 +1,5 @@
 <template>
-  <div class="pdf-edit">
+  <div class="pdf-view">
     <iframe class="i" :src="$props.src" frameborder="0"></iframe>
   </div>
 </template>
@@ -9,7 +9,7 @@ const $props = defineProps<{ src: string }>()
 </script>
 
 <style lang="scss" scoped>
-.pdf-edit {
+.pdf-view {
   height: 100%;
 
   > .i {

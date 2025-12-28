@@ -13,14 +13,11 @@
             <div v-show="item.diff" class="diff"></div>
           </template>
 
-          <div class="img" v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'">
-            <el-image
-              style="width: 80%; height: 80%"
-              :src="getFullPath(item.path)"
-              fit="contain"
-              :preview-src-list="[getFullPath(item.path)]"
-            />
-          </div>
+          <ImageView
+            v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'"
+            :src="item.path"
+            :list="item.list"
+          />
 
           <PdfEditor
             v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'"
@@ -78,6 +75,7 @@ import { storeToRefs } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
+import ImageView from '@/components/ImageView.vue'
 import PdfEditor from '@/components/PdfEditor.vue'
 
 import { FILE_MAP } from '@/utils/option'
@@ -179,14 +177,6 @@ watch(
           height: 100%;
           display: flex;
           flex-direction: column;
-
-          > .img {
-            height: 100%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
 
           > .no-open {
             height: 100%;

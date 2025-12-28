@@ -144,7 +144,10 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
 
 const openNode = (data: TreeNodeData) => {
   if (data.leaf) {
-    editor.add(data.value, { keep: false })
+    editor.add(data.value, {
+      keep: false,
+      list: treeRef.value?.getNode(data.value)?.parent?.childNodes?.map((i) => i.data.value) || [],
+    })
   }
 }
 </script>

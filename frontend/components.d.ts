@@ -28,7 +28,9 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
     FileView: typeof import('./src/components/FileView.vue')['default']
+    ImageView: typeof import('./src/components/ImageView.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+    PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
   }
 }
 
@@ -50,5 +52,7 @@ declare global {
   const ElTooltip: typeof import('element-plus/es')['ElTooltip']
   const ElTree: typeof import('element-plus/es')['ElTree']
   const FileView: typeof import('./src/components/FileView.vue')['default']
+  const ImageView: typeof import('./src/components/ImageView.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+  const PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
 }

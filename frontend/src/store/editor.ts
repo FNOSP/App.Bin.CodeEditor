@@ -11,6 +11,7 @@ interface ViewModel {
   path: string
   diff: boolean
   keep: boolean
+  list: string[]
 }
 
 export const useEditorStore = defineStore('editor', () => {
@@ -24,7 +25,11 @@ export const useEditorStore = defineStore('editor', () => {
 
   const add = (
     path: ViewModel['path'],
-    opt: { keep?: boolean; history?: boolean } = { keep: true, history: true },
+    opt: { keep?: boolean; history?: boolean; list?: string[] } = {
+      keep: true,
+      history: true,
+      list: [],
+    },
   ) => {
     if (!path) {
       return
@@ -32,11 +37,12 @@ export const useEditorStore = defineStore('editor', () => {
 
     const keep = opt.keep === undefined ? true : opt.keep
     const history = opt.history === undefined ? true : opt.history
+    const list = opt.list === undefined ? [] : opt.list
 
     const index = view.findIndex((i) => i.path === path)
 
     if (index === -1) {
-      view.push({ path, diff: false, keep })
+      view.push({ path, diff: false, keep, list })
     }
 
     active.value = path

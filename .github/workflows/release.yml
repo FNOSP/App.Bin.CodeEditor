@@ -79,12 +79,12 @@ jobs:
       - name: Rename arm package
         run: mv code.editor.fpk code.editor.arm.fpk
 
-      - name: Release
-        uses: ncipollo/release-action@v1.20.0
-        with:
-          tag: v${{ steps.read_version.outputs.version}}
-          name: v${{ steps.read_version.outputs.version}}
-          body: |
-            [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
-          artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Release
+      #   uses: ncipollo/release-action@v1.20.0
+      #   with:
+      #     tag: v${{ steps.read_version.outputs.version}}
+      #     name: v${{ steps.read_version.outputs.version}}
+      #     body: |
+      #       [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
+      #     artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
+      #     token: ${{ secrets.GITHUB_TOKEN }}

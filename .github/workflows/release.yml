@@ -24,10 +24,10 @@ jobs:
           node-version: "20.19.6"
 
       - name: Install
-        run: npm install
+        run: npm run install
 
-      - name: Build Server
-        run: npm run build:server
+      - name: Build frontend
+        run: npm run build:frontend
 
       - name: Get version
         id: read_version
@@ -49,17 +49,30 @@ jobs:
         run: |
           sed -i "s|changelog=changelog|changelog=${{ steps.read_log.outputs.changelog }}|" app/manifest
 
-      - name: Build Package
+      - name: Build x86 backend
+        run: npm run build:backend
+
+      - name: Update x86 platform in manifest file
+        run: |
+          sed -i "s|platform=platform|platform=x86|" app/manifest
+
+      - name: Build x86 package
         run: |
           chmod +x ./build/fnpack-1.0.4-linux-amd64
           ./build/fnpack-1.0.4-linux-amd64 build app
 
-      - name: Release
-        uses: ncipollo/release-action@v1.20.0
-        with:
-          tag: v${{ steps.read_version.outputs.version}}
-          name: v${{ steps.read_version.outputs.version}}
-          body: |
-            [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
-          artifacts: "code.editor.fpk"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build x86 package
+        run: mv code.editor.fpk code.editor.x86.fpk
+
+      - name: Show files
+        run: ls
+
+      # - name: Release
+      #   uses: ncipollo/release-action@v1.20.0
+      #   with:
+      #     tag: v${{ steps.read_version.outputs.version}}
+      #     name: v${{ steps.read_version.outputs.version}}
+      #     body: |
+      #       [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
+      #     artifacts: "code.editor.fpk"
+      #     token: ${{ secrets.GITHUB_TOKEN }}

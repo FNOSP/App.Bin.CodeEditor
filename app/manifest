@@ -4,7 +4,7 @@ changelog=changelog
 desc=`<div>VS Code 同源库，多种编码文件的操作，更有语法高亮、代码补全、目录管理和图片预览。</div><div>多数文件可双击文件或右键选择代码编辑器打开，部分文件可右键【详细信息】-【复制原始路径】，点击桌面图标访问后粘贴路径打开。</div>
 <div>程序已开源，欢迎 Star，欢迎 <a href="https://github.com/FNOSP/App.Bin.CodeEditor/issues" target="_blank">Issues</a></div>
 <div>提示：移动端暂未做 UI 适配，访问可能布局错乱。</div>`
-arch=x86_64
+platform=platform
 display_name=代码编辑器
 maintainer=Flex_7746
 distributor=Flex_7746

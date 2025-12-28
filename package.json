@@ -9,7 +9,8 @@
     "dev:backend": "npm run dev --prefix=backend",
     "build:frontend": "npm run build --prefix=frontend",
     "build:backend": "npm run build --prefix=backend",
-    "build:server": "npm run build:frontend && npm run build:backend",
-    "build": "npm run build:server && fnpack build app"
+    "build:backend:arm": "npm run build:arm --prefix=backend",
+    "build": "npm run build:frontend && npm run build:backend && fnpack build app",
+    "build:arm": "npm run build:frontend && npm run build:backend:arm && fnpack build app"
   }
 }

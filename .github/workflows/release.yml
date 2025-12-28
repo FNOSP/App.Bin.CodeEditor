@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-release:
     name: Build Project and Create Release
-    runs-on: ubuntu-24.04-arm64
+    runs-on: macos-latest
     permissions:
       contents: write
 
@@ -63,10 +63,6 @@ jobs:
 
       - name: Rename x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
-
-      - name: Clear
-        run: |
-          rm -rf ~/.pkg-cache
 
       - name: Build arm backend
         run: npm run build:backend:arm

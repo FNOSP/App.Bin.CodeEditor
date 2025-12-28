@@ -22,6 +22,11 @@
             />
           </div>
 
+          <PdfEditor
+            v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'"
+            :src="getFullPath(item.path)"
+          />
+
           <div
             class="no-open"
             v-else-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]"
@@ -73,6 +78,7 @@ import { storeToRefs } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
+import PdfEditor from '@/components/PdfEditor.vue'
 
 import { FILE_MAP } from '@/utils/option'
 import { getFileName, getFileSuffix, getFullPath } from '@/utils/file'

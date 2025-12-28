@@ -42,6 +42,7 @@ export const FILE_MAP: { [x: string]: string } = {
   avif: 'img',
   apng: 'img',
   ico: 'img',
+  pdf: 'pdf',
   zip: 'zip',
   rar: 'zip',
   '7z': 'zip',

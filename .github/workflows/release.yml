@@ -61,11 +61,8 @@ jobs:
           chmod +x ./build/fnpack-1.0.4-linux-amd64
           ./build/fnpack-1.0.4-linux-amd64 build app
 
-      - name: Build x86 package
+      - name: Rename x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
-
-      - name: Clear x86 api
-        run: rm ./app/app/server/api
 
       - name: Build arm backend
         run: npm run build:backend:arm
@@ -79,11 +76,8 @@ jobs:
           chmod +x ./build/fnpack-1.0.4-linux-amd64
           ./build/fnpack-1.0.4-linux-amd64 build app
 
-      - name: Build arm package
+      - name: Rename arm package
         run: mv code.editor.fpk code.editor.arm.fpk
-
-      - name: Show files
-        run: ls
 
       - name: Release
         uses: ncipollo/release-action@v1.20.0

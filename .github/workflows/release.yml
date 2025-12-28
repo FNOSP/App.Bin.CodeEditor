@@ -64,6 +64,9 @@ jobs:
       - name: Build x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
 
+      - name: Clear x86 api
+        run: rm ./app/app/server/api
+
       - name: Build arm backend
         run: npm run build:backend:arm
 

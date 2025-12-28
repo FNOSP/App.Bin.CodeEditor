@@ -64,6 +64,21 @@ jobs:
       - name: Build x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
 
+      - name: Build arm backend
+        run: npm run build:backend:arm
+
+      - name: Update arm platform in manifest file
+        run: |
+          sed -i "s|platform=platform|platform=arm|" app/manifest
+
+      - name: Build arm package
+        run: |
+          chmod +x ./build/fnpack-1.0.4-linux-amd64
+          ./build/fnpack-1.0.4-linux-amd64 build app
+
+      - name: Build arm package
+        run: mv code.editor.fpk code.editor.arm.fpk
+
       - name: Show files
         run: ls
 

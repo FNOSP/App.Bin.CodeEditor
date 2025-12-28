@@ -37,7 +37,7 @@ jobs:
 
       - name: Update version in manifest file
         run: |
-          sed -i "s/version=0.0.1/version=${{ steps.read_version.outputs.version }}/" app/manifest
+          sed -i "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
 
       - name: Get changelog
         id: read_log

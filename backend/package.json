@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "node --watch src/koa.js",
     "build": "pkg -t node18-linux-x64 ./src/cgi.js --output ../app/app/server/api",
-    "build:arm": "pkg -t node18-linux-arm64 ./src/cgi.js --output ../app/app/server/api -d"
+    "build:arm": "pkg -t node18-linux-arm64 ./src/cgi.js --output ../app/app/server/api"
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",

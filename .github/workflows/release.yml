@@ -64,6 +64,10 @@ jobs:
       - name: Rename x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
 
+      - name: Clear
+        run: |
+          rm -rf ~/.pkg-cache
+
       - name: Build arm backend
         run: npm run build:backend:arm
 

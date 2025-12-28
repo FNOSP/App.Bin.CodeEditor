@@ -69,7 +69,7 @@ jobs:
 
       - name: Update arm platform in manifest file
         run: |
-          sed -i "s|platform=platform|platform=arm|" app/manifest
+          sed -i "s|platform=x86|platform=arm|" app/manifest
 
       - name: Build arm package
         run: |

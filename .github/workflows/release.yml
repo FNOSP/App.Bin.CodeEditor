@@ -37,7 +37,7 @@ jobs:
 
       - name: Update version in manifest file
         run: |
-          sed -i "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
+          sed -i '' "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
 
       - name: Get changelog
         id: read_log
@@ -47,14 +47,14 @@ jobs:
 
       - name: Update changelog in manifest file
         run: |
-          sed -i "s|changelog=changelog|changelog=${{ steps.read_log.outputs.changelog }}|" app/manifest
+          sed -i '' "s|changelog=changelog|changelog=${{ steps.read_log.outputs.changelog }}|" app/manifest
 
       - name: Build x86 backend
         run: npm run build:backend
 
       - name: Update x86 platform in manifest file
         run: |
-          sed -i "s|platform=platform|platform=x86|" app/manifest
+          sed -i '' "s|platform=platform|platform=x86|" app/manifest
 
       - name: Build x86 package
         run: |
@@ -69,7 +69,7 @@ jobs:
 
       - name: Update arm platform in manifest file
         run: |
-          sed -i "s|platform=x86|platform=arm|" app/manifest
+          sed -i '' "s|platform=x86|platform=arm|" app/manifest
 
       - name: Build arm package
         run: |

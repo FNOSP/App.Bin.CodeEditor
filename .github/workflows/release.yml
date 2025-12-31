@@ -23,18 +23,25 @@ jobs:
         with:
           node-version: "20.19.6"
 
-      - name: Install
-        run: npm run install
-
-      - name: Build frontend
-        run: npm run build:frontend
-
+      # 读取 package.json 里的 version 和 changelog 作为 app/manifest 里的配置
       - name: Get version
         id: read_version
         run: |
           VERSION=$(jq -r '.version' package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Update version in manifest file
+        run: |
+          sed -i '' "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
+      - name: Get changelog
+        id: read_log
+        run: |
+          CHANGELOG=$(jq -r '.changelog' package.json)
+          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+      - name: Update changelog in manifest file
+        run: |
+          sed -i '' "s|changelog=changelog|changelog=${{ steps.read_log.outputs.changelog }}|" app/manifest
 
+      # 读取 CHANGELOG.md 里的更新记录
       - name: Get changelog body
         id: read_changelog
         run: |
@@ -47,55 +54,54 @@ jobs:
             found { print }
           ' CHANGELOG.md > RELEASE_NOTES.md
 
-      - name: Update version in manifest file
-        run: |
-          sed -i '' "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
+      # 查看 RELEASE_NOTES.md
+      - name: RELEASE_NOTES.md
+        run: cat RELEASE_NOTES.md
 
-      - name: Get changelog
-        id: read_log
-        run: |
-          CHANGELOG=$(jq -r '.changelog' package.json)
-          echo "changelog=$CHANGELOG" >> $GITHUB_OUTPUT
+      # 安装所有依赖
+      - name: Install
+        run: npm run install
 
-      - name: Update changelog in manifest file
-        run: |
-          sed -i '' "s|changelog=changelog|changelog=${{ steps.read_log.outputs.changelog }}|" app/manifest
+      # 打包前端代码
+      - name: Build frontend
+        run: npm run build:frontend
 
+      # 打包 x86 文件
       - name: Build x86 backend
         run: npm run build:backend
-
       - name: Update x86 platform in manifest file
         run: |
           sed -i '' "s|platform=platform|platform=x86|" app/manifest
-
       - name: Build x86 package
         run: |
           chmod +x ./build/fnpack-1.0.4-darwin-arm64
           ./build/fnpack-1.0.4-darwin-arm64 build app
-
       - name: Rename x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
 
+      # 打包 arm 文件
       - name: Build arm backend
         run: npm run build:backend:arm
-
       - name: Update arm platform in manifest file
         run: |
           sed -i '' "s|platform=x86|platform=arm|" app/manifest
-
       - name: Build arm package
         run: |
           chmod +x ./build/fnpack-1.0.4-darwin-arm64
           ./build/fnpack-1.0.4-darwin-arm64 build app
-
       - name: Rename arm package
         run: mv code.editor.fpk code.editor.arm.fpk
 
-      - name: Release
-        uses: ncipollo/release-action@v1.20.0
-        with:
-          tag: v${{ steps.read_version.outputs.version}}
-          name: v${{ steps.read_version.outputs.version}}
-          body_path: RELEASE_NOTES.md
-          artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      # 发布文件
+      # - name: Release
+      #   uses: ncipollo/release-action@v1.20.0
+      #   with:
+      #     tag: v${{ steps.read_version.outputs.version}}
+      #     name: v${{ steps.read_version.outputs.version}}
+      #     body_path: RELEASE_NOTES.md
+      #     artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 查看所有文件
+      - name: Files
+        run: ls

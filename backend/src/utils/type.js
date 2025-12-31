@@ -1,6 +1,7 @@
 const mimeMap = {
   // 文本类型
   css: "text/css",
+  mjs: "text/javascript",
   js: "text/javascript",
   html: "text/html",
   htm: "text/html",

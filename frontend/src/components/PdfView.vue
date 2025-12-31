@@ -43,13 +43,15 @@
     </div>
 
     <div class="body">
-      <div class="left" v-show="left.outline">
+      <div class="left" v-show="left.outline" :style="{ width: `${left.width}px` }">
         <el-tree
           :data="outline"
           :props="{ children: 'items', label: 'title' }"
           :expand-on-click-node="false"
           @node-click="outlineClick"
         />
+
+        <ClickMove @move="(v) => changeLeftWidth(v.x)" />
       </div>
       <div class="right">
         <div class="pages" ref="views" @scroll="onScroll">
@@ -75,6 +77,8 @@ import { debounce } from 'lodash'
 import * as pdfjsLib from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
+import ClickMove from '@/components/ClickMove.vue'
+
 import { getFullPath } from '@/utils/file'
 import type { TreeNodeData } from 'element-plus'
 
@@ -88,7 +92,7 @@ interface OutlineModel {
 
 const $props = defineProps<{ src: string }>()
 
-const left = ref({ outline: true })
+const left = ref({ outline: true, width: 240 })
 
 const pdf = ref<pdfjsLib.PDFDocumentProxy>()
 const params = ref({ dpr: 1, width: 0, height: 0 })
@@ -196,6 +200,16 @@ const outlineClick = async (data: TreeNodeData) => {
     changeCur(page + 1)
   }
 }
+
+const changeLeftWidth = (v: number) => {
+  const newVal = left.value.width + v
+
+  if (newVal > 500 || newVal < 200) {
+    return
+  }
+
+  left.value.width = newVal
+}
 </script>
 
 <style lang="scss" scoped>
@@ -235,7 +249,6 @@ const outlineClick = async (data: TreeNodeData) => {
 
     > .left {
       position: relative;
-      width: 300px;
       border-right: 1px solid var(--el-border-color);
 
       > .el-tree {
@@ -245,6 +258,20 @@ const outlineClick = async (data: TreeNodeData) => {
         height: 100%;
         width: 100%;
         overflow: auto;
+      }
+
+      > .click-move {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 7px;
+        transform: translateX(4px);
+        cursor: e-resize;
+
+        &:hover {
+          background-color: var(--el-text-color-placeholder);
+        }
       }
     }
 

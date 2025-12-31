@@ -23,7 +23,7 @@ watchEffect(async () => {
   top: 0;
   height: 100%;
   width: 100%;
-  padding: 20px;
+  padding: 0 20px;
   box-sizing: border-box;
   overflow: auto;
 }

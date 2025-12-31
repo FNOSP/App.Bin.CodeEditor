@@ -35,6 +35,18 @@ jobs:
           VERSION=$(jq -r '.version' package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      - name: Get changelog body
+        id: read_changelog
+        run: |
+          awk -v ver="${{ steps.read_version.outputs.version }}" '
+            /^## / {
+              if (found) exit
+              if ($0 ~ "^## " ver "( |$)" ) { found=1; print; next }
+              next
+            }
+            found { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+
       - name: Update version in manifest file
         run: |
           sed -i '' "s|version=0.0.1|version=${{ steps.read_version.outputs.version }}|" app/manifest
@@ -84,7 +96,6 @@ jobs:
         with:
           tag: v${{ steps.read_version.outputs.version}}
           name: v${{ steps.read_version.outputs.version}}
-          body: |
-            [更新日志](https://github.com/FNOSP/App.Bin.CodeEditor/blob/main/CHANGELOG.md)
+          body_path: RELEASE_NOTES.md
           artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
           token: ${{ secrets.GITHUB_TOKEN }}

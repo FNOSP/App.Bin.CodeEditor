@@ -2,7 +2,7 @@
   <div style="flex: 1; position: relative">
     <MonacoEditor
       v-if="code.lang"
-      v-show="!mdView"
+      v-show="!showMdView"
       v-model:value="code.value"
       :language="code.lang"
       :theme="like.cfg.theme"
@@ -10,7 +10,7 @@
       @editorDidMount="editorDidMount"
     />
 
-    <MdView v-show="mdView" :text="code.value" />
+    <MdView v-show="showMdView" :text="code.value" />
   </div>
 
   <div class="footer">
@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
 import * as iconv from 'iconv-lite'
 
@@ -80,6 +80,8 @@ const $emit = defineEmits<{ diff: [v: boolean]; error: [v?: string] }>()
 const like = useLikeStore()
 
 const mdView = ref(like.cfg.fileMdView)
+
+const showMdView = computed(() => code.lang === 'markdown' && mdView)
 
 defineExpose({
   save: () => save(),

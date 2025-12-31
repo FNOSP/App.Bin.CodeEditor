@@ -1,19 +1,30 @@
 <template>
-  <div style="flex: 1">
+  <div style="flex: 1; position: relative">
     <MonacoEditor
       v-if="code.lang"
+      v-show="!mdView"
       v-model:value="code.value"
       :language="code.lang"
       :theme="like.cfg.theme"
       :options="{ automaticLayout: true, ...like.cfg.editorOption }"
       @editorDidMount="editorDidMount"
     />
+
+    <MdView v-show="mdView" :text="code.value" />
   </div>
 
   <div class="footer">
     <div class="developed">Developed by Flex_7746</div>
 
     <div style="flex: 1"></div>
+
+    <el-switch
+      v-if="code.lang === 'markdown'"
+      v-model="mdView"
+      inline-prompt
+      active-text="预览"
+      inactive-text="源码"
+    />
 
     <el-select
       v-model="code.lang"
@@ -50,9 +61,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
 import * as iconv from 'iconv-lite'
+
+import MdView from '@/components/MdView.vue'
 
 import { useLikeStore } from '@/store/like'
 
@@ -65,6 +78,8 @@ const $props = defineProps<{ path: string }>()
 const $emit = defineEmits<{ diff: [v: boolean]; error: [v?: string] }>()
 
 const like = useLikeStore()
+
+const mdView = ref(like.cfg.fileMdView)
 
 defineExpose({
   save: () => save(),

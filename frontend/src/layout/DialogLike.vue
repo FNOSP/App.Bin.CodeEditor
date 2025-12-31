@@ -19,7 +19,7 @@
         <div class="item">
           <div class="label">启动时询问</div>
           <div class="value">
-            <el-switch v-model="cfg.startOpen" inline-prompt />
+            <el-switch v-model="cfg.startOpen" />
           </div>
         </div>
       </el-tab-pane>
@@ -27,7 +27,7 @@
         <div class="item">
           <div class="label">保存时确认</div>
           <div class="value">
-            <el-switch v-model="cfg.confirm" inline-prompt />
+            <el-switch v-model="cfg.confirm" />
           </div>
         </div>
 
@@ -47,6 +47,13 @@
               active-value="on"
               inactive-value="off"
             />
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="label">MD 打开时预览</div>
+          <div class="value">
+            <el-switch v-model="cfg.fileMdView" />
           </div>
         </div>
       </el-tab-pane>

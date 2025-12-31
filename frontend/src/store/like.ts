@@ -9,6 +9,7 @@ interface LikeModel {
   startOpen: boolean
   leftWidth: number
   confirm: boolean
+  fileMdView: boolean
   folderActive: string
   folderDefOpen: string
   folderHidePrefix: string[]
@@ -26,6 +27,9 @@ const getDef = (): LikeModel => ({
 
   // 安全性
   confirm: true, // 保存二次确认
+
+  // 文件
+  fileMdView: false, // md默认预览
 
   // 目录
   folderActive: '', // 当前打开的目录
@@ -57,6 +61,7 @@ export const useLikeStore = defineStore('like', () => {
         startOpen: cfg.value.startOpen,
         leftWidth: cfg.value.leftWidth,
         confirm: cfg.value.confirm,
+        fileMdView: cfg.value.confirm,
         folderDefOpen: cfg.value.folderDefOpen,
         folderHidePrefix: cfg.value.folderHidePrefix,
         editorOption: {

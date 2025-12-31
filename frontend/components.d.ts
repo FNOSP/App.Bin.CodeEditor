@@ -13,6 +13,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ClickMove: typeof import('./src/components/ClickMove.vue')['default']
+    copy: typeof import('./src/components/ImageView copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -29,6 +30,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     FileView: typeof import('./src/components/FileView.vue')['default']
     ImageView: typeof import('./src/components/ImageView.vue')['default']
+    MdView: typeof import('./src/components/MdView.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
     PdfView: typeof import('./src/components/PdfView.vue')['default']
   }
@@ -37,6 +39,7 @@ declare module 'vue' {
 // For TSX support
 declare global {
   const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
+  const copy: typeof import('./src/components/ImageView copy.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -53,6 +56,7 @@ declare global {
   const ElTree: typeof import('element-plus/es')['ElTree']
   const FileView: typeof import('./src/components/FileView.vue')['default']
   const ImageView: typeof import('./src/components/ImageView.vue')['default']
+  const MdView: typeof import('./src/components/MdView.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
   const PdfView: typeof import('./src/components/PdfView.vue')['default']
 }

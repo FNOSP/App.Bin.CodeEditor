@@ -39,3 +39,12 @@ npm run build
 
 - 服务端：服务端将接口和 node 环境，通过 pkg 打包成 linux 运行文件，在飞牛以 cgi 的方式进行调用和返回。
 - 客户端：vite 打包后，将引入文件通过服务端 api 加载
+
+## 鸣谢
+
+感谢以下开源项目：
+
+- [monaco-editor](https://github.com/microsoft/monaco-editor)
+- [monaco-editor-vue3](https://github.com/bazingaedward/monaco-editor-vue3)
+- [pdfjs](https://github.com/mozilla/pdf.js)
+- [marked](https://github.com/markedjs/marked)

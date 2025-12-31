@@ -16,6 +16,7 @@
     "element-plus": "^2.11.9",
     "iconv-lite": "^0.7.0",
     "lodash": "^4.17.21",
+    "marked": "^17.0.1",
     "monaco-editor": "^0.54.0",
     "monaco-editor-vue3": "^1.0.4",
     "normalize.css": "^8.0.1",

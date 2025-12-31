@@ -31,6 +31,7 @@ declare module 'vue' {
     ImageView: typeof import('./src/components/ImageView.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
     PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
+    PdfView: typeof import('./src/components/PdfView.vue')['default']
   }
 }
 
@@ -55,4 +56,5 @@ declare global {
   const ImageView: typeof import('./src/components/ImageView.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
   const PdfEditor: typeof import('./src/components/PdfEditor.vue')['default']
+  const PdfView: typeof import('./src/components/PdfView.vue')['default']
 }

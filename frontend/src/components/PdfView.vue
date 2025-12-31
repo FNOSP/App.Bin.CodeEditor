@@ -1,14 +1,14 @@
 <template>
   <div class="pdf-view" v-if="pages.length">
     <div class="head">
-      <!-- <el-icon><Notebook /></el-icon>
-
-      <el-icon><Collection /></el-icon> -->
+      <el-icon :class="{ active: left.outline }" @click="left.outline = !left.outline">
+        <Notebook />
+      </el-icon>
 
       <div style="flex: 1"></div>
 
       <el-input-number
-        v-model="params.scale"
+        v-model="option.scale"
         :min="10"
         :max="200"
         :step="10"
@@ -43,7 +43,14 @@
     </div>
 
     <div class="body">
-      <div class="left" v-show="!1"></div>
+      <div class="left" v-show="left.outline">
+        <el-tree
+          :data="outline"
+          :props="{ children: 'items', label: 'title' }"
+          :expand-on-click-node="false"
+          @node-click="outlineClick"
+        />
+      </div>
       <div class="right">
         <div class="pages" ref="views" @scroll="onScroll">
           <div v-for="(_, i) in pages" :key="i" class="i">
@@ -62,23 +69,33 @@
 
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, toRaw, useTemplateRef } from 'vue'
-// import { Notebook, Collection } from '@element-plus/icons-vue'
+import { Notebook } from '@element-plus/icons-vue'
 import { debounce } from 'lodash'
 
 import * as pdfjsLib from 'pdfjs-dist'
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 import { getFullPath } from '@/utils/file'
+import type { TreeNodeData } from 'element-plus'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl
 
+interface OutlineModel {
+  title: string
+  dest: any
+  items: OutlineModel[]
+}
+
 const $props = defineProps<{ src: string }>()
 
+const left = ref({ outline: true })
+
 const pdf = ref<pdfjsLib.PDFDocumentProxy>()
-const params = ref({ timer: 0, scale: 100, dpr: 1, width: 0, height: 0 })
-const option = ref({ cur: 0 })
+const params = ref({ dpr: 1, width: 0, height: 0 })
+const option = ref({ scale: 100, cur: 0 })
 
 const pages = ref<(pdfjsLib.PDFPageProxy | undefined)[]>([])
+const outline = ref<OutlineModel[]>([])
 
 const canvasRef = useTemplateRef('canvas')
 const viewsRef = useTemplateRef('views')
@@ -92,6 +109,8 @@ onMounted(async () => {
   setSize()
 
   pages.value = Array.from({ length: task.numPages })
+
+  outline.value = await task.getOutline()
 
   nextTick(() => {
     Array.from({ length: 5 }).forEach((_, i) => loadPage(i))
@@ -111,10 +130,12 @@ const onScroll = debounce((e: Event) => {
 
   option.value.cur = progress > 0.9 ? curPage + 1 : curPage
 
-  // 加载上一页、当前页、下一页
+  // 加载上2页、上1页、当前页、下1页、下2页
+  loadPage(option.value.cur - 3)
   loadPage(option.value.cur - 2)
   loadPage(option.value.cur - 1)
   loadPage(option.value.cur)
+  loadPage(option.value.cur + 1)
 }, 300)
 
 const setSize = async () => {
@@ -123,7 +144,7 @@ const setSize = async () => {
   }
 
   const viewport = (await toRaw(pdf.value).getPage(1)).getViewport({
-    scale: params.value.scale / 100,
+    scale: option.value.scale / 100,
   })
   params.value.dpr = window.devicePixelRatio || 1
   params.value.width = viewport.width
@@ -138,7 +159,7 @@ const loadPage = async (index: number, force = false) => {
   }
 
   const page = await toRaw(pdf.value).getPage(index + 1)
-  const viewport = page.getViewport({ scale: params.value.scale / 100 })
+  const viewport = page.getViewport({ scale: option.value.scale / 100 })
 
   const ctx = canvas.getContext('2d')!
   ctx.setTransform(params.value.dpr, 0, 0, params.value.dpr, 0, 0)
@@ -164,6 +185,16 @@ const changeCur = async (cur: number) => {
   }
 
   viewsRef.value.scrollTop = (cur - 1) * (params.value.height + 26)
+}
+
+const outlineClick = async (data: TreeNodeData) => {
+  const val = toRaw(data)
+
+  const page = await toRaw(pdf.value)?.getPageIndex(val.dest[0])
+
+  if (page !== undefined) {
+    changeCur(page + 1)
+  }
 }
 </script>
 
@@ -203,8 +234,18 @@ const changeCur = async (cur: number) => {
     display: flex;
 
     > .left {
-      width: 200px;
+      position: relative;
+      width: 300px;
       border-right: 1px solid var(--el-border-color);
+
+      > .el-tree {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+      }
     }
 
     > .right {

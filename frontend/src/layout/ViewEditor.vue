@@ -19,7 +19,7 @@
             :list="item.list"
           />
 
-          <PdfEditor v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'" :src="item.path" />
+          <PdfView v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'" :src="item.path" />
 
           <div
             class="no-open"
@@ -73,7 +73,7 @@ import { Plus } from '@element-plus/icons-vue'
 
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import ImageView from '@/components/ImageView.vue'
-import PdfEditor from '@/components/PdfEditor.vue'
+import PdfView from '@/components/PdfView.vue'
 
 import { FILE_MAP } from '@/utils/option'
 import { getFileName, getFileSuffix } from '@/utils/file'

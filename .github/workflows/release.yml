@@ -48,7 +48,7 @@ jobs:
           awk -v ver="${{ steps.read_version.outputs.version }}" '
             /^## / {
               if (found) exit
-              if ($0 ~ "^## " ver "( |$)" ) { found=1; print; next }
+              if ($0 ~ "^## " ver "( |$)" ) { found=1; next }
               next
             }
             found { print }
@@ -93,14 +93,14 @@ jobs:
         run: mv code.editor.fpk code.editor.arm.fpk
 
       # 发布文件
-      # - name: Release
-      #   uses: ncipollo/release-action@v1.20.0
-      #   with:
-      #     tag: v${{ steps.read_version.outputs.version}}
-      #     name: v${{ steps.read_version.outputs.version}}
-      #     body_path: RELEASE_NOTES.md
-      #     artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          tag: v${{ steps.read_version.outputs.version}}
+          name: v${{ steps.read_version.outputs.version}}
+          bodyFile: RELEASE_NOTES.md
+          artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # 查看所有文件
       - name: Files

@@ -1,7 +1,7 @@
 appname=code.editor
 version=0.0.1
 changelog=changelog
-desc=`<div>支持多种文件编码，更有语法高亮、代码补全、目录管理、多图预览、PDF预览、Markdown预览等丰富功能。</div><div>多数文件可双击文件或右键选择代码编辑器打开，部分文件可右键【详细信息】-【复制原始路径】，点击桌面图标访问后粘贴路径打开。</div><div>程序已开源，欢迎 Star，欢迎 <a href="https://github.com/FNOSP/App.Bin.CodeEditor/issues" target="_blank">Issues</a></div><div>提示：移动端暂未做 UI 适配，访问可能布局错乱。</div>`
+desc=`<div>支持多种文件编码，更有语法高亮、代码补全、目录管理、多图预览、PDF预览、Markdown预览等丰富功能。</div><div>多数文件可双击文件或右键选择代码编辑器打开，部分文件可右键【详细信息】-【复制原始路径】，点击桌面图标访问后粘贴路径打开，<a href="https://club.fnnas.com/forum.php?mod=viewthread&tid=42587" target="_blank">点此查看详细操作指南</a>。</div><div>程序已开源，欢迎 Star，欢迎 <a href="https://github.com/FNOSP/App.Bin.CodeEditor/issues" target="_blank">Issues</a></div><div>提示：移动端暂未做 UI 适配，访问可能布局错乱。</div>`
 platform=platform
 display_name=代码编辑器
 maintainer=Flex_7746

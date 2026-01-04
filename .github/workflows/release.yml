@@ -52,11 +52,11 @@ jobs:
               next
             }
             found { print }
-          ' CHANGELOG.md > RELEASE_NOTES.md
+          ' CHANGELOG.md >> RELEASE.md
 
-      # 查看 RELEASE_NOTES.md
-      - name: RELEASE_NOTES.md
-        run: cat RELEASE_NOTES.md
+      # 查看 RELEASE.md
+      - name: RELEASE.md
+        run: cat RELEASE.md
 
       # 安装所有依赖
       - name: Install
@@ -95,7 +95,7 @@ jobs:
         with:
           tag: v${{ steps.read_version.outputs.version}}
           name: v${{ steps.read_version.outputs.version}}
-          bodyFile: RELEASE_NOTES.md
+          bodyFile: RELEASE.md
           artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
           token: ${{ secrets.GITHUB_TOKEN }}
 

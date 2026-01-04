@@ -10,15 +10,23 @@
 
     <div style="flex: 1"></div>
 
-    <div class="item" :class="{ active: like.open }" @click="like.open = true">
-      <el-icon><Setting /></el-icon>
-    </div>
+    <el-tooltip content="独立窗口" placement="right">
+      <div class="item" @click="windowOpen()">
+        <el-icon><Notification /></el-icon>
+      </div>
+    </el-tooltip>
+
+    <el-tooltip content="偏好设置" placement="right">
+      <div class="item" @click="like.open = true">
+        <el-icon><Setting /></el-icon>
+      </div>
+    </el-tooltip>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { Folder, Timer, Setting } from '@element-plus/icons-vue'
+import { Folder, Timer, Notification, Setting } from '@element-plus/icons-vue'
 
 import { useMenuStore } from '@/store/menu'
 import { useUserStore } from '@/store/user'
@@ -33,6 +41,8 @@ onMounted(() => {
     menu.toggle('folder')
   }
 })
+
+const windowOpen = () => window.open('./')
 </script>
 
 <style lang="scss">

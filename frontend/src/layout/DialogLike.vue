@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div class="item">
+        <!-- <div class="item">
           <el-popover
             title="实验性功能"
             content="开关控制任何文件均双击或右键选择代码编辑器启动，开关后请刷新 Web 界面"
@@ -87,7 +87,7 @@
           <div class="value">
             <el-switch v-model="cfg.fileAllOpen" />
           </div>
-        </div>
+        </div> -->
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">
@@ -131,7 +131,7 @@
 <script lang="ts" setup>
 import { watch, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { Warning } from '@element-plus/icons-vue'
+// import { Warning } from '@element-plus/icons-vue'
 
 import { THEME_OPTIONS } from '@/utils/option'
 

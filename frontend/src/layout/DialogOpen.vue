@@ -15,11 +15,7 @@
     <el-tabs v-model="show">
       <el-tab-pane label="文件" name="file">
         <div class="view-dialog">
-          <el-input
-            v-model="input"
-            placeholder="请输入文件路径（不存在的文件编辑后可直接新增）"
-            class="input"
-          >
+          <el-input v-model="input" placeholder="请输入文件路径（不存在的文件编辑后可直接新增）" class="input">
             <template #append>
               <el-button @click="editor.add(input)">确认</el-button>
             </template>
@@ -32,12 +28,7 @@
             </div>
 
             <div class="list">
-              <div
-                class="item"
-                v-for="item in open.history"
-                :key="item.path"
-                @click="editor.add(item.path)"
-              >
+              <div class="item" v-for="item in open.history" :key="item.path" @click="editor.add(item.path)">
                 <div class="t">{{ item.path }}</div>
                 <div style="flex: 1"></div>
                 <el-icon class="i" @click.stop="open.removeHistory(item.path)"><Close /></el-icon>
@@ -58,13 +49,7 @@
           <div class="title">
             <div class="t">我的目录</div>
 
-            <el-select
-              v-model="cfg.folderDefOpen"
-              size="small"
-              clearable
-              style="width: 200px"
-              placeholder="选择目录"
-            >
+            <el-select v-model="cfg.folderDefOpen" size="small" clearable style="width: 200px" placeholder="选择目录">
               <el-option-group label="启动时默认打开">
                 <el-option v-for="item in user.cfg.dir" :key="item" :label="item" :value="item" />
               </el-option-group>

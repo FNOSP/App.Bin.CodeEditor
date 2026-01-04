@@ -4,7 +4,7 @@ import axios from 'axios'
 import { cloneDeep, debounce } from 'lodash'
 
 import localStorage from '@/utils/localStorage'
-import { HOST, IS_DEV, USER_CONFIG_PATH } from '@/utils/env'
+import { HOST, IS_DEV, APP_DIR_PATH } from '@/utils/env'
 
 import { useLikeStore } from '@/store/like'
 
@@ -29,6 +29,8 @@ interface LikeModel {
   folderDefOpen: string // 默认开启目录
   folderHidePrefix: string[] // 隐藏的文件前缀
 }
+
+const USER_CONFIG_PATH = `${APP_DIR_PATH}/config.json`
 
 const getDef = (): LikeModel => ({
   // 全局配置

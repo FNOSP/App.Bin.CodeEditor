@@ -13,18 +13,11 @@
             <div v-show="item.diff" class="diff"></div>
           </template>
 
-          <ImageView
-            v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'"
-            :src="item.path"
-            :list="item.list"
-          />
+          <ImageView v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'" :src="item.path" :list="item.list" />
 
           <PdfView v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'" :src="item.path" />
 
-          <div
-            class="no-open"
-            v-else-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]"
-          >
+          <div class="no-open" v-else-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]">
             <div class="t">{{ errorMap[item.path] || '不支持二进制文件的编辑' }}</div>
           </div>
 
@@ -91,10 +84,7 @@ const errorMap = ref<{ [x: string]: string | undefined }>({})
 
 watch(
   () => active.value,
-  () =>
-    editor.view.forEach(
-      (item) => active.value !== item.path && !item.keep && editor.remove(item.path),
-    ),
+  () => editor.view.forEach((item) => active.value !== item.path && !item.keep && editor.remove(item.path)),
 )
 </script>
 

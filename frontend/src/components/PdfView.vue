@@ -7,15 +7,7 @@
 
       <div style="flex: 1"></div>
 
-      <el-input-number
-        v-model="option.scale"
-        :min="10"
-        :max="200"
-        :step="10"
-        size="small"
-        @change="changeScale"
-        style="width: 140px"
-      >
+      <el-input-number v-model="option.scale" :min="10" :max="200" :step="10" size="small" @change="changeScale" style="width: 140px">
         <template #prefix>
           <span>比例</span>
         </template>
@@ -44,12 +36,7 @@
 
     <div class="body">
       <div class="left" v-show="left.outline" :style="{ width: `${left.width}px` }">
-        <el-tree
-          :data="outline"
-          :props="{ children: 'items', label: 'title' }"
-          :expand-on-click-node="false"
-          @node-click="outlineClick"
-        />
+        <el-tree :data="outline" :props="{ children: 'items', label: 'title' }" :expand-on-click-node="false" @node-click="outlineClick" />
 
         <ClickMove @move="(v) => changeLeftWidth(v.x)" />
       </div>

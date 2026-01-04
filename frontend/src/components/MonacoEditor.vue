@@ -21,44 +21,14 @@
 
     <div class="info">{{ code.value.length }} 个字符</div>
 
-    <el-switch
-      v-if="code.lang === 'markdown'"
-      v-model="mdView"
-      inline-prompt
-      active-text="预览"
-      inactive-text="源码"
-    />
+    <el-switch v-if="code.lang === 'markdown'" v-model="mdView" inline-prompt active-text="预览" inactive-text="源码" />
 
-    <el-select
-      v-model="code.lang"
-      style="width: 120px"
-      size="small"
-      filterable
-      placement="top"
-      @change="changeLang"
-    >
-      <el-option
-        v-for="item in LANG_OPTIONS"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+    <el-select v-model="code.lang" style="width: 120px" size="small" filterable placement="top" @change="changeLang">
+      <el-option v-for="item in LANG_OPTIONS" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
 
-    <el-select
-      v-model="code.encode"
-      style="width: 120px"
-      size="small"
-      filterable
-      placement="top-end"
-      @change="changeEncode"
-    >
-      <el-option
-        v-for="item in ENCODING_OPTIONS"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+    <el-select v-model="code.encode" style="width: 120px" size="small" filterable placement="top-end" @change="changeEncode">
+      <el-option v-for="item in ENCODING_OPTIONS" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
   </div>
 </template>

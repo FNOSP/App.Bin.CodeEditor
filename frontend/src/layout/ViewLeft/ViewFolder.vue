@@ -66,12 +66,7 @@ import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
 
-import {
-  type TreeInstance,
-  type TreeData,
-  type TreeNodeData,
-  type RenderContentContext,
-} from 'element-plus'
+import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
 const editor = useEditorStore()
 const like = useLikeStore()
@@ -95,11 +90,7 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    await axios.post(
-      HOST,
-      { encode: 'utf8', path, value: '', force: 1 },
-      { params: { _api: 'save' } },
-    )
+    await axios.post(HOST, { encode: 'utf8', path, value: '', force: 1 }, { params: { _api: 'save' } })
 
     editor.add(path, { keep: false })
 

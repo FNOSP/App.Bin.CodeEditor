@@ -8,12 +8,7 @@
           </div>
           <div class="value">
             <el-select v-model="cfg.theme" size="small">
-              <el-option
-                v-for="item in THEME_OPTIONS"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in THEME_OPTIONS" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </div>
         </div>
@@ -51,12 +46,7 @@
             <div class="t">自动换行</div>
           </div>
           <div class="value">
-            <el-switch
-              v-model="cfg.editorOption.wordWrap"
-              inline-prompt
-              active-value="on"
-              inactive-value="off"
-            />
+            <el-switch v-model="cfg.editorOption.wordWrap" inline-prompt active-value="on" inactive-value="off" />
           </div>
         </div>
 
@@ -95,12 +85,7 @@
             <div class="t">默认打开</div>
           </div>
           <div class="value">
-            <el-select
-              v-model="cfg.folderDefOpen"
-              size="small"
-              clearable
-              placeholder="启动时默认打开某个目录"
-            >
+            <el-select v-model="cfg.folderDefOpen" size="small" clearable placeholder="启动时默认打开某个目录">
               <el-option v-for="item in user.cfg.dir" :key="item" :label="item" :value="item" />
             </el-select>
           </div>
@@ -145,9 +130,7 @@ const { open } = storeToRefs(like)
 const { cfg } = storeToRefs(user)
 
 watchEffect(() => {
-  document.documentElement.className = THEME_OPTIONS.find((i) => i.value === cfg.value.theme)?.dark
-    ? 'dark'
-    : ''
+  document.documentElement.className = THEME_OPTIONS.find((i) => i.value === cfg.value.theme)?.dark ? 'dark' : ''
 })
 
 watch(cfg, user.update, { deep: true })

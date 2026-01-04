@@ -69,9 +69,6 @@ jobs:
       # 打包 x86 文件
       - name: Build x86 backend
         run: npm run build:backend
-      - name: Update x86 platform in manifest file
-        run: |
-          sed -i '' "s|platform=platform|platform=x86|" app/manifest
       - name: Build x86 package
         run: |
           chmod +x ./build/fnpack-1.0.4-darwin-arm64

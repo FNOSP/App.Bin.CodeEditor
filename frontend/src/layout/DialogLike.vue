@@ -89,16 +89,6 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-
-    <template #footer>
-      <div style="display: flex; align-items: center; margin-top: 32px">
-        <el-button size="small" type="danger" @click="like.resetCfg()">恢复默认</el-button>
-
-        <div style="flex: 1"></div>
-
-        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">修改实时生效</div>
-      </div>
-    </template>
   </el-dialog>
 </template>
 

@@ -30,17 +30,27 @@ module.exports = async function read({ query }) {
       const itemStats = fs.statSync(fullPath);
 
       if (itemStats.isDirectory()) {
-        result.dirs.push(item);
+        result.dirs.push({
+          name: item,
+        });
       } else {
-        result.files.push(item);
+        result.files.push({
+          name: item,
+          size: itemStats.size,
+          updateDate: itemStats.mtime,
+        });
       }
     });
 
     result.files.sort((i, j) =>
-      (i || "").toLocaleLowerCase() > (j || "").toLocaleLowerCase() ? 1 : -1
+      (i.name || "").toLocaleLowerCase() > (j.name || "").toLocaleLowerCase()
+        ? 1
+        : -1
     );
     result.dirs.sort((i, j) =>
-      (i || "").toLocaleLowerCase() > (j || "").toLocaleLowerCase() ? 1 : -1
+      (i.name || "").toLocaleLowerCase() > (j.name || "").toLocaleLowerCase()
+        ? 1
+        : -1
     );
 
     return {

@@ -135,7 +135,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 0 4px;
+  padding: 0 8px;
   background-color: var(--el-bg-color);
 
   > * {

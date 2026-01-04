@@ -122,7 +122,7 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
 
   const { data: result } = await axios.get<{
     code: number
-    data: { dirs: string[]; files: string[] }
+    data: { dirs: { name: string }[]; files: { name: string; size: number; updateDate: string }[] }
   }>(HOST, {
     params: { _api: 'dir', path: root },
   })
@@ -133,12 +133,19 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
 
   resolve(
     [
-      ...result.data.dirs.map((i) => ({ label: i, value: `${root}/${i}`, leaf: false, dir: true })),
+      ...result.data.dirs.map((i) => ({
+        label: i.name,
+        value: `${root}/${i.name}`,
+        leaf: false,
+        dir: true,
+      })),
       ...result.data.files.map((i) => ({
-        label: i,
-        value: `${root}/${i}`,
+        label: i.name,
+        value: `${root}/${i.name}`,
         leaf: true,
         dir: false,
+        size: i.size,
+        updateDate: i.updateDate,
       })),
     ].filter((i) => !user.cfg.folderHidePrefix.some((x) => i.label.indexOf(x) === 0)),
   )

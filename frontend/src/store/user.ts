@@ -1,7 +1,7 @@
-import { ref } from 'vue'
+import { ref, toRaw, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { debounce } from 'lodash'
+import { cloneDeep, debounce } from 'lodash'
 
 import localStorage from '@/utils/localStorage'
 import { HOST, IS_DEV, USER_CONFIG_PATH } from '@/utils/env'
@@ -17,6 +17,7 @@ interface LikeModel {
   // 文件
   confirm: boolean // 保存二次确认
   fileMdView: boolean // MD打开默认预览
+  fileAllOpen: boolean // Web端全文件支持
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -38,6 +39,7 @@ const getDef = (): LikeModel => ({
   // 文件
   confirm: true, // 保存二次确认
   fileMdView: false, // md默认预览
+  fileAllOpen: false, // Web端全文件支持
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小
@@ -58,6 +60,7 @@ export const useUserStore = defineStore('user', () => {
 
   const initialized = ref(false)
 
+  const org = ref(Object.assign({}, getDef(), localStorage.get(key)))
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
@@ -68,7 +71,8 @@ export const useUserStore = defineStore('user', () => {
     if (result1.code === 404) {
       await update()
     } else {
-      cfg.value = Object.assign(cfg.value, result1 as LikeModel)
+      org.value = Object.assign(org.value, cloneDeep(result1) as LikeModel)
+      cfg.value = Object.assign(cfg.value, cloneDeep(result1) as LikeModel)
     }
 
     like.cfg.folderActive = cfg.value.folderDefOpen || cfg.value.dir[0] || ''
@@ -89,7 +93,20 @@ export const useUserStore = defineStore('user', () => {
         params: { _api: 'save' },
       },
     )
+
+    org.value = cloneDeep(toRaw(cfg.value))
   }, 300)
+
+  watch(
+    () => cfg.value.fileAllOpen,
+    () => {
+      if (!initialized.value) {
+        return
+      }
+
+      axios.post(HOST, { open: Number(cfg.value.fileAllOpen) }, { params: { _api: 'def' } })
+    },
+  )
 
   return { initialized, cfg, load, update }
 })

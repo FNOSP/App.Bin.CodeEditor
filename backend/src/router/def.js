@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const wwwRoot = "/Users/flex/Downloads/111/000/test.nas321.top:7746";
+const wwwRoot = "/usr/trim/www";
 const wwwReg = /(?<=<script\s[^>]*?src=")\/assets\/index[^"]+(?=")/gi;
 
 const constReg =

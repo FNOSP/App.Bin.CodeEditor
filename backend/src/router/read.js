@@ -24,7 +24,6 @@ module.exports = async function read({ query }) {
       console.log(
         `Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`
       );
-      console.log(`Last-Modified: ${stat.mtime.toUTCString()}`);
       console.log(`ETag: "${stat.size}-${stat.mtime.getTime()}"`);
     }
 
@@ -33,6 +32,7 @@ module.exports = async function read({ query }) {
       msg: "操作成功",
       data: {
         size: stat.size,
+        time: stat.mtime.toUTCString(),
         filename: path.split("/").pop(),
         stream: fs.createReadStream(path),
       },

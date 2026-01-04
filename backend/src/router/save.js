@@ -30,7 +30,13 @@ module.exports = async function read({ body }) {
 
     fs.writeFileSync(path, iconv.encode(value, encode));
 
-    return { code: 200, msg: "操作成功", data: null };
+    const stat = fs.statSync(path);
+
+    return {
+      code: 200,
+      msg: "操作成功",
+      data: { size: stat.size, time: stat.mtime.toUTCString() },
+    };
   } catch (err) {
     if (err.code === "EACCES") {
       return { code: 401, msg: "权限不足，无法写入文件", data: body };

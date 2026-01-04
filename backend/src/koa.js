@@ -22,6 +22,7 @@ app.use(async (ctx) => {
   if (type) {
     ctx.set("Content-Type", type);
     ctx.set("Content-Length", body.size);
+    ctx.set("Last-Modified", body.time);
     ctx.body = body.stream;
   } else {
     ctx.set("Content-Type", "application/json; charset=utf-8");

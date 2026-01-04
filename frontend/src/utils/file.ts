@@ -1,6 +1,6 @@
 import { HOST } from '@/utils/env'
 
-export const getFileName = (v: string) => (v.split('/').pop() || '').toLocaleLowerCase()
+export const getFileName = (v: string) => v.split('/').pop() || ''
 
 export const getFileSuffix = (v: string) => (v.split('.').pop() || '').toLocaleLowerCase()
 
@@ -10,6 +10,29 @@ export const getFullPath = (path: string) => {
   }
 
   return `${HOST}?_api=read&path=${encodeURIComponent(path)}`
+}
+
+export const getSize = (byte: number) => {
+  if (byte < 1024) {
+    return `${byte} B`
+  }
+
+  const KB = byte / 1024
+  if (KB < 1024) {
+    return `${Number(KB.toFixed(2))} KB`
+  }
+
+  const MB = KB / 1024
+  if (MB < 1024) {
+    return `${Number(MB.toFixed(2))} MB`
+  }
+
+  const TB = MB / 1024
+  if (TB < 1024) {
+    return `${Number(TB.toFixed(2))} TB`
+  }
+
+  return ''
 }
 
 export async function isBinaryContent(blob: Blob) {

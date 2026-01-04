@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
 import { HOST } from '@/utils/env'
@@ -21,6 +21,8 @@ interface CodeModel {
   value: string
   lang: string
   encode: string
+  byte?: number
+  date?: dayjs.Dayjs
 }
 
 export default function useCode(option: OptionModel) {
@@ -42,7 +44,7 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data } = await axios.get(HOST, {
+      const { data, headers } = await axios.get(HOST, {
         params: { _api: 'read', path },
         responseType: 'blob',
       })
@@ -53,10 +55,11 @@ export default function useCode(option: OptionModel) {
         return
       }
 
+      code.byte = headers['content-length'] ? Number(headers['content-length']) : undefined
+      code.date = headers['last-modified'] ? dayjs(headers['last-modified']) : undefined
+
       code.blob = data
-
       code.path = path
-
       code.org = code.value = await data.text()
 
       const filename = path.split('/').pop() || ''
@@ -91,7 +94,11 @@ export default function useCode(option: OptionModel) {
 
   const upload = async (force?: 1) => {
     try {
-      const { data: value }: any = await axios.post(
+      const { data: value } = await axios.post<{
+        code: number
+        msg: string
+        data: { size: number; time: string }
+      }>(
         HOST,
         {
           encode: code.encode,
@@ -104,6 +111,9 @@ export default function useCode(option: OptionModel) {
 
       if (value.code === 200) {
         ElMessage({ type: 'success', message: '操作成功' })
+
+        code.byte = value.data.size
+        code.date = dayjs(value.data.time)
 
         code.org = code.value
 

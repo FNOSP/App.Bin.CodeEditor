@@ -14,9 +14,12 @@
   </div>
 
   <div class="footer">
-    <div class="developed">Developed by Flex_7746</div>
+    <div class="info" v-if="code.date">修改时间：{{ code.date.format('YYYY/MM/DD HH:mm:ss') }}</div>
+    <div class="info" v-if="code.byte !== undefined">文件大小：{{ getSize(code.byte) }}</div>
 
     <div style="flex: 1"></div>
+
+    <div class="info">{{ code.value.length }} 个字符</div>
 
     <el-switch
       v-if="code.lang === 'markdown'"
@@ -70,6 +73,7 @@ import MdView from '@/components/MdView.vue'
 import { useUserStore } from '@/store/user'
 
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
+import { getSize } from '@/utils/file'
 
 import useCode from '../hooks/useCode'
 import useEditor from '../hooks/useEditor'
@@ -81,7 +85,7 @@ const user = useUserStore()
 
 const mdView = ref(user.cfg.fileMdView)
 
-const showMdView = computed(() => code.lang === 'markdown' && mdView)
+const showMdView = computed(() => code.lang === 'markdown' && mdView.value)
 
 defineExpose({
   save: () => save(),
@@ -130,7 +134,7 @@ onMounted(() => {
   border-top: solid 1px var(--el-border-color);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   padding: 0 4px;
   background-color: var(--el-bg-color);
 
@@ -138,7 +142,7 @@ onMounted(() => {
     margin: 0;
   }
 
-  > .developed {
+  > .info {
     font-size: 12px;
     line-height: 32px;
     color: var(--el-text-color-placeholder);

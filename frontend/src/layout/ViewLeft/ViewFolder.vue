@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { ElMessageBox } from 'element-plus'
+import { dayjs, ElMessageBox } from 'element-plus'
 import { Files, Folder, FolderOpened, Refresh, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
@@ -147,6 +147,8 @@ const openNode = (data: TreeNodeData) => {
     editor.add(data.value, {
       keep: false,
       list: treeRef.value?.getNode(data.value)?.parent?.childNodes?.map((i) => i.data.value) || [],
+      size: data.size,
+      date: dayjs(data.updateDate),
     })
   }
 }

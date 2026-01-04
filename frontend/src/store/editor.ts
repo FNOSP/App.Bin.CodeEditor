@@ -1,21 +1,34 @@
 import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
-import { ElMessageBox } from 'element-plus'
+import { dayjs, ElMessageBox } from 'element-plus'
 
 import { FILE_MAP } from '@/utils/option'
 import { getFileSuffix } from '@/utils/file'
 
 import { useOpenStore } from './open'
+import { useUserStore } from './user'
 
 interface ViewModel {
   path: string
   diff: boolean
   keep: boolean
   list: string[]
+  wait: boolean
+  size?: number
+  date?: dayjs.Dayjs
+}
+
+interface AddOption {
+  history?: boolean
+  keep?: ViewModel['keep']
+  list?: ViewModel['list']
+  size?: ViewModel['size']
+  date?: ViewModel['date']
 }
 
 export const useEditorStore = defineStore('editor', () => {
   const open = useOpenStore()
+  const user = useUserStore()
 
   const view = reactive<ViewModel[]>([])
 
@@ -23,14 +36,7 @@ export const useEditorStore = defineStore('editor', () => {
 
   const index = computed(() => view.findIndex((i) => i.path === active.value))
 
-  const add = (
-    path: ViewModel['path'],
-    opt: { keep?: boolean; history?: boolean; list?: string[] } = {
-      keep: true,
-      history: true,
-      list: [],
-    },
-  ) => {
+  const add = (path: ViewModel['path'], opt: AddOption = { keep: true, history: true, list: [] }) => {
     if (!path) {
       return
     }
@@ -42,7 +48,15 @@ export const useEditorStore = defineStore('editor', () => {
     const index = view.findIndex((i) => i.path === path)
 
     if (index === -1) {
-      view.push({ path, diff: false, keep, list })
+      view.push({
+        path,
+        diff: false,
+        keep,
+        list,
+        wait: user.cfg.fileBigWait > 0 && opt.size !== undefined && opt.size > user.cfg.fileBigWait,
+        size: opt.size,
+        date: opt.date,
+      })
     }
 
     active.value = path

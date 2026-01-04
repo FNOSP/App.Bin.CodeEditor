@@ -78,6 +78,23 @@
             <el-switch v-model="cfg.fileAllOpen" />
           </div>
         </div> -->
+
+        <div class="item">
+          <el-popover title="文件加载询问" content="避免加载大文件浪费带宽，设置超限数值，单位 B" placement="top" :width="220">
+            <template #reference>
+              <div class="label">
+                <el-icon><Warning /></el-icon>
+                <div class="t">大文件加载询问</div>
+              </div>
+            </template>
+          </el-popover>
+
+          <div class="value">
+            <el-input-number v-model="cfg.fileBigWait" :min="1" />
+
+            <div>{{ getSize(cfg.fileBigWait) }}</div>
+          </div>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">
@@ -116,9 +133,10 @@
 <script lang="ts" setup>
 import { watch, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-// import { Warning } from '@element-plus/icons-vue'
+import { Warning } from '@element-plus/icons-vue'
 
 import { THEME_OPTIONS } from '@/utils/option'
+import { getSize } from '@/utils/file'
 
 import { useUserStore } from '@/store/user'
 import { useLikeStore } from '@/store/like'

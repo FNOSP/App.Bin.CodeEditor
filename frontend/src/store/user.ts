@@ -18,6 +18,7 @@ interface LikeModel {
   confirm: boolean // 保存二次确认
   fileMdView: boolean // MD打开默认预览
   fileAllOpen: boolean // Web端全文件支持
+  fileBigWait: number // 多大文件暂停加载，0为不启用
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -42,6 +43,7 @@ const getDef = (): LikeModel => ({
   confirm: true, // 保存二次确认
   fileMdView: false, // md默认预览
   fileAllOpen: false, // Web端全文件支持
+  fileBigWait: 50 * 1024 * 1024, // 多大文件暂停加载，0为不启用，默认50M
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小

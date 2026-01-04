@@ -13,29 +13,36 @@
             <div v-show="item.diff" class="diff"></div>
           </template>
 
-          <ImageView v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'" :src="item.path" :list="item.list" />
-
-          <PdfView v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'" :src="item.path" />
-
-          <div class="no-open" v-else-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]">
+          <div class="no-open" v-if="FILE_MAP[getFileSuffix(item.path)] || errorMap[item.path]">
             <div class="t">{{ errorMap[item.path] || '不支持二进制文件的编辑' }}</div>
           </div>
 
-          <MonacoEditor
-            v-else
-            ref="editorRef"
-            :path="item.path"
-            @diff="
-              (v) => {
-                item.diff = v
+          <div class="wait-load" v-else-if="item.wait && item.size !== undefined">
+            <div class="t">文件大小为 {{ getSize(item.size) }}，是否继续？</div>
+            <el-button @click="item.wait = false">继续加载文件</el-button>
+          </div>
 
-                if (!item.keep && v) {
-                  item.keep = true
+          <template v-else>
+            <ImageView v-if="FILE_MAP[getFileSuffix(item.path)] === 'img'" :src="item.path" :list="item.list" />
+
+            <PdfView v-else-if="FILE_MAP[getFileSuffix(item.path)] === 'pdf'" :src="item.path" />
+
+            <MonacoEditor
+              v-else
+              ref="editorRef"
+              :path="item.path"
+              @diff="
+                (v) => {
+                  item.diff = v
+
+                  if (!item.keep && v) {
+                    item.keep = true
+                  }
                 }
-              }
-            "
-            @error="(v) => (errorMap[item.path] = v)"
-          />
+              "
+              @error="(v) => (errorMap[item.path] = v)"
+            />
+          </template>
         </el-tab-pane>
 
         <el-tab-pane :name="-1" disabled>
@@ -69,7 +76,7 @@ import ImageView from '@/components/ImageView.vue'
 import PdfView from '@/components/PdfView.vue'
 
 import { FILE_MAP } from '@/utils/option'
-import { getFileName, getFileSuffix } from '@/utils/file'
+import { getFileName, getFileSuffix, getSize } from '@/utils/file'
 
 import { useOpenStore } from '@/store/open'
 import { useEditorStore } from '@/store/editor'
@@ -164,6 +171,22 @@ watch(
           height: 100%;
           display: flex;
           flex-direction: column;
+
+          > .wait-load {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+
+            > .t {
+              white-space: nowrap;
+              font-size: 14px;
+              color: var(--el-text-color-placeholder);
+            }
+          }
 
           > .no-open {
             height: 100%;

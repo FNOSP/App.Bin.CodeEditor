@@ -17,17 +17,19 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue'
 import { Folder, Timer, Setting } from '@element-plus/icons-vue'
 
-import { useLikeStore } from '@/store/like'
 import { useMenuStore } from '@/store/menu'
-import { onMounted } from 'vue'
+import { useUserStore } from '@/store/user'
+import { useLikeStore } from '@/store/like'
 
 const menu = useMenuStore()
+const user = useUserStore()
 const like = useLikeStore()
 
 onMounted(() => {
-  if (like.cfg.folderDefOpen) {
+  if (user.cfg.folderDefOpen) {
     menu.toggle('folder')
   }
 })

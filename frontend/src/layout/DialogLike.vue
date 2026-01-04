@@ -23,7 +23,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="编辑器" name="editor">
+      <el-tab-pane label="文件" name="editor">
         <div class="item">
           <div class="label">保存时确认</div>
           <div class="value">
@@ -96,9 +96,7 @@
 
         <div style="flex: 1"></div>
 
-        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">
-          修改实时生效，且进行缓存
-        </div>
+        <div style="font-size: 12px; color: var(--el-text-color-placeholder)">修改实时生效</div>
       </div>
     </template>
   </el-dialog>
@@ -116,15 +114,16 @@ import { useLikeStore } from '@/store/like'
 const user = useUserStore()
 const like = useLikeStore()
 
-const { open, cfg } = storeToRefs(like)
+const { open } = storeToRefs(like)
+const { cfg } = storeToRefs(user)
 
 watchEffect(() => {
-  document.documentElement.className = THEME_OPTIONS.find((i) => i.value === like.cfg.theme)?.dark
+  document.documentElement.className = THEME_OPTIONS.find((i) => i.value === cfg.value.theme)?.dark
     ? 'dark'
     : ''
 })
 
-watch(cfg, like.saveCfg, { deep: true })
+watch(cfg, user.update, { deep: true })
 </script>
 
 <style lang="scss" scoped>

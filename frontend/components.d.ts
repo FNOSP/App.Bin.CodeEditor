@@ -13,7 +13,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ClickMove: typeof import('./src/components/ClickMove.vue')['default']
-    copy: typeof import('./src/components/ImageView copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -39,7 +38,6 @@ declare module 'vue' {
 // For TSX support
 declare global {
   const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
-  const copy: typeof import('./src/components/ImageView copy.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']

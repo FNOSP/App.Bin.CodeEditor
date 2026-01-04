@@ -104,14 +104,14 @@ const like = useLikeStore()
 const editor = useEditorStore()
 
 const { show, input } = storeToRefs(open)
-const { cfg } = storeToRefs(like)
+const { cfg } = storeToRefs(user)
 
 onMounted(async () => {
   const query = new URLSearchParams(window.location.search).get('path') || ''
   if (query) {
     editor.add(query)
   } else {
-    if (like.cfg.startOpen) {
+    if (cfg.value.startOpen) {
       show.value = 'file'
     }
   }
@@ -131,8 +131,6 @@ const addDir = (v: string) => {
   }
 
   user.cfg.dir.unshift(v)
-
-  user.update()
 }
 
 const deleteDir = (v: string) => {
@@ -143,8 +141,6 @@ const deleteDir = (v: string) => {
     if (cfg.value.folderDefOpen === v) {
       cfg.value.folderDefOpen = ''
     }
-
-    user.update()
   }
 }
 </script>

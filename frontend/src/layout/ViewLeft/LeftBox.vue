@@ -1,5 +1,5 @@
 <template>
-  <div id="left-view" :style="{ width: `${like.cfg.leftWidth}px` }" v-show="menu.open">
+  <div id="left-view" :style="{ width: `${user.cfg.leftWidth}px` }" v-show="menu.open">
     <ViewFolder v-if="menu.initialized.folder" v-show="menu.open === 'folder'" />
 
     <ViewHistory v-if="menu.initialized.history" v-show="menu.open === 'history'" />
@@ -14,20 +14,20 @@ import ClickMove from '@/components/ClickMove.vue'
 import ViewFolder from './ViewFolder.vue'
 import ViewHistory from './ViewHistory.vue'
 
-import { useLikeStore } from '@/store/like'
 import { useMenuStore } from '@/store/menu'
+import { useUserStore } from '@/store/user'
 
 const menu = useMenuStore()
-const like = useLikeStore()
+const user = useUserStore()
 
 const changeFolderWidth = (v: number) => {
-  const newVal = like.cfg.leftWidth + v
+  const newVal = user.cfg.leftWidth + v
 
   if (newVal > 600 || newVal < 200) {
     return
   }
 
-  like.cfg.leftWidth = newVal
+  user.cfg.leftWidth = newVal
 }
 </script>
 

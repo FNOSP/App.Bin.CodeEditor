@@ -5,8 +5,8 @@
       v-show="!showMdView"
       v-model:value="code.value"
       :language="code.lang"
-      :theme="like.cfg.theme"
-      :options="{ automaticLayout: true, ...like.cfg.editorOption }"
+      :theme="user.cfg.theme"
+      :options="{ automaticLayout: true, ...user.cfg.editorOption }"
       @editorDidMount="editorDidMount"
     />
 
@@ -67,7 +67,7 @@ import * as iconv from 'iconv-lite'
 
 import MdView from '@/components/MdView.vue'
 
-import { useLikeStore } from '@/store/like'
+import { useUserStore } from '@/store/user'
 
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
 
@@ -77,9 +77,9 @@ import useEditor from '../hooks/useEditor'
 const $props = defineProps<{ path: string }>()
 const $emit = defineEmits<{ diff: [v: boolean]; error: [v?: string] }>()
 
-const like = useLikeStore()
+const user = useUserStore()
 
-const mdView = ref(like.cfg.fileMdView)
+const mdView = ref(user.cfg.fileMdView)
 
 const showMdView = computed(() => code.lang === 'markdown' && mdView)
 
@@ -88,7 +88,7 @@ defineExpose({
 })
 
 const { code, load, save } = useCode({
-  confirm: () => like.cfg.confirm,
+  confirm: () => user.cfg.confirm,
   onSave: () => $emit('diff', false),
   onError: (v) => $emit('error', v),
 })
@@ -107,13 +107,13 @@ watch(
   },
 )
 watch(
-  () => like.cfg.theme,
+  () => user.cfg.theme,
   (v) => {
     changeTheme(v)
   },
 )
 watch(
-  () => like.cfg.editorOption,
+  () => user.cfg.editorOption,
   (v) => {
     changeOption(v)
   },

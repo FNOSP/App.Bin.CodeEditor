@@ -64,6 +64,7 @@ import { HOST } from '@/utils/env'
 import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
+import { useUserStore } from '@/store/user'
 
 import {
   type TreeInstance,
@@ -74,6 +75,7 @@ import {
 
 const editor = useEditorStore()
 const like = useLikeStore()
+const user = useUserStore()
 const open = useOpenStore()
 
 const treeRef = ref<TreeInstance>()
@@ -138,7 +140,7 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
         leaf: true,
         dir: false,
       })),
-    ].filter((i) => !like.cfg.folderHidePrefix.some((x) => i.label.indexOf(x) === 0)),
+    ].filter((i) => !user.cfg.folderHidePrefix.some((x) => i.label.indexOf(x) === 0)),
   )
 }
 

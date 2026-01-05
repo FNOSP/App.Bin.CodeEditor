@@ -24,6 +24,8 @@ interface OpenModel {
 export const useCameraStore = defineStore('camera', () => {
   const show = ref(false)
 
+  const input = ref('')
+
   const option = ref<OpenModel>()
 
   const data = ref<ValueModel[]>([])
@@ -55,12 +57,17 @@ export const useCameraStore = defineStore('camera', () => {
     }
   }
 
-  const add = async (msg: string) => {
-    if (!option.value) {
+  const add = async () => {
+    if (!option.value || !input.value) {
       return
     }
 
-    const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${msg}.txt`
+    if (data.value.find((i) => i.name.replace(/\.txt$/, '') === input.value)) {
+      ElMessage({ type: 'error', message: '快照说明不能相同' })
+      return
+    }
+
+    const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`
 
     await axios.post(
       HOST,
@@ -72,6 +79,8 @@ export const useCameraStore = defineStore('camera', () => {
       },
       { params: { _api: 'save' } },
     )
+
+    input.value = ''
 
     await load()
   }
@@ -139,5 +148,5 @@ export const useCameraStore = defineStore('camera', () => {
     show.value = false
   }
 
-  return { show, data, open, add, del, usage }
+  return { show, input, data, open, add, del, usage }
 })

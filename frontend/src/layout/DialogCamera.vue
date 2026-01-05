@@ -1,18 +1,9 @@
 <template>
   <el-dialog v-model="camera.show" title="文件快照" width="600">
     <div class="camera-dialog">
-      <el-input v-model="input" placeholder="请输入快照说明" class="input" maxlength="32" show-word-limit>
+      <el-input v-model="camera.input" placeholder="请输入快照说明" class="input" maxlength="32" show-word-limit>
         <template #append>
-          <el-button
-            @click="
-              () => {
-                camera.add(input)
-                input = ''
-              }
-            "
-          >
-            添加快照
-          </el-button>
+          <el-button @click="camera.add()"> 添加快照 </el-button>
         </template>
       </el-input>
 
@@ -43,12 +34,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-
 import { useCameraStore } from '@/store/camera'
 import { dayjs } from 'element-plus'
 
 const camera = useCameraStore()
-
-const input = ref('')
 </script>

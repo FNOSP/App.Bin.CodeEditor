@@ -1,4 +1,7 @@
+import * as iconv from 'iconv-lite'
+
 import { HOST } from '@/utils/env'
+import { ENCODING_OPTIONS } from '@/utils/option'
 
 export const getFileName = (v: string) => v.split('/').pop() || ''
 
@@ -42,7 +45,48 @@ export const getKey = (path: string) =>
     .join('-')
     .replace(/\./g, '_')
 
-export async function isBinaryContent(blob: Blob) {
+export const getEncodeValue = async (blob: Blob) => {
+  const result = { encode: '', value: '' }
+
+  const buffer = new Uint8Array(await blob.arrayBuffer())
+
+  if (buffer.length >= 3 && buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf) {
+    result.encode = 'utf8'
+  } else if (buffer[0] === 0xfe && buffer[1] === 0xff) {
+    result.encode = 'utf16be'
+  } else if (buffer[0] === 0xff && buffer[1] === 0xfe) {
+    result.encode = 'utf16le'
+  }
+
+  if (!result.encode) {
+    for (const item of ENCODING_OPTIONS) {
+      try {
+        const text = iconv.decode(buffer, item.value)
+        const sum = text.length
+        const err = text.split('').filter((i) => i === '�').length
+
+        if (err / sum > 0.3) {
+          result.encode = item.value
+          result.value = text
+        }
+      } catch {
+        continue
+      }
+    }
+  }
+
+  if (!result.encode) {
+    result.encode = 'utf8'
+  }
+
+  if (!result.value) {
+    result.value = iconv.decode(buffer, result.encode)
+  }
+
+  return result
+}
+
+export const isBinaryContent = async (blob: Blob) => {
   const slice = blob.slice(0, 1024)
   const arrayBuffer = await slice.arrayBuffer()
   const bytes = new Uint8Array(arrayBuffer)

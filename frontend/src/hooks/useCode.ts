@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { HOST } from '@/utils/env'
 import { LANG_MAP } from '@/utils/option'
-import { isBinaryContent } from '@/utils/file'
+import { getEncodeValue, isBinaryContent } from '@/utils/file'
 
 import { useOpenStore } from '@/store/open'
 
@@ -58,9 +58,12 @@ export default function useCode(option: OptionModel) {
       code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
       code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
 
+      const info = await getEncodeValue(data)
+
       code.blob = data
       code.path = path
-      code.org = code.value = await data.text()
+      code.encode = info.encode
+      code.org = code.value = info.value
 
       const filename = path.split('/').pop() || ''
 

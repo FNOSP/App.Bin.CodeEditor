@@ -12,7 +12,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    2: typeof import('./src/components/icons/OfficeWord copy 2.vue')['default']
     ClickMove: typeof import('./src/components/ClickMove.vue')['default']
+    Code: typeof import('./src/components/icons/Code.vue')['default']
+    copy: typeof import('./src/components/icons/Feiniu copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -28,17 +31,26 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
+    Feiniu: typeof import('./src/components/icons/Feiniu.vue')['default']
     FileView: typeof import('./src/components/FileView.vue')['default']
     ImageView: typeof import('./src/components/ImageView.vue')['default']
+    Iso: typeof import('./src/components/icons/Iso.vue')['default']
     MdView: typeof import('./src/components/MdView.vue')['default']
     MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+    OfficeExcel: typeof import('./src/components/icons/OfficeExcel.vue')['default']
+    OfficePPT: typeof import('./src/components/icons/OfficePPT.vue')['default']
+    OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
     PdfView: typeof import('./src/components/PdfView.vue')['default']
+    Zip: typeof import('./src/components/icons/Zip.vue')['default']
   }
 }
 
 // For TSX support
 declare global {
+  const 2: typeof import('./src/components/icons/OfficeWord copy 2.vue')['default']
   const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
+  const Code: typeof import('./src/components/icons/Code.vue')['default']
+  const copy: typeof import('./src/components/icons/Feiniu copy.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -54,9 +66,15 @@ declare global {
   const ElTabs: typeof import('element-plus/es')['ElTabs']
   const ElTooltip: typeof import('element-plus/es')['ElTooltip']
   const ElTree: typeof import('element-plus/es')['ElTree']
+  const Feiniu: typeof import('./src/components/icons/Feiniu.vue')['default']
   const FileView: typeof import('./src/components/FileView.vue')['default']
   const ImageView: typeof import('./src/components/ImageView.vue')['default']
+  const Iso: typeof import('./src/components/icons/Iso.vue')['default']
   const MdView: typeof import('./src/components/MdView.vue')['default']
   const MonacoEditor: typeof import('./src/components/MonacoEditor.vue')['default']
+  const OfficeExcel: typeof import('./src/components/icons/OfficeExcel.vue')['default']
+  const OfficePPT: typeof import('./src/components/icons/OfficePPT.vue')['default']
+  const OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
   const PdfView: typeof import('./src/components/PdfView.vue')['default']
+  const Zip: typeof import('./src/components/icons/Zip.vue')['default']
 }

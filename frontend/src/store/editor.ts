@@ -8,7 +8,7 @@ import { getFileSuffix } from '@/utils/file'
 import { useOpenStore } from './open'
 import { useUserStore } from './user'
 
-interface ViewModel {
+export interface ViewModel {
   path: string
   diff: boolean
   keep: boolean
@@ -18,7 +18,7 @@ interface ViewModel {
   date?: dayjs.Dayjs
 }
 
-interface AddOption {
+export interface AddOption {
   history?: boolean
   keep?: ViewModel['keep']
   list?: ViewModel['list']

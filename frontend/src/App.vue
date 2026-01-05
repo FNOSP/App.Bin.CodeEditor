@@ -2,7 +2,7 @@
   <template v-if="user.initialized">
     <ViewMenu />
     <ViewLeft />
-    <ViewEditor />
+    <ViewRight />
 
     <DialogLike />
     <DialogOpen />
@@ -14,7 +14,7 @@ import { onMounted } from 'vue'
 
 import ViewMenu from '@/layout/ViewMenu.vue'
 import ViewLeft from '@/layout/ViewLeft/LeftBox.vue'
-import ViewEditor from '@/layout/ViewEditor.vue'
+import ViewRight from '@/layout/ViewRight/RightBox.vue'
 import DialogLike from '@/layout/DialogLike.vue'
 import DialogOpen from '@/layout/DialogOpen.vue'
 

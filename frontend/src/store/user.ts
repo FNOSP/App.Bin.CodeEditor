@@ -19,6 +19,8 @@ interface LikeModel {
   fileMdView: boolean // MD打开默认预览
   fileAllOpen: boolean // Web端全文件支持
   fileBigWait: number // 多大文件暂停加载，0为不启用
+  fileCameraUseConfirm: boolean // 切换快照时询问
+  fileCameraUseDoSave: boolean // 切换快照立即保存
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -44,6 +46,8 @@ const getDef = (): LikeModel => ({
   fileMdView: false, // md默认预览
   fileAllOpen: false, // Web端全文件支持
   fileBigWait: 50 * 1024 * 1024, // 多大文件暂停加载，0为不启用，默认50M
+  fileCameraUseConfirm: true, // 切换快照时询问
+  fileCameraUseDoSave: false, // 切换快照立即保存
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小

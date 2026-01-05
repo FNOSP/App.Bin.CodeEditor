@@ -1,6 +1,6 @@
 {
   "name": "code.editor",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "changelog": "<div>新增：文件快照功能，可随时回退文件</div><div>新增：图片查看，支持同级快速预览</div><div>新增：PDF 阅读，支持索引跳转和缩放</div><div>新增：支持刷新目录和在目录下创建文件</div><div>新增：偏好设置-启动时询问，可在桌面图标访问时不询问开启</div><div>新增：markdown 文件支持预览</div><div>新增：偏好设置支持设置打开 markdown 时默认预览</div><div>新增：显示字数、文件大小、最后更新日期</div><div>新增：独立窗口按钮</div><div>新增：加载大文件将提示是否继续加载，避免带宽浪费</div>",
   "scripts": {
     "dev": "node src/app.js",

@@ -103,6 +103,24 @@
             <div v-if="cfg.fileBigWait > 0">超出 {{ getSize(cfg.fileBigWait) }} 将询问</div>
           </div>
         </div>
+
+        <div class="item">
+          <div class="label">
+            <div class="t">切换快照时询问</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileCameraUseConfirm" />
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="label">
+            <div class="t">切换快照立即保存</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileCameraUseDoSave" />
+          </div>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">

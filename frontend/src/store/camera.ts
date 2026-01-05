@@ -6,6 +6,8 @@ import axios from 'axios'
 import { HOST, APP_DIR_PATH } from '@/utils/env'
 import { getKey } from '@/utils/file'
 
+import { useUserStore } from './user'
+
 const CAMERA_DIR_PATH = `${APP_DIR_PATH}/camera`
 
 interface ValueModel {
@@ -22,6 +24,8 @@ interface OpenModel {
 }
 
 export const useCameraStore = defineStore('camera', () => {
+  const user = useUserStore()
+
   const show = ref(false)
 
   const input = ref('')
@@ -126,14 +130,16 @@ export const useCameraStore = defineStore('camera', () => {
       return
     }
 
-    try {
-      await ElMessageBox.confirm(`确定要使用【${item.name.replace(/\.txt$/, '')}】快照吗？当前窗口内容将会被覆盖`, '提示', {
-        confirmButtonText: '继续',
-        cancelButtonText: '取消',
-        type: 'info',
-      })
-    } catch {
-      return
+    if (user.cfg.fileCameraUseConfirm) {
+      try {
+        await ElMessageBox.confirm(`确定要使用【${item.name.replace(/\.txt$/, '')}】快照吗？当前窗口内容将会被覆盖`, '提示', {
+          confirmButtonText: '继续',
+          cancelButtonText: '取消',
+          type: 'info',
+        })
+      } catch {
+        return
+      }
     }
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`

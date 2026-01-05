@@ -73,7 +73,6 @@ async function main() {
     if (type) {
       console.log(`Content-Type: ${type}`)
       console.log(`Content-Length: ${body.size}`)
-      console.log(`Last-Modified: ${body.time}`)
       console.log('')
       body.stream.pipe(process.stdout)
     } else {

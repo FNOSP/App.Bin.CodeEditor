@@ -22,7 +22,10 @@
             path: code.path,
             value: code.value,
             encode: code.encode,
-            callback: (v) => (code.value = v),
+            callback: (v) => {
+              code.value = v
+              user.cfg.fileCameraUseDoSave && save()
+            },
           })
         "
       >

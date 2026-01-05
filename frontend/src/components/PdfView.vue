@@ -163,10 +163,12 @@ const loadPage = async (index: number, force = false) => {
 const changeScale = async () => {
   setSize()
 
-  pages.value.forEach((page, index) => {
-    if (page !== undefined) {
-      loadPage(index, true)
-    }
+  nextTick(() => {
+    pages.value.forEach((page, index) => {
+      if (page !== undefined) {
+        loadPage(index, true)
+      }
+    })
   })
 }
 

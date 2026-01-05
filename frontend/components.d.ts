@@ -40,6 +40,7 @@ declare module 'vue' {
     OfficeExcel: typeof import('./src/components/icons/OfficeExcel.vue')['default']
     OfficePPT: typeof import('./src/components/icons/OfficePPT.vue')['default']
     OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
+    Pdf: typeof import('./src/components/icons/Pdf.vue')['default']
     PdfView: typeof import('./src/components/PdfView.vue')['default']
     Zip: typeof import('./src/components/icons/Zip.vue')['default']
   }
@@ -75,6 +76,7 @@ declare global {
   const OfficeExcel: typeof import('./src/components/icons/OfficeExcel.vue')['default']
   const OfficePPT: typeof import('./src/components/icons/OfficePPT.vue')['default']
   const OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
+  const Pdf: typeof import('./src/components/icons/Pdf.vue')['default']
   const PdfView: typeof import('./src/components/PdfView.vue')['default']
   const Zip: typeof import('./src/components/icons/Zip.vue')['default']
 }

@@ -15,6 +15,7 @@ import OfficePPT from '@/components/icons/OfficePPT.vue'
 import Zip from '@/components/icons/Zip.vue'
 import Iso from '@/components/icons/Iso.vue'
 import Code from '@/components/icons/Code.vue'
+import Pdf from '@/components/icons/Pdf.vue'
 
 import { LANG_MAP, FILE_MAP } from '@/utils/option'
 import { getFileSuffix } from '@/utils/file'
@@ -30,6 +31,7 @@ const iconView: { [x: string]: Component } = {
   zip: Zip,
   iso: Iso,
   code: Code,
+  pdf: Pdf,
   default: Document,
 }
 

@@ -15,6 +15,11 @@
 
         <div class="item">
           <div class="label">
+            <el-popover content="开启后，从桌面访问时将询问是否打开文件" placement="top" :width="220">
+              <template #reference>
+                <el-icon><Warning /></el-icon>
+              </template>
+            </el-popover>
             <div class="t">启动时询问</div>
           </div>
           <div class="value">
@@ -80,25 +85,33 @@
         </div> -->
 
         <div class="item">
-          <el-popover title="文件加载询问" content="避免加载大文件浪费带宽，设置超限数值，单位 B" placement="top" :width="220">
-            <template #reference>
-              <div class="label">
+          <div class="label">
+            <el-popover
+              title="文件加载询问"
+              content="避免加载大文件浪费带宽，设置超限数值，单位 B，设置为 0 则关闭此功能"
+              placement="top"
+              :width="220"
+            >
+              <template #reference>
                 <el-icon><Warning /></el-icon>
-                <div class="t">大文件加载询问</div>
-              </div>
-            </template>
-          </el-popover>
-
+              </template>
+            </el-popover>
+            <div class="t">文件加载询问</div>
+          </div>
           <div class="value">
-            <el-input-number v-model="cfg.fileBigWait" :min="1" />
-
-            <div>{{ getSize(cfg.fileBigWait) }}</div>
+            <el-input-number v-model="cfg.fileBigWait" :min="0" />
+            <div v-if="cfg.fileBigWait > 0">超出 {{ getSize(cfg.fileBigWait) }} 将询问</div>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">
           <div class="label">
+            <el-popover content="选择后，启动时将默认打开该目录" placement="top" :width="150">
+              <template #reference>
+                <el-icon><Warning /></el-icon>
+              </template>
+            </el-popover>
             <div class="t">默认打开</div>
           </div>
           <div class="value">

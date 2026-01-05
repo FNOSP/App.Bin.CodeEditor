@@ -125,19 +125,37 @@
       <el-tab-pane label="目录" name="folder">
         <div class="item">
           <div class="label">
-            <el-popover content="选择后，启动时将默认打开该目录" placement="top" :width="150">
+            <el-popover content="选择后，启动时将自动打开该目录" placement="top" :width="150">
               <template #reference>
                 <el-icon><Warning /></el-icon>
               </template>
             </el-popover>
-            <div class="t">默认打开</div>
+            <div class="t">自动打开</div>
           </div>
           <div class="value">
-            <el-select v-model="cfg.folderDefOpen" size="small" clearable placeholder="启动时默认打开某个目录">
+            <el-select v-model="cfg.folderDefOpen" size="small" clearable placeholder="启动时自动打开某个目录">
               <el-option v-for="item in user.cfg.dir" :key="item" :label="item" :value="item" />
             </el-select>
           </div>
         </div>
+
+        <template v-if="cfg.folderDefOpen">
+          <div class="item">
+            <div class="label">
+              <el-popover content="开启后，从文件列表直接操作文件时将不会自动打开上方设置的目录" placement="top" :width="200">
+                <template #reference>
+                  <el-icon><Warning /></el-icon>
+                </template>
+              </el-popover>
+              <div class="t">打开文件时关闭</div>
+            </div>
+            <div class="value">
+              <el-switch v-model="cfg.folderNotOpenInQuery" />
+            </div>
+          </div>
+
+          <div class="line"></div>
+        </template>
 
         <div class="item">
           <div class="label">
@@ -224,6 +242,11 @@ watch(cfg, user.update, { deep: true })
             color: var(--el-text-color-placeholder);
           }
         }
+      }
+
+      > .line {
+        height: 1px;
+        background-color: var(--el-border-color);
       }
     }
   }

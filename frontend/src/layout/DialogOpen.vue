@@ -50,7 +50,7 @@
             <div class="t">我的目录</div>
 
             <el-select v-model="cfg.folderDefOpen" size="small" clearable style="width: 200px" placeholder="选择目录">
-              <el-option-group label="启动时默认打开">
+              <el-option-group label="启动时自动打开">
                 <el-option v-for="item in user.cfg.dir" :key="item" :label="item" :value="item" />
               </el-option-group>
             </el-select>

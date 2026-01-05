@@ -29,15 +29,13 @@ import { onMounted } from 'vue'
 import { Folder, Timer, Notification, Setting } from '@element-plus/icons-vue'
 
 import { useMenuStore } from '@/store/menu'
-import { useUserStore } from '@/store/user'
 import { useLikeStore } from '@/store/like'
 
 const menu = useMenuStore()
-const user = useUserStore()
 const like = useLikeStore()
 
 onMounted(() => {
-  if (user.cfg.folderDefOpen) {
+  if (like.cfg.folderActive) {
     menu.toggle('folder')
   }
 })

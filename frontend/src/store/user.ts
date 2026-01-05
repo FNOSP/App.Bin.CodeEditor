@@ -29,11 +29,14 @@ interface LikeModel {
 
   // 目录
   dir: string[] // 文件列表
-  folderDefOpen: string // 默认开启目录
+  folderDefOpen: string // 自动打开目录
+  folderNotOpenInQuery: boolean // 打开文件时不打开目录
   folderHidePrefix: string[] // 隐藏的文件前缀
 }
 
 const USER_CONFIG_PATH = `${APP_DIR_PATH}/config.json`
+
+const dir = IS_DEV ? ['/Users/flex/Downloads'] : ['/vol1/1000']
 
 const getDef = (): LikeModel => ({
   // 全局配置
@@ -55,8 +58,9 @@ const getDef = (): LikeModel => ({
   },
 
   // 目录
-  dir: IS_DEV ? ['/Users/flex/Downloads'] : ['/vol1/1000'],
-  folderDefOpen: '', // 默认开启目录
+  dir: [...dir],
+  folderDefOpen: dir[0]!, // 自动打开目录
+  folderNotOpenInQuery: true, // 打开文件时不打开目录
   folderHidePrefix: ['.'], // 隐藏的文件前缀
 })
 
@@ -83,7 +87,11 @@ export const useUserStore = defineStore('user', () => {
       cfg.value = Object.assign(cfg.value, cloneDeep(result1) as LikeModel)
     }
 
-    like.cfg.folderActive = cfg.value.folderDefOpen || cfg.value.dir[0] || ''
+    const query = new URLSearchParams(window.location.search).get('path') || ''
+
+    if ((!query || !cfg.value.folderNotOpenInQuery) && cfg.value.folderDefOpen) {
+      like.cfg.folderActive = cfg.value.folderDefOpen
+    }
 
     initialized.value = true
   }
@@ -94,7 +102,7 @@ export const useUserStore = defineStore('user', () => {
       {
         encode: 'utf8',
         path: USER_CONFIG_PATH,
-        value: JSON.stringify(cfg.value),
+        value: JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }),
         force: 1,
       },
       {

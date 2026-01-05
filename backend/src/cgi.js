@@ -73,6 +73,10 @@ async function main() {
     if (type) {
       console.log(`Content-Type: ${type}`)
       console.log(`Content-Length: ${body.size}`)
+      console.log('Access-Control-Expose-Headers: X-Size,X-Update-Date,X-Create-Date')
+      console.log(`X-Size: ${body.size}`)
+      console.log(`X-Update-Date: ${body.mtime}`)
+      console.log(`X-Create-Date: ${body.birthtime}`)
       console.log('')
       body.stream.pipe(process.stdout)
     } else {

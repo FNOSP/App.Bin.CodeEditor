@@ -55,8 +55,8 @@ export default function useCode(option: OptionModel) {
         return
       }
 
-      code.byte = headers['content-length'] ? Number(headers['content-length']) : undefined
-      code.date = headers['last-modified'] ? dayjs(headers['last-modified']) : undefined
+      code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
+      code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
 
       code.blob = data
       code.path = path

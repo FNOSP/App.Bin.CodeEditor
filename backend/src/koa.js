@@ -22,6 +22,10 @@ app.use(async (ctx) => {
   if (type) {
     ctx.set('Content-Type', type)
     ctx.set('Content-Length', body.size)
+    ctx.set('Access-Control-Expose-Headers', 'X-Size,X-Update-Date,X-Create-Date')
+    ctx.set('X-Size', body.size)
+    ctx.set('X-Update-Date', body.mtime)
+    ctx.set('X-Create-Date', body.birthtime)
     ctx.body = body.stream
   } else {
     ctx.set('Content-Type', 'application/json; charset=utf-8')

@@ -19,7 +19,6 @@ module.exports = async function ({ query }) {
 
     if (query.cache) {
       const maxAge = 365 * 24 * 60 * 60
-
       console.log(`Cache-Control: public, max-age=${maxAge}, immutable`)
       console.log(`Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`)
       console.log(`ETag: "${stat.size}-${stat.mtime.getTime()}"`)
@@ -31,7 +30,8 @@ module.exports = async function ({ query }) {
       msg: '操作成功',
       data: {
         size: stat.size,
-        time: stat.mtime.toUTCString(),
+        mtime: stat.mtime.toUTCString(),
+        birthtime: stat.birthtime.toUTCString(),
         filename: filePath.split('/').pop(),
         stream: fs.createReadStream(filePath),
       },

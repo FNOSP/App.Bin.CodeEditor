@@ -12,10 +12,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    2: typeof import('./src/components/icons/OfficeWord copy 2.vue')['default']
     ClickMove: typeof import('./src/components/ClickMove.vue')['default']
     Code: typeof import('./src/components/icons/Code.vue')['default']
-    copy: typeof import('./src/components/icons/Feiniu copy.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -50,10 +48,8 @@ declare module 'vue' {
 
 // For TSX support
 declare global {
-  const 2: typeof import('./src/components/icons/OfficeWord copy 2.vue')['default']
   const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
   const Code: typeof import('./src/components/icons/Code.vue')['default']
-  const copy: typeof import('./src/components/icons/Feiniu copy.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
   const ElDialog: typeof import('element-plus/es')['ElDialog']
   const ElIcon: typeof import('element-plus/es')['ElIcon']

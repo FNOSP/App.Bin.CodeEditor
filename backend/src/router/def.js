@@ -6,7 +6,7 @@ const wwwReg = /(?<=<script\s[^>]*?src=")\/assets\/index[^"]+(?=")/gi
 
 const constReg = /fn\:\(\)\=\>\{const (.+)\=\{\}\;return .+\.state\.apps\.forEach/
 
-module.exports = async function read({ body }) {
+module.exports = async function ({ body }) {
   try {
     const html = fs.readFileSync(path.join(wwwRoot, './index.html'), { encoding: 'utf-8' })
 

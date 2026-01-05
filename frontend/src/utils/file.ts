@@ -35,6 +35,13 @@ export const getSize = (byte: number) => {
   return ''
 }
 
+export const getKey = (path: string) =>
+  path
+    .split('/')
+    .filter((i) => !!i)
+    .join('-')
+    .replace(/\./g, '_')
+
 export async function isBinaryContent(blob: Blob) {
   const slice = blob.slice(0, 1024)
   const arrayBuffer = await slice.arrayBuffer()

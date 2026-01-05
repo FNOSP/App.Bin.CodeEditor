@@ -15,7 +15,19 @@
 
   <div class="footer">
     <el-tooltip content="文件快照" placement="bottom">
-      <el-icon class="icon" @click="camera.open(code.path)"><Camera /></el-icon>
+      <el-icon
+        class="icon"
+        @click="
+          camera.open({
+            path: code.path,
+            value: code.value,
+            encode: code.encode,
+            callback: (v) => (code.value = v),
+          })
+        "
+      >
+        <Camera />
+      </el-icon>
     </el-tooltip>
 
     <div class="info" v-if="code.date">修改时间：{{ code.date.format('YYYY/MM/DD HH:mm:ss') }}</div>
@@ -47,7 +59,7 @@ import * as iconv from 'iconv-lite'
 import MdView from '@/components/MdView.vue'
 
 import { useUserStore } from '@/store/user'
-import { useCameraStore } from '@/store/camera2'
+import { useCameraStore } from '@/store/camera'
 
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
 import { getSize } from '@/utils/file'
@@ -121,7 +133,7 @@ onMounted(() => {
   }
 
   > .icon {
-    color: var(--el-text-color-regular);
+    color: var(--el-text-color-placeholder);
     cursor: pointer;
   }
 

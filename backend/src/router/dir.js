@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-module.exports = async function read({ query }) {
+module.exports = async function ({ query }) {
   if (!query.path) {
     return { code: 400, msg: '缺少文件路径参数', data: query }
   }
@@ -29,7 +29,7 @@ module.exports = async function read({ query }) {
       if (itemStats.isDirectory()) {
         result.dirs.push({ name: item })
       } else {
-        result.files.push({ name: item, size: itemStats.size, updateDate: itemStats.mtime })
+        result.files.push({ name: item, size: itemStats.size, updateDate: itemStats.mtime, createDate: itemStats.birthtime })
       }
     })
 

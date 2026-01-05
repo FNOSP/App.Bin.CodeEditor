@@ -35,6 +35,10 @@ body {
   height: 100%;
 }
 
+body {
+  background-color: var(--el-bg-color);
+}
+
 #app {
   height: 100%;
   display: flex;

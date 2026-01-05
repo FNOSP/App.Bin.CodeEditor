@@ -6,6 +6,7 @@
 
     <DialogLike />
     <DialogOpen />
+    <DialogCamera />
   </template>
 </template>
 
@@ -17,6 +18,7 @@ import ViewLeft from '@/layout/ViewLeft/LeftBox.vue'
 import ViewRight from '@/layout/ViewRight/RightBox.vue'
 import DialogLike from '@/layout/DialogLike.vue'
 import DialogOpen from '@/layout/DialogOpen.vue'
+import DialogCamera from '@/layout/DialogCamera.vue'
 
 import { useUserStore } from '@/store/user'
 

@@ -14,7 +14,12 @@
   </div>
 
   <div class="footer">
+    <el-tooltip content="文件快照" placement="bottom">
+      <el-icon class="icon" @click="camera.open(code.path)"><Camera /></el-icon>
+    </el-tooltip>
+
     <div class="info" v-if="code.date">修改时间：{{ code.date.format('YYYY/MM/DD HH:mm:ss') }}</div>
+
     <div class="info" v-if="code.byte !== undefined">文件大小：{{ getSize(code.byte) }}</div>
 
     <div style="flex: 1"></div>
@@ -36,11 +41,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
+import { Camera } from '@element-plus/icons-vue'
 import * as iconv from 'iconv-lite'
 
 import MdView from '@/components/MdView.vue'
 
 import { useUserStore } from '@/store/user'
+import { useCameraStore } from '@/store/camera2'
 
 import { LANG_OPTIONS, ENCODING_OPTIONS } from '@/utils/option'
 import { getSize } from '@/utils/file'
@@ -52,6 +59,7 @@ const $props = defineProps<{ path: string }>()
 const $emit = defineEmits<{ diff: [v: boolean]; error: [v?: string] }>()
 
 const user = useUserStore()
+const camera = useCameraStore()
 
 const mdView = ref(user.cfg.fileMdView)
 
@@ -110,6 +118,11 @@ onMounted(() => {
 
   > * {
     margin: 0;
+  }
+
+  > .icon {
+    color: var(--el-text-color-regular);
+    cursor: pointer;
   }
 
   > .info {

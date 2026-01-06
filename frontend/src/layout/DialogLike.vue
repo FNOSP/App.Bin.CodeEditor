@@ -121,11 +121,27 @@
             <el-switch v-model="cfg.fileCameraUseDoSave" />
           </div>
         </div>
+
+        <div class="item">
+          <div class="label">
+            <el-popover placement="top" :width="200">
+              <template #reference>
+                <el-icon><Warning /></el-icon>
+              </template>
+              <div>未编辑时切换编码将正常切换；编辑后切换编码将不会触发，保存时以切换后的编码保存。</div>
+              <div>启用此配置后，编辑后切换编码将忽略编辑内容直接从未编辑状态切换编码。</div>
+            </el-popover>
+            <div class="t">切换编码忽略编辑</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileEncodeFromOrg" />
+          </div>
+        </div>
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">
           <div class="label">
-            <el-popover content="选择后，启动时将自动打开该目录" placement="top" :width="150">
+            <el-popover content="选择后，启动时将自动打开该目录" placement="top" :width="200">
               <template #reference>
                 <el-icon><Warning /></el-icon>
               </template>

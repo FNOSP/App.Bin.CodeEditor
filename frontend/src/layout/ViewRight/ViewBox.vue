@@ -35,6 +35,13 @@ import type { ViewModel as EditorViewModel } from '@/store/editor'
 const $props = defineProps<{ value: EditorViewModel }>()
 const $emit = defineEmits<{ next: []; diff: [v: boolean] }>()
 
+defineExpose({
+  isEditor: () => !!editorRef.value,
+  save: () => editorRef.value?.save(),
+})
+
+const editorRef = ref<{ save: () => void }>()
+
 const error = ref('')
 const fileType = computed(() => FILE_MAP[getFileSuffix($props.value.path)])
 const isBinaryFile = computed(() => fileType.value && !['img', 'pdf'].includes(fileType.value))

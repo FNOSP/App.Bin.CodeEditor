@@ -14,6 +14,7 @@
           </template>
 
           <ViewBox
+            ref="editorRef"
             :value="item"
             @next="item.wait = false"
             @diff="
@@ -38,6 +39,7 @@
       </el-tabs>
 
       <el-button
+        v-show="editorRef[editor.index]?.isEditor()"
         size="small"
         class="save"
         v-bind="editor.view[editor.index]?.diff ? { type: 'primary' } : { disabled: true }"
@@ -66,7 +68,7 @@ const editor = useEditorStore()
 
 const { active } = storeToRefs(editor)
 
-const editorRef = ref<{ save: () => void }[]>([])
+const editorRef = ref<{ isEditor: () => boolean; save: () => void }[]>([])
 
 watch(
   () => active.value,

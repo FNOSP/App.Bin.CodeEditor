@@ -19,7 +19,6 @@ interface ValueModel {
 interface OpenModel {
   path: string
   value: string
-  encode: string
   callback?: (v: string) => void
 }
 
@@ -34,7 +33,7 @@ export const useCameraStore = defineStore('camera', () => {
 
   const data = ref<ValueModel[]>([])
 
-  const open = (opt: { path: string; value: string; encode: string; callback?: (v: string) => void }) => {
+  const open = (opt: { path: string; value: string; callback?: (v: string) => void }) => {
     option.value = opt
     show.value = true
     load()
@@ -76,9 +75,9 @@ export const useCameraStore = defineStore('camera', () => {
     await axios.post(
       HOST,
       {
-        encode: option.value.encode,
-        value: option.value.value,
         path: filePath,
+        value: option.value.value,
+        encode: 'utf-8',
         force: 1,
       },
       { params: { _api: 'save' } },

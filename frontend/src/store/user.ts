@@ -21,7 +21,7 @@ interface LikeModel {
   fileBigWait: number // 多大文件暂停加载，0为不启用
   fileCameraUseConfirm: boolean // 切换快照时询问
   fileCameraUseDoSave: boolean // 切换快照立即保存
-  fileEncodeFrom: 'org' | 'value' // 切换编码从何处选择
+  fileEncodeFromOrg: boolean // 切换编码忽略编辑
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -52,7 +52,7 @@ const getDef = (): LikeModel => ({
   fileBigWait: 50 * 1024 * 1024, // 多大文件暂停加载，0为不启用，默认50M
   fileCameraUseConfirm: true, // 切换快照时询问
   fileCameraUseDoSave: false, // 切换快照立即保存
-  fileEncodeFrom: 'org', // 切换编码从何处选择
+  fileEncodeFromOrg: false, // 切换编码忽略编辑
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小

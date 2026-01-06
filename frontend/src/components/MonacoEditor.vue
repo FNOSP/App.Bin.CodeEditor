@@ -21,7 +21,6 @@
           camera.open({
             path: code.path,
             value: code.value,
-            encode: code.encode,
             callback: (v) => {
               code.value = v
               user.cfg.fileCameraUseDoSave && save()
@@ -43,7 +42,7 @@
 
     <el-switch v-if="code.lang === 'markdown'" v-model="mdView" inline-prompt active-text="预览" inactive-text="源码" />
 
-    <el-select v-model="code.lang" style="width: 120px" size="small" filterable placement="top" @change="changeLang">
+    <el-select v-if="code.lang" v-model="code.lang" style="width: 120px" size="small" filterable placement="top" @change="changeLang">
       <el-option v-for="item in LANG_OPTIONS" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
 
@@ -92,8 +91,9 @@ const { code, load, save } = useCode({
 const { editorDidMount, changeLang, changeTheme, changeOption } = useEditor({ onSave: save })
 
 const changeEncode = async (v: string) => {
-  const buffer = await code.blob.arrayBuffer()
-  code.org = code.value = new TextDecoder(v).decode(buffer)
+  if (code.org === code.value || user.cfg.fileEncodeFromOrg) {
+    code.org = code.value = new TextDecoder(v).decode(code.buffer)
+  }
 }
 
 watch(

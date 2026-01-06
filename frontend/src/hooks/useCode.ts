@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
+import iconv from 'iconv-lite'
 
 import { HOST } from '@/utils/env'
 import { LANG_MAP } from '@/utils/option'
@@ -15,8 +16,8 @@ interface OptionModel {
 }
 
 interface CodeModel {
+  buffer: ArrayBuffer
   path: string
-  blob: Blob
   org: string
   value: string
   lang: string
@@ -29,8 +30,8 @@ export default function useCode(option: OptionModel) {
   // const open = useOpenStore()
 
   const code = reactive<CodeModel>({
+    buffer: new ArrayBuffer(),
     path: '',
-    blob: new Blob(),
     org: '',
     value: '',
     lang: '',
@@ -49,14 +50,14 @@ export default function useCode(option: OptionModel) {
         responseType: 'blob',
       })
 
-      const info = await getEncodeValue(data)
-
-      code.blob = data
+      code.buffer = await data.arrayBuffer()
       code.path = path
-      code.encode = info.encode
-      code.org = code.value = info.value
       code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
       code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
+
+      const info = getEncodeValue(code.buffer)
+      code.encode = info.encode
+      code.org = code.value = info.value
 
       // if (await isBinaryContent(data)) {
       //   option.onError('不支持二进制文件的编辑')
@@ -118,6 +119,7 @@ export default function useCode(option: OptionModel) {
         code.date = dayjs(value.data.time)
 
         code.org = code.value
+        code.buffer = iconv.encode(code.value, code.encode)
 
         option.onSave()
       } else {

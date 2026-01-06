@@ -71,8 +71,8 @@ jobs:
         run: npm run build:backend
       - name: Build x86 package
         run: |
-          chmod +x ./build/fnpack-1.0.4-darwin-arm64
-          ./build/fnpack-1.0.4-darwin-arm64 build app
+          chmod +x ./build/fnpack-1.2.0-darwin-arm64
+          ./build/fnpack-1.2.0-darwin-arm64 build app
       - name: Rename x86 package
         run: mv code.editor.fpk code.editor.x86.fpk
 
@@ -84,8 +84,8 @@ jobs:
           sed -i '' "s|platform=x86|platform=arm|" app/manifest
       - name: Build arm package
         run: |
-          chmod +x ./build/fnpack-1.0.4-darwin-arm64
-          ./build/fnpack-1.0.4-darwin-arm64 build app
+          chmod +x ./build/fnpack-1.2.0-darwin-arm64
+          ./build/fnpack-1.2.0-darwin-arm64 build app
       - name: Rename arm package
         run: mv code.editor.fpk code.editor.arm.fpk
 

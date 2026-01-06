@@ -4,9 +4,9 @@ import axios from 'axios'
 
 import { HOST } from '@/utils/env'
 import { LANG_MAP } from '@/utils/option'
-import { getEncodeValue, isBinaryContent } from '@/utils/file'
+import { getEncodeValue } from '@/utils/file'
 
-import { useOpenStore } from '@/store/open'
+// import { useOpenStore } from '@/store/open'
 
 interface OptionModel {
   confirm: () => boolean
@@ -26,7 +26,7 @@ interface CodeModel {
 }
 
 export default function useCode(option: OptionModel) {
-  const open = useOpenStore()
+  // const open = useOpenStore()
 
   const code = reactive<CodeModel>({
     path: '',
@@ -49,21 +49,20 @@ export default function useCode(option: OptionModel) {
         responseType: 'blob',
       })
 
-      if (await isBinaryContent(data)) {
-        option.onError('不支持二进制文件的编辑')
-        open.removeHistory(path)
-        return
-      }
-
-      code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
-      code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
-
       const info = await getEncodeValue(data)
 
       code.blob = data
       code.path = path
       code.encode = info.encode
       code.org = code.value = info.value
+      code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
+      code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
+
+      // if (await isBinaryContent(data)) {
+      //   option.onError('不支持二进制文件的编辑')
+      //   open.removeHistory(path)
+      //   return
+      // }
 
       const filename = path.split('/').pop() || ''
 

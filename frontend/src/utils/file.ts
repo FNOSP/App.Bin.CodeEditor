@@ -1,5 +1,3 @@
-import * as iconv from 'iconv-lite'
-
 import { HOST } from '@/utils/env'
 import { ENCODING_OPTIONS } from '@/utils/option'
 
@@ -46,44 +44,25 @@ export const getKey = (path: string) =>
     .replace(/\./g, '_')
 
 export const getEncodeValue = async (blob: Blob) => {
-  const result = { encode: '', value: '' }
+  const encode: string[] = []
+  const buffer = await blob.arrayBuffer()
 
-  const buffer = new Uint8Array(await blob.arrayBuffer())
+  for (const item of ENCODING_OPTIONS) {
+    try {
+      const decoder = new TextDecoder(item.value)
+      const text = decoder.decode(buffer)
 
-  if (buffer.length >= 3 && buffer[0] === 0xef && buffer[1] === 0xbb && buffer[2] === 0xbf) {
-    result.encode = 'utf8'
-  } else if (buffer[0] === 0xfe && buffer[1] === 0xff) {
-    result.encode = 'utf16be'
-  } else if (buffer[0] === 0xff && buffer[1] === 0xfe) {
-    result.encode = 'utf16le'
-  }
-
-  if (!result.encode) {
-    for (const item of ENCODING_OPTIONS) {
-      try {
-        const text = iconv.decode(buffer, item.value)
-        const sum = text.length
-        const err = text.split('').filter((i) => i === '�').length
-
-        if (err / sum > 0.3) {
-          result.encode = item.value
-          result.value = text
-        }
-      } catch {
+      if (text.includes('�')) {
         continue
       }
+
+      encode.push(item.value)
+    } catch {
+      continue
     }
   }
 
-  if (!result.encode) {
-    result.encode = 'utf8'
-  }
-
-  if (!result.value) {
-    result.value = iconv.decode(buffer, result.encode)
-  }
-
-  return result
+  return { encode: encode[0] || 'utf8', value: new TextDecoder(encode[0] || 'utf8').decode(buffer) }
 }
 
 export const isBinaryContent = async (blob: Blob) => {

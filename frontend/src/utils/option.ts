@@ -86,16 +86,16 @@ export const THEME_OPTIONS: { label: string; value: string; dark: boolean }[] = 
 
 export const ENCODING_OPTIONS = [
   // 推荐优先显示（常用编码）
-  { value: 'utf8', label: 'UTF-8' },
+  { value: 'utf-8', label: 'UTF-8' },
   { value: 'gbk', label: 'GBK' },
   { value: 'gb2312', label: 'GB2312' },
   { value: 'gb18030', label: 'GB18030' },
   { value: 'big5', label: 'Big5' },
 
   // 国际通用编码
-  { value: 'utf16le', label: 'UTF-16 LE' },
-  { value: 'utf16be', label: 'UTF-16 BE' },
-  { value: 'utf16', label: 'UTF-16' },
+  { value: 'utf-16le', label: 'UTF-16 LE' },
+  { value: 'utf-16be', label: 'UTF-16 BE' },
+  { value: 'utf-16', label: 'UTF-16' },
   { value: 'ascii', label: 'ASCII' },
   { value: 'latin1', label: 'ISO-8859-1' },
   { value: 'windows-1252', label: 'Windows-1252' },

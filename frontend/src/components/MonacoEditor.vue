@@ -57,7 +57,6 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import MonacoEditor from 'monaco-editor-vue3'
 import { Camera } from '@element-plus/icons-vue'
-import * as iconv from 'iconv-lite'
 
 import MdView from '@/components/MdView.vue'
 
@@ -94,7 +93,7 @@ const { editorDidMount, changeLang, changeTheme, changeOption } = useEditor({ on
 
 const changeEncode = async (v: string) => {
   const buffer = await code.blob.arrayBuffer()
-  code.org = code.value = iconv.decode(new Uint8Array(buffer), v)
+  code.org = code.value = new TextDecoder(v).decode(buffer)
 }
 
 watch(

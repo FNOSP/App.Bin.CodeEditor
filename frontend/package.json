@@ -14,7 +14,6 @@
     "axios": "^1.13.2",
     "buffer": "^6.0.3",
     "element-plus": "^2.11.9",
-    "iconv-lite": "^0.7.0",
     "lodash": "^4.17.21",
     "marked": "^17.0.1",
     "monaco-editor": "^0.54.0",

@@ -44,7 +44,7 @@ export const getKey = (path: string) =>
     .replace(/\./g, '_')
 
 export const getEncodeValue = (buffer: ArrayBuffer) => {
-  const encode: string[] = []
+  let encode = 'utf-8'
 
   for (const item of ENCODING_OPTIONS) {
     try {
@@ -61,11 +61,12 @@ export const getEncodeValue = (buffer: ArrayBuffer) => {
         }
       }
 
-      encode.push(item.value)
+      encode = item.value
+      break
     } catch {
       continue
     }
   }
 
-  return { encode: encode[0] || 'utf8', value: new TextDecoder(encode[0] || 'utf8').decode(buffer) }
+  return { encode, value: new TextDecoder(encode).decode(buffer) }
 }

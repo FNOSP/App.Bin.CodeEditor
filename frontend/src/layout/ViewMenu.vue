@@ -30,12 +30,16 @@ import { Folder, Timer, Notification, Setting } from '@element-plus/icons-vue'
 
 import { useMenuStore } from '@/store/menu'
 import { useLikeStore } from '@/store/like'
+import { useUserStore } from '@/store/user'
 
 const menu = useMenuStore()
 const like = useLikeStore()
+const user = useUserStore()
 
 onMounted(() => {
-  if (like.cfg.folderActive) {
+  const query = new URLSearchParams(window.location.search).get('path') || ''
+
+  if ((!query || !user.cfg.folderNotOpenInQuery) && user.cfg.folderDefOpen) {
     menu.toggle('folder')
   }
 })

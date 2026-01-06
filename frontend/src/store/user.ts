@@ -87,11 +87,7 @@ export const useUserStore = defineStore('user', () => {
       cfg.value = Object.assign(cfg.value, cloneDeep(result1) as LikeModel)
     }
 
-    const query = new URLSearchParams(window.location.search).get('path') || ''
-
-    if ((!query || !cfg.value.folderNotOpenInQuery) && cfg.value.folderDefOpen) {
-      like.cfg.folderActive = cfg.value.folderDefOpen
-    }
+    like.cfg.folderActive = cfg.value.folderDefOpen || cfg.value.dir[0] || ''
 
     initialized.value = true
   }

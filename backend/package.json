@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "iconv-lite": "^0.7.0",
+    "iconv-lite": "^0.7.1",
     "koa": "^3.1.1",
     "koa-bodyparser": "^4.4.1"
   },

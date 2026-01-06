@@ -56,6 +56,12 @@ export const getEncodeValue = async (blob: Blob) => {
         continue
       }
 
+      if (item.match) {
+        if (!item.match(text)) {
+          continue
+        }
+      }
+
       encode.push(item.value)
     } catch {
       continue

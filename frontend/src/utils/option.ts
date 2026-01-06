@@ -84,6 +84,12 @@ export const THEME_OPTIONS: { label: string; value: string; dark: boolean }[] = 
   { label: 'High Contrast Black（深色模式）', value: 'hc-black', dark: true },
 ]
 
+const codeMatch = (v: string) => {
+  const sum = v.length
+  const err = v.split('').filter((i) => i.charCodeAt(0) > 191).length
+  return err / sum < 0.1
+}
+
 export const ENCODING_OPTIONS = [
   // 推荐优先显示（常用编码）
   { value: 'utf-8', label: 'UTF-8' },
@@ -96,29 +102,13 @@ export const ENCODING_OPTIONS = [
   { value: 'utf-16le', label: 'UTF-16 LE' },
   { value: 'utf-16be', label: 'UTF-16 BE' },
   { value: 'utf-16', label: 'UTF-16' },
-  { value: 'ascii', label: 'ASCII' },
-  { value: 'latin1', label: 'ISO-8859-1' },
-  { value: 'windows-1252', label: 'Windows-1252' },
+  { value: 'ascii', label: 'ASCII', match: codeMatch },
+  { value: 'latin1', label: 'ISO-8859-1', match: codeMatch },
+  { value: 'windows-1252', label: 'Windows-1252', match: codeMatch },
 
   // 日韩编码
   { value: 'shift_jis', label: 'Shift_JIS' },
   { value: 'euc-jp', label: 'EUC-JP' },
   { value: 'euc-kr', label: 'EUC-KR' },
   { value: 'windows-949', label: 'Windows-949' },
-
-  // 东欧/斯拉夫编码
-  { value: 'windows-1251', label: 'Windows-1251' },
-  { value: 'koi8-r', label: 'KOI8-R' },
-  { value: 'iso-8859-5', label: 'ISO-8859-5' },
-
-  // 西欧/南欧编码
-  { value: 'iso-8859-2', label: 'ISO-8859-2' },
-  { value: 'windows-1250', label: 'Windows-1250' },
-  { value: 'iso-8859-3', label: 'ISO-8859-3' },
-
-  // 中东编码
-  { value: 'windows-1256', label: 'Windows-1256' },
-  { value: 'iso-8859-6', label: 'ISO-8859-6' },
-  { value: 'windows-1255', label: 'Windows-1255' },
-  { value: 'iso-8859-8', label: 'ISO-8859-8' },
 ]

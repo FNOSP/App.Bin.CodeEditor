@@ -90,7 +90,7 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    await axios.post(HOST, { encode: 'utf8', path, value: '', force: 1 }, { params: { _api: 'save' } })
+    await axios.post(HOST, { encode: 'utf-8', path, value: '', force: 1 }, { params: { _api: 'save' } })
 
     editor.add(path, { keep: false })
 

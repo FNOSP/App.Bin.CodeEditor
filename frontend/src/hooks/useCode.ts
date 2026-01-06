@@ -34,7 +34,7 @@ export default function useCode(option: OptionModel) {
     org: '',
     value: '',
     lang: '',
-    encode: 'utf8',
+    encode: 'utf-8',
   })
 
   const load = async (path: string) => {

@@ -53,18 +53,17 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import { dayjs, ElMessageBox } from 'element-plus'
 import { Files, Folder, FolderOpened, Refresh, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
 
-import { HOST } from '@/utils/env'
-
 import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
+
+import api from '@/utils/api'
 
 import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
@@ -90,7 +89,7 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    await axios.post(HOST, { encode: 'utf-8', path, value: '', force: 1 }, { params: { _api: 'save' } })
+    await api.post('/save', { encode: 'utf-8', path, value: '', force: 1 })
 
     editor.add(path, { keep: false })
 
@@ -111,12 +110,10 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
     return resolve([])
   }
 
-  const { data: result } = await axios.get<{
+  const { data: result } = await api.get<{
     code: number
     data: { dirs: { name: string }[]; files: { name: string; size: number; updateDate: string }[] }
-  }>(HOST, {
-    params: { _api: 'dir', path: root },
-  })
+  }>('/dir', { params: { path: root } })
 
   if (result.code !== 200) {
     return resolve([])

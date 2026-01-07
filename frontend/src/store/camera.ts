@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
 
-import { HOST, APP_DIR_PATH } from '@/utils/env'
+import api from '@/utils/api'
+import { APP_DIR_PATH } from '@/utils/env'
 import { getKey } from '@/utils/file'
 
 import { useUserStore } from './user'
@@ -47,9 +47,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}`
 
-    const { data: result } = await axios.get<{ code: number; data: { files: ValueModel[] } }>(HOST, {
-      params: { _api: 'dir', path: filePath },
-    })
+    const { data: result } = await api.get<{ code: number; data: { files: ValueModel[] } }>('/dir', { params: { path: filePath } })
 
     if (result.code === 404) {
       data.value = []
@@ -72,16 +70,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`
 
-    await axios.post(
-      HOST,
-      {
-        path: filePath,
-        value: option.value.value,
-        encode: 'utf-8',
-        force: 1,
-      },
-      { params: { _api: 'save' } },
-    )
+    await api.post('/save', { path: filePath, value: option.value.value, encode: 'utf-8', force: 1 })
 
     input.value = ''
 
@@ -111,7 +100,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`
 
-    await axios.post(HOST, { path: filePath }, { params: { _api: 'del' } })
+    await api.post('/del', { path: filePath })
 
     ElMessage({ type: 'success', message: '操作成功' })
 
@@ -143,10 +132,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`
 
-    const { data: result } = await axios.get(HOST, {
-      params: { _api: 'read', path: filePath },
-      responseType: 'blob',
-    })
+    const { data: result } = await api.get('/read', { params: { path: filePath }, responseType: 'blob' })
 
     option.value.callback?.(await result.text())
 

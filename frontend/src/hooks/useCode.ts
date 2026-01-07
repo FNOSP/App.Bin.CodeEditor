@@ -1,9 +1,8 @@
 import { reactive } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
 import iconv from 'iconv-lite'
 
-import { HOST } from '@/utils/env'
+import api from '@/utils/api'
 import { LANG_MAP } from '@/utils/option'
 import { getEncodeValue } from '@/utils/file'
 
@@ -45,10 +44,7 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, headers } = await axios.get(HOST, {
-        params: { _api: 'read', path },
-        responseType: 'blob',
-      })
+      const { data, headers } = await api.get('/read', { params: { path }, responseType: 'blob' })
 
       code.buffer = await data.arrayBuffer()
       code.path = path
@@ -97,20 +93,16 @@ export default function useCode(option: OptionModel) {
 
   const upload = async (force?: 1) => {
     try {
-      const { data: value } = await axios.post<{
+      const { data: value } = await api.post<{
         code: number
         msg: string
         data: { size: number; time: string }
-      }>(
-        HOST,
-        {
-          encode: code.encode,
-          value: code.value,
-          path: code.path,
-          force,
-        },
-        { params: { _api: 'save' } },
-      )
+      }>('/save', {
+        encode: code.encode,
+        value: code.value,
+        path: code.path,
+        force,
+      })
 
       if (value.code === 200) {
         ElMessage({ type: 'success', message: '操作成功' })

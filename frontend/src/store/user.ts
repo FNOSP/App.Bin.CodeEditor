@@ -1,10 +1,10 @@
 import { ref, toRaw, watch } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import { cloneDeep, debounce } from 'lodash'
 
+import api from '@/utils/api'
 import localStorage from '@/utils/localStorage'
-import { HOST, IS_DEV, APP_DIR_PATH } from '@/utils/env'
+import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
 
 import { useLikeStore } from '@/store/like'
 
@@ -78,9 +78,7 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data: result1 } = await axios.get(HOST, {
-      params: { _api: 'read', path: USER_CONFIG_PATH },
-    })
+    const { data: result1 } = await api.get('/read', { params: { path: USER_CONFIG_PATH } })
 
     if (result1.code === 404) {
       await update()
@@ -95,18 +93,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const update = debounce(async () => {
-    await axios.post(
-      HOST,
-      {
-        encode: 'utf-8',
-        path: USER_CONFIG_PATH,
-        value: JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }),
-        force: 1,
-      },
-      {
-        params: { _api: 'save' },
-      },
-    )
+    await api.post('/save', {
+      encode: 'utf-8',
+      path: USER_CONFIG_PATH,
+      value: JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }),
+      force: 1,
+    })
 
     org.value = cloneDeep(toRaw(cfg.value))
   }, 300)
@@ -118,7 +110,7 @@ export const useUserStore = defineStore('user', () => {
         return
       }
 
-      axios.post(HOST, { open: Number(cfg.value.fileAllOpen) }, { params: { _api: 'def' } })
+      api.post('/def', { open: Number(cfg.value.fileAllOpen) })
     },
   )
 

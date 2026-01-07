@@ -10,7 +10,7 @@
 
 ## 应用说明
 
-VS Code 同源库，支持多种编码文件的操作，更有语法高亮、代码补全。
+支持多种文件编码，更有语法高亮、代码提示、文件快照、目录管理、多图预览、PDF 预览、Markdown 预览等丰富功能。
 
 [更新日志](CHANGELOG.md)
 
@@ -35,16 +35,10 @@ npm run install
 npm run build
 ```
 
-## CGI 模式说明
-
-- 服务端：服务端将接口和 node 环境，通过 pkg 打包成 linux 运行文件，在飞牛以 cgi 的方式进行调用和返回。
-- 客户端：vite 打包后，将引入文件通过服务端 api 加载
-
 ## 鸣谢
 
-感谢以下开源项目：
+文件的查阅和编辑功能基于以下开源项目进行实现，特别感谢有这些好用的开源项目：
 
-- [monaco-editor](https://github.com/microsoft/monaco-editor)
-- [monaco-editor-vue3](https://github.com/bazingaedward/monaco-editor-vue3)
-- [pdfjs](https://github.com/mozilla/pdf.js)
-- [marked](https://github.com/markedjs/marked)
+- 代码编辑：[monaco-editor](https://github.com/microsoft/monaco-editor)、[monaco-editor-vue3](https://github.com/bazingaedward/monaco-editor-vue3)
+- PDF 阅览：[pdfjs](https://github.com/mozilla/pdf.js)
+- Markdown 阅览：[marked](https://github.com/markedjs/marked)

@@ -1,5 +1,6 @@
+const path = require('path')
 const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const { koaBody } = require('koa-body')
 const cors = require('@koa/cors')
 
 const exec = require('./utils/exec')
@@ -8,11 +9,23 @@ const app = new Koa()
 
 app.use(cors())
 
-app.use(bodyParser())
+app.use(
+  koaBody({
+    includeUnparsed: true,
+    parsedMethods: ['POST', 'PUT', 'PATCH'],
+    multipart: true,
+    formidable: {
+      uploadDir: path.join(__dirname, '../../runtime/upload'),
+      keepExtensions: true,
+    },
+  })
+)
 
 app.use(async (ctx) => {
+  const url = ctx.request.url.split('?')[0]
+
   const data = {
-    api: ctx.request.headers['api-path'] || '',
+    api: url.replace('/api', ''),
     query: ctx.query || {},
     body: ctx.request.body || {},
   }

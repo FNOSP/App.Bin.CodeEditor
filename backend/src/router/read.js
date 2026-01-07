@@ -17,14 +17,6 @@ module.exports = async function ({ query }) {
       return { code: 400, msg: '路径不是文件' }
     }
 
-    if (query.cache) {
-      const maxAge = 365 * 24 * 60 * 60
-      console.log(`Cache-Control: public, max-age=${maxAge}, immutable`)
-      console.log(`Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`)
-      console.log(`ETag: "${stat.size}-${stat.mtime.getTime()}"`)
-      console.log(`Last-Modified: ${stat.mtime.toUTCString()}`)
-    }
-
     return {
       code: 200,
       msg: '操作成功',

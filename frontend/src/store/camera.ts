@@ -68,9 +68,12 @@ export const useCameraStore = defineStore('camera', () => {
       return
     }
 
-    const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`
+    const formData = new FormData()
+    formData.append('path', `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`)
+    formData.append('force', '1')
+    formData.append('file', new Blob([new TextEncoder().encode(option.value.value)]))
 
-    await api.post('/save', { path: filePath, value: option.value.value, encode: 'utf-8', force: 1 })
+    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
 
     input.value = ''
 

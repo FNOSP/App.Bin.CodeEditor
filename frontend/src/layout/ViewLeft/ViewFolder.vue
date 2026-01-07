@@ -89,7 +89,12 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    await api.post('/save', { encode: 'utf-8', path, value: '', force: 1 })
+    const formData = new FormData()
+    formData.append('path', path)
+    formData.append('force', '1')
+    formData.append('file', new Blob([new TextEncoder().encode(' ')]))
+
+    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
 
     editor.add(path, { keep: false })
 

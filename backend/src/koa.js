@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const Koa = require('koa')
 const { koaBody } = require('koa-body')
@@ -11,7 +12,6 @@ app.use(cors())
 
 app.use(
   koaBody({
-    includeUnparsed: true,
     parsedMethods: ['POST', 'PUT', 'PATCH'],
     multipart: true,
     formidable: {
@@ -28,6 +28,12 @@ app.use(async (ctx) => {
     api: url.replace('/api', ''),
     query: ctx.query || {},
     body: ctx.request.body || {},
+    files: ctx.request.files
+      ? Object.keys(ctx.request.files).reduce((obj, key) => {
+          obj[key] = fs.readFileSync(ctx.request.files[key].filepath)
+          return obj
+        }, {})
+      : {},
   }
 
   const { type, body } = await exec(data)

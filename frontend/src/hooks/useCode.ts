@@ -93,25 +93,22 @@ export default function useCode(option: OptionModel) {
 
   const upload = async (force?: 1) => {
     try {
-      const { data: value } = await api.post<{
-        code: number
-        msg: string
-        data: { size: number; time: string }
-      }>('/save', {
-        encode: code.encode,
-        value: code.value,
-        path: code.path,
-        force,
-      })
+      const buffer = iconv.encode(code.value, code.encode)
+
+      const formData = new FormData()
+      formData.append('path', code.path)
+      formData.append('force', force ? '1' : '0')
+      formData.append('file', new Blob([buffer]))
+
+      const { data: value } = await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
 
       if (value.code === 200) {
         ElMessage({ type: 'success', message: '操作成功' })
 
         code.byte = value.data.size
         code.date = dayjs(value.data.time)
-
         code.org = code.value
-        code.buffer = iconv.encode(code.value, code.encode)
+        code.buffer = buffer
 
         option.onSave()
       } else {

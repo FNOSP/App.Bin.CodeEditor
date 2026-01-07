@@ -93,12 +93,15 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const update = debounce(async () => {
-    await api.post('/save', {
-      encode: 'utf-8',
-      path: USER_CONFIG_PATH,
-      value: JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }),
-      force: 1,
-    })
+    const formData = new FormData()
+    formData.append('path', USER_CONFIG_PATH)
+    formData.append('force', '1')
+    formData.append(
+      'file',
+      new Blob([new TextEncoder().encode(JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }))]),
+    )
+
+    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
 
     org.value = cloneDeep(toRaw(cfg.value))
   }, 300)

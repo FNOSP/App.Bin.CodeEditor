@@ -4,7 +4,7 @@ import iconv from 'iconv-lite'
 
 import api from '@/utils/api'
 import { LANG_MAP } from '@/utils/option'
-import { getEncodeValue } from '@/utils/file'
+import { getEncodeValue, getFullPath } from '@/utils/file'
 
 // import { useOpenStore } from '@/store/open'
 
@@ -44,7 +44,7 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, headers } = await api.get('/read', { params: { path }, responseType: 'blob' })
+      const { data, headers } = await api.get(getFullPath(path), { responseType: 'blob' })
 
       code.buffer = await data.arrayBuffer()
       code.path = path

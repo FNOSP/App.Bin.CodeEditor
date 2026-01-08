@@ -7,20 +7,16 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@koa/cors':
         specifier: ^5.0.0
         version: 5.0.0
-      iconv-lite:
-        specifier: ^0.7.1
-        version: 0.7.1
       koa:
         specifier: ^3.1.1
         version: 3.1.1
       koa-body:
         specifier: ^7.0.1
         version: 7.0.1
-    devDependencies:
       pkg:
         specifier: ^5.8.1
         version: 5.8.1
@@ -414,10 +410,6 @@ packages:
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
-    engines: {node: '>=0.10.0'}
-
-  iconv-lite@0.7.1:
-    resolution: {integrity: sha512-2Tth85cXwGFHfvRgZWszZSvdo+0Xsqmw8k8ZwxScfcBneNUraK+dxRxRm24nszx80Y0TVio8kKLt5sLE7ZCLlw==}
     engines: {node: '>=0.10.0'}
 
   ieee754@1.2.1:
@@ -1242,10 +1234,6 @@ snapshots:
       - supports-color
 
   iconv-lite@0.4.24:
-    dependencies:
-      safer-buffer: 2.1.2
-
-  iconv-lite@0.7.1:
     dependencies:
       safer-buffer: 2.1.2
 

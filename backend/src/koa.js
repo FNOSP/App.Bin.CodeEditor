@@ -6,35 +6,41 @@ const cors = require('@koa/cors')
 
 const exec = require('./utils/exec')
 
+const uploadDir = path.join(__dirname, '../runtime/upload')
+fs.existsSync(uploadDir) || fs.mkdirSync(uploadDir, { recursive: true })
+
+const getData = (ctx) => {
+  const path = decodeURIComponent(ctx.request.url.split('?')[0])
+
+  if (path.indexOf('/api') === 0) {
+    return {
+      api: path.replace('/api', ''),
+      query: ctx.query || {},
+      body: ctx.request.body || {},
+      files: ctx.request.files
+        ? Object.keys(ctx.request.files).reduce((obj, key) => {
+            obj[key] = fs.readFileSync(ctx.request.files[key].filepath)
+            return obj
+          }, {})
+        : {},
+    }
+  } else if (path.indexOf('/proxy') === 0) {
+    return { api: '/read', query: { path: path.replace('/proxy', '') } }
+  } else {
+    // 本地开发用不到这里
+    const assets = path === '/' ? '/index.html' : path
+    return { api: '/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}`, cache: 1 } }
+  }
+}
+
 const app = new Koa()
 
 app.use(cors())
 
-app.use(
-  koaBody({
-    parsedMethods: ['POST', 'PUT', 'PATCH'],
-    multipart: true,
-    formidable: {
-      uploadDir: path.join(__dirname, '../../runtime/upload'),
-      keepExtensions: true,
-    },
-  })
-)
+app.use(koaBody({ parsedMethods: ['POST', 'PUT', 'PATCH'], multipart: true, formidable: { uploadDir, keepExtensions: true } }))
 
 app.use(async (ctx) => {
-  const url = ctx.request.url.split('?')[0]
-
-  const data = {
-    api: url.replace('/api', ''),
-    query: ctx.query || {},
-    body: ctx.request.body || {},
-    files: ctx.request.files
-      ? Object.keys(ctx.request.files).reduce((obj, key) => {
-          obj[key] = fs.readFileSync(ctx.request.files[key].filepath)
-          return obj
-        }, {})
-      : {},
-  }
+  const data = getData(ctx)
 
   const { type, body } = await exec(data)
 

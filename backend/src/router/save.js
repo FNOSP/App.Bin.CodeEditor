@@ -1,5 +1,4 @@
 const fs = require('fs')
-const iconv = require('iconv-lite')
 const path = require('path')
 
 module.exports = async function ({ body, files }) {

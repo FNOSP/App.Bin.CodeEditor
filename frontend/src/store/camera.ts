@@ -4,7 +4,7 @@ import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 
 import api from '@/utils/api'
 import { APP_DIR_PATH } from '@/utils/env'
-import { getKey } from '@/utils/file'
+import { getFullPath, getKey } from '@/utils/file'
 
 import { useUserStore } from './user'
 
@@ -135,7 +135,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`
 
-    const { data: result } = await api.get('/read', { params: { path: filePath }, responseType: 'blob' })
+    const { data: result } = await api.get(getFullPath(filePath), { responseType: 'blob' })
 
     option.value.callback?.(await result.text())
 

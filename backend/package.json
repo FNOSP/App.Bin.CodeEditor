@@ -5,9 +5,7 @@
     "build": "pkg -t node18-linux-x64 ./src/cgi.js --output ../app/app/server/api",
     "build:arm": "pkg -t node18-linux-arm64 ./src/cgi.js --output ../app/app/server/api"
   },
-  "dependencies": {
-    "iconv-lite": "^0.7.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@koa/cors": "^5.0.0",
     "koa": "^3.1.1",

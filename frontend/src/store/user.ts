@@ -5,6 +5,7 @@ import { cloneDeep, debounce } from 'lodash'
 import api from '@/utils/api'
 import localStorage from '@/utils/localStorage'
 import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
+import { getFullPath } from '@/utils/file'
 
 import { useLikeStore } from '@/store/like'
 
@@ -78,13 +79,13 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data: result1 } = await api.get('/read', { params: { path: USER_CONFIG_PATH } })
+    const { data } = await api.get(getFullPath(USER_CONFIG_PATH))
 
-    if (result1.code === 404) {
+    if (data.code === 404) {
       await update()
     } else {
-      org.value = Object.assign(org.value, cloneDeep(result1) as LikeModel)
-      cfg.value = Object.assign(cfg.value, cloneDeep(result1) as LikeModel)
+      org.value = Object.assign(org.value, cloneDeep(data) as LikeModel)
+      cfg.value = Object.assign(cfg.value, cloneDeep(data) as LikeModel)
     }
 
     like.cfg.folderActive = cfg.value.folderDefOpen || cfg.value.dir[0] || ''

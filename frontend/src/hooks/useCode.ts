@@ -2,9 +2,8 @@ import { reactive } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import iconv from 'iconv-lite'
 
-import api, { axios } from '@/utils/api'
 import { LANG_MAP } from '@/utils/option'
-import { getEncodeValue, getFullPath } from '@/utils/file'
+import { getEncodeValue, readFile, saveFile } from '@/utils/file'
 
 // import { useOpenStore } from '@/store/open'
 
@@ -44,12 +43,12 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, headers } = await axios(getFullPath(path), { responseType: 'blob' })
+      const { data, byte, date } = await readFile(path, 'arraybuffer')
 
-      code.buffer = await data.arrayBuffer()
       code.path = path
-      code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
-      code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
+      code.buffer = data
+      code.byte = byte
+      code.date = date
 
       const info = getEncodeValue(code.buffer)
       code.encode = info.encode
@@ -95,12 +94,7 @@ export default function useCode(option: OptionModel) {
     try {
       const buffer = iconv.encode(code.value, code.encode)
 
-      const formData = new FormData()
-      formData.append('path', code.path)
-      formData.append('force', force ? '1' : '0')
-      formData.append('file', new Blob([buffer]))
-
-      const { data: value } = await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
+      const value = await saveFile({ path: code.path, force: force ? 1 : 0, file: new Blob([buffer]) })
 
       if (value.code === 200) {
         ElMessage({ type: 'success', message: '操作成功' })

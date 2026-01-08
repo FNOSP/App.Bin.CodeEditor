@@ -63,8 +63,8 @@ import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
 
-import api, { axios } from '@/utils/api'
-import { getFullPath } from '@/utils/file'
+import { axios } from '@/utils/api'
+import { getFullPath, saveFile } from '@/utils/file'
 
 import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
@@ -90,12 +90,7 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    const formData = new FormData()
-    formData.append('path', path)
-    formData.append('force', '1')
-    formData.append('file', new Blob([new TextEncoder().encode(' ')]))
-
-    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
+    await saveFile({ path, force: 1, file: new Blob([new TextEncoder().encode(' ')]) })
 
     editor.add(path, { keep: false })
 

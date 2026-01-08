@@ -4,7 +4,7 @@ import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 
 import api, { axios } from '@/utils/api'
 import { APP_DIR_PATH } from '@/utils/env'
-import { getFullPath, getKey } from '@/utils/file'
+import { getFullPath, getKey, readFile } from '@/utils/file'
 
 import { useUserStore } from './user'
 
@@ -133,11 +133,9 @@ export const useCameraStore = defineStore('camera', () => {
       }
     }
 
-    const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`
+    const result = await readFile(`${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`, 'text')
 
-    const { data: result } = await axios(getFullPath(filePath), { responseType: 'blob' })
-
-    option.value.callback?.(await result.text())
+    option.value.callback?.(result.data)
 
     show.value = false
   }

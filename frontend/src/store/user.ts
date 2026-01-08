@@ -1,11 +1,10 @@
-import { ref, toRaw, watch } from 'vue'
+import { ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
 import { cloneDeep, debounce } from 'lodash'
 
-import api, { axios } from '@/utils/api'
 import localStorage from '@/utils/localStorage'
 import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
-import { getFullPath } from '@/utils/file'
+import { readFile, saveFile } from '@/utils/file'
 
 import { useLikeStore } from '@/store/like'
 
@@ -79,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data } = await axios(getFullPath(USER_CONFIG_PATH))
+    const { data } = await readFile(USER_CONFIG_PATH)
 
     if (data.code === 404) {
       await update()
@@ -94,29 +93,25 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const update = debounce(async () => {
-    const formData = new FormData()
-    formData.append('path', USER_CONFIG_PATH)
-    formData.append('force', '1')
-    formData.append(
-      'file',
-      new Blob([new TextEncoder().encode(JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }))]),
-    )
-
-    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
+    await saveFile({
+      path: USER_CONFIG_PATH,
+      force: 1,
+      file: new Blob([new TextEncoder().encode(JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }))]),
+    })
 
     org.value = cloneDeep(toRaw(cfg.value))
   }, 300)
 
-  watch(
-    () => cfg.value.fileAllOpen,
-    () => {
-      if (!initialized.value) {
-        return
-      }
+  // watch(
+  //   () => cfg.value.fileAllOpen,
+  //   () => {
+  //     if (!initialized.value) {
+  //       return
+  //     }
 
-      api.post('/def', { open: Number(cfg.value.fileAllOpen) })
-    },
-  )
+  //     api.post('/def', { open: Number(cfg.value.fileAllOpen) })
+  //   },
+  // )
 
   return { initialized, cfg, load, update }
 })

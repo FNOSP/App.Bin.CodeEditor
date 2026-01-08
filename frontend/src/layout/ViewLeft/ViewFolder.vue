@@ -63,7 +63,8 @@ import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
 
-import api from '@/utils/api'
+import api, { axios } from '@/utils/api'
+import { getFullPath } from '@/utils/file'
 
 import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
@@ -115,10 +116,10 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
     return resolve([])
   }
 
-  const { data: result } = await api.get<{
+  const { data: result } = await axios<{
     code: number
     data: { dirs: { name: string }[]; files: { name: string; size: number; updateDate: string }[] }
-  }>('/dir', { params: { path: root } })
+  }>(getFullPath(root), { params: { dir: 1 } })
 
   if (result.code !== 200) {
     return resolve([])

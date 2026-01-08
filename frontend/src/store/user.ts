@@ -2,7 +2,7 @@ import { ref, toRaw, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { cloneDeep, debounce } from 'lodash'
 
-import api from '@/utils/api'
+import api, { axios } from '@/utils/api'
 import localStorage from '@/utils/localStorage'
 import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
 import { getFullPath } from '@/utils/file'
@@ -79,7 +79,7 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data } = await api.get(getFullPath(USER_CONFIG_PATH))
+    const { data } = await axios(getFullPath(USER_CONFIG_PATH))
 
     if (data.code === 404) {
       await update()

@@ -2,7 +2,7 @@ import { reactive } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import iconv from 'iconv-lite'
 
-import api from '@/utils/api'
+import api, { axios } from '@/utils/api'
 import { LANG_MAP } from '@/utils/option'
 import { getEncodeValue, getFullPath } from '@/utils/file'
 
@@ -44,7 +44,7 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, headers } = await api.get(getFullPath(path), { responseType: 'blob' })
+      const { data, headers } = await axios(getFullPath(path), { responseType: 'blob' })
 
       code.buffer = await data.arrayBuffer()
       code.path = path

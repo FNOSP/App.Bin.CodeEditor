@@ -25,11 +25,12 @@ const getData = (ctx) => {
         : {},
     }
   } else if (path.indexOf('/proxy') === 0) {
-    return { api: '/read', query: { path: path.replace('/proxy', '') } }
+    const query = ctx.query || {}
+    return { api: Number(query.dir) === 1 ? '/dir' : '/read', query: { path: path.replace('/proxy', '') } }
   } else {
     // 本地开发用不到这里
     const assets = path === '/' ? '/index.html' : path
-    return { api: '/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}`, cache: 1 } }
+    return { api: '/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}` }, cache: path !== '/' }
   }
 }
 
@@ -49,8 +50,8 @@ app.use(async (ctx) => {
     ctx.set('Content-Length', body.size)
     ctx.set('Access-Control-Expose-Headers', 'X-Size,X-Update-Date,X-Create-Date')
     ctx.set('X-Size', body.size)
-    ctx.set('X-Update-Date', body.mtime)
-    ctx.set('X-Create-Date', body.birthtime)
+    ctx.set('X-Update-Date', body.mtime.toUTCString())
+    ctx.set('X-Create-Date', body.birthtime.toUTCString())
     ctx.body = body.stream
   } else {
     ctx.set('Content-Type', 'application/json; charset=utf-8')

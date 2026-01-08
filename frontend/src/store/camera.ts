@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 
-import api from '@/utils/api'
+import api, { axios } from '@/utils/api'
 import { APP_DIR_PATH } from '@/utils/env'
 import { getFullPath, getKey } from '@/utils/file'
 
@@ -47,7 +47,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}`
 
-    const { data: result } = await api.get<{ code: number; data: { files: ValueModel[] } }>('/dir', { params: { path: filePath } })
+    const { data: result } = await axios<{ code: number; data: { files: ValueModel[] } }>(getFullPath(filePath), { params: { dir: 1 } })
 
     if (result.code === 404) {
       data.value = []
@@ -135,7 +135,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`
 
-    const { data: result } = await api.get(getFullPath(filePath), { responseType: 'blob' })
+    const { data: result } = await axios(getFullPath(filePath), { responseType: 'blob' })
 
     option.value.callback?.(await result.text())
 

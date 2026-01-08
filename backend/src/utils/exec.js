@@ -1,7 +1,7 @@
 const getType = require('./type')
 
 const router = {
-  '/read': { type: 'file', run: require('../router/read') },
+  '/read': { run: require('../router/read'), type: 'file' },
   '/save': { run: require('../router/save') },
   '/del': { run: require('../router/del') },
   '/dir': { run: require('../router/dir') },

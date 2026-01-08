@@ -81,11 +81,15 @@ const getData = async () => {
   const path = process.env.PATH_INFO.replace('/cgi/ThirdParty/code.editor/index.cgi', '')
 
   if (path.indexOf('/api') === 0) {
+    const query = getQuery()
     const { body, files } = await getBody()
     return { api: path.replace('/api', ''), query, body, files }
+  } else if (path.indexOf('/proxy') === 0) {
+    const query = getQuery()
+    return { api: Number(query.dir) === 1 ? '/dir' : '/read', query: { path: path.replace('/proxy', '') } }
   } else {
     const assets = path === '/' ? '/index.html' : path
-    return { api: '/api/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}`, cache: 1 } }
+    return { api: '/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}` }, cache: path !== '/' }
   }
 }
 
@@ -100,7 +104,7 @@ async function main() {
       console.log(`Content-Length: ${body.size}`)
 
       // 缓存静态资源
-      if (data.query.cache) {
+      if (data.cache) {
         const maxAge = 365 * 24 * 60 * 60
         console.log(`Cache-Control: public, max-age=${maxAge}, immutable`)
         console.log(`Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`)
@@ -111,8 +115,8 @@ async function main() {
       // 自定义响应头
       console.log('Access-Control-Expose-Headers: X-Size,X-Update-Date,X-Create-Date')
       console.log(`X-Size: ${body.size}`)
-      console.log(`X-Update-Date: ${body.mtime}`)
-      console.log(`X-Create-Date: ${body.birthtime}`)
+      console.log(`X-Update-Date: ${body.mtime.toUTCString()}`)
+      console.log(`X-Create-Date: ${body.birthtime.toUTCString()}`)
 
       // 返回文件
       console.log('')

@@ -10,7 +10,13 @@ export const getFullPath = (path: string) => {
     return path
   }
 
-  return `${HOST}/proxy${path[0] === '/' ? '' : '/'}${path}`
+  const encode = path
+    .split('/')
+    .filter((i) => i !== '')
+    .map((i) => encodeURIComponent(i))
+    .join('/')
+
+  return `${HOST}/proxy/${encode}`
 }
 
 export const getSize = (byte: number) => {

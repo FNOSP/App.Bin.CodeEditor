@@ -1,4 +1,15 @@
-const exec = require('./utils/exec')
+#!/var/apps/nodejs_v22/target/bin/node
+
+console.log('Content-Type: text/plain\n')
+
+const fs = require('fs')
+
+for (const key in process.env) {
+  console.log(`${key}=${process.env[key]}`)
+}
+
+console.log('')
+console.log('')
 
 const getQuery = (v = '') =>
   (v || process.env.QUERY_STRING || '')
@@ -90,58 +101,13 @@ const getBody = async () => {
   }
 }
 
-const getData = async () => {
-  const path = process.env.PATH_INFO.replace('/cgi/ThirdParty/code.editor/index.cgi', '')
-
-  if (path.indexOf('/api') === 0) {
-    const query = getQuery()
-    const { body, files } = await getBody()
-    return { api: path.replace('/api', ''), query, body, files }
-  } else if (path.indexOf('/proxy') === 0) {
-    const query = getQuery()
-    return { api: Number(query.dir) === 1 ? '/dir' : '/read', query: { path: path.replace('/proxy', '') } }
-  } else {
-    const assets = path === '/' ? '/index.html' : path
-    return { api: '/read', query: { path: `/var/apps/code.editor/target/server/dist${assets}` }, cache: path !== '/' }
-  }
-}
-
-async function main() {
+const run = async () => {
   try {
-    const data = await getData()
-
-    const { type, body } = await exec(data)
-
-    if (type) {
-      console.log(`Content-Type: ${type}`)
-      console.log(`Content-Length: ${body.size}`)
-
-      // 缓存静态资源
-      if (data.cache) {
-        const maxAge = 365 * 24 * 60 * 60
-        console.log(`Cache-Control: public, max-age=${maxAge}, immutable`)
-        console.log(`Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`)
-        console.log(`ETag: "${body.size}-${body.mtime.getTime()}"`)
-        console.log(`Last-Modified: ${body.mtime.toUTCString()}`)
-      }
-
-      // 自定义响应头
-      console.log('Access-Control-Expose-Headers: X-Size,X-Update-Date,X-Create-Date')
-      console.log(`X-Size: ${body.size}`)
-      console.log(`X-Update-Date: ${body.mtime.toUTCString()}`)
-      console.log(`X-Create-Date: ${body.birthtime.toUTCString()}`)
-
-      // 返回文件
-      console.log('')
-      body.stream.pipe(process.stdout)
-    } else {
-      console.log('Content-Type: application/json; charset=utf-8\n')
-      console.log(JSON.stringify(body))
-    }
-  } catch (error) {
-    console.log('Content-Type: application/json; charset=utf-8\n')
-    console.log(JSON.stringify({ code: 400, msg: '调用错误' }))
+    const { files } = await getBody()
+    files.file1 && fs.writeFileSync('/var/apps/code.editor/target/ui/' + files.file1.name, files.file1.data)
+  } catch (e) {
+    console.log(JSON.stringify(e))
   }
 }
 
-main()
+run()

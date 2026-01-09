@@ -6,7 +6,7 @@ const getQuery = (v = '') =>
     .filter((i) => !!i)
     .map((i) => i.split('='))
     .reduce((o, [k, v]) => {
-      o[k] = v
+      o[k] = decodeURIComponent(v)
       return o
     }, {})
 
@@ -83,11 +83,9 @@ const getBody = async () => {
         }
       }
     })
-
-    return result
-  } else {
-    return result
   }
+
+  return result
 }
 
 const getData = async () => {

@@ -17,7 +17,7 @@ const getQuery = (v = '') =>
     .filter((i) => !!i)
     .map((i) => i.split('='))
     .reduce((o, [k, v]) => {
-      o[k] = v
+      o[k] = decodeURIComponent(v)
       return o
     }, {})
 
@@ -94,17 +94,15 @@ const getBody = async () => {
         }
       }
     })
-
-    return result
-  } else {
-    return result
   }
+
+  return result
 }
 
 const run = async () => {
   try {
-    const { files } = await getBody()
-    files.file1 && fs.writeFileSync('/var/apps/code.editor/target/ui/' + files.file1.name, files.file1.data)
+    console.log(getQuery())
+    console.log(await getBody())
   } catch (e) {
     console.log(JSON.stringify(e))
   }

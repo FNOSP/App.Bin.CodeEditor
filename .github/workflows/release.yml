@@ -74,7 +74,7 @@ jobs:
           chmod +x ./build/fnpack-1.2.0-darwin-arm64
           ./build/fnpack-1.2.0-darwin-arm64 build app
       - name: Rename x86 package
-        run: mv code.editor.fpk code.editor.x86.fpk
+        run: mv code.editor.fpk code.editor.${{ steps.read_version.outputs.version}}.x86.fpk
 
       # 打包 arm 文件
       - name: Build arm backend
@@ -87,7 +87,7 @@ jobs:
           chmod +x ./build/fnpack-1.2.0-darwin-arm64
           ./build/fnpack-1.2.0-darwin-arm64 build app
       - name: Rename arm package
-        run: mv code.editor.fpk code.editor.arm.fpk
+        run: mv code.editor.fpk code.editor.${{ steps.read_version.outputs.version}}.arm.fpk
 
       # 发布文件
       - name: Release
@@ -96,7 +96,7 @@ jobs:
           tag: v${{ steps.read_version.outputs.version}}
           name: v${{ steps.read_version.outputs.version}}
           bodyFile: RELEASE.md
-          artifacts: "code.editor.x86.fpk,code.editor.arm.fpk"
+          artifacts: "code.editor.${{ steps.read_version.outputs.version}}.x86.fpk,code.editor.${{ steps.read_version.outputs.version}}.arm.fpk"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # 查看所有文件

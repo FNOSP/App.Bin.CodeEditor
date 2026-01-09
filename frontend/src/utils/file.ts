@@ -1,3 +1,7 @@
+import axios from 'axios'
+import { dayjs } from 'element-plus'
+
+import api from '@/utils/api'
 import { HOST } from '@/utils/env'
 import { ENCODING_OPTIONS } from '@/utils/option'
 
@@ -10,7 +14,13 @@ export const getFullPath = (path: string) => {
     return path
   }
 
-  return `${HOST}?_api=read&path=${encodeURIComponent(path)}`
+  const encode = path
+    .split('/')
+    .filter((i) => i !== '')
+    .map((i) => encodeURIComponent(i))
+    .join('/')
+
+  return `${HOST}/proxy/${encode}`
 }
 
 export const getSize = (byte: number) => {
@@ -69,4 +79,30 @@ export const getEncodeValue = (buffer: ArrayBuffer) => {
   }
 
   return { encode, value: new TextDecoder(encode).decode(buffer) }
+}
+
+export const readPath = async <T = any>(opt: { path: string; responseType?: 'json' | 'arraybuffer' | 'text'; dir?: boolean }) => {
+  const responseType = opt.responseType || 'json'
+
+  const { data, headers } = await (getFileSuffix(opt.path) === 'cgi'
+    ? api.get<T>('/read', { params: { path: opt.path }, responseType })
+    : axios<T>(getFullPath(opt.path), { params: { dir: opt.dir ? 1 : undefined }, responseType }))
+
+  return {
+    data,
+    byte: headers['x-size'] ? Number(headers['x-size']) : undefined,
+    date: headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined,
+  }
+}
+
+export const saveFile = async (opt: { path: string; force?: boolean; file: Blob | File }) => {
+  const formData = new FormData()
+
+  formData.append('path', opt.path)
+  opt.force && formData.append('force', '1')
+  formData.append('file', opt.file)
+
+  const { data } = await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
+
+  return data
 }

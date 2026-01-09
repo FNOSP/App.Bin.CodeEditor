@@ -4,17 +4,33 @@
       <div class="title">目录</div>
 
       <el-tooltip content="切换目录" placement="bottom">
-        <el-icon class="icon" @click="openDir()"><Files /></el-icon>
+        <el-icon class="icon" @click="openDir()"><Switch /></el-icon>
       </el-tooltip>
+
+      <template v-if="treeRef">
+        <el-tooltip content="刷新目录" placement="top">
+          <el-icon class="icon" @click.stop="refreshNode(treeRef.root)"><Refresh /></el-icon>
+        </el-tooltip>
+
+        <el-tooltip content="上传文件" placement="top">
+          <el-icon class="icon" @click.stop="uploadFile(treeRef.root)"><Upload /></el-icon>
+        </el-tooltip>
+
+        <el-tooltip content="创建文件" placement="top">
+          <el-icon class="icon" @click.stop="addFile(treeRef.root)"><DocumentAdd /></el-icon>
+        </el-tooltip>
+      </template>
     </div>
 
     <div class="content">
       <div class="list">
         <el-tree
           ref="treeRef"
-          :key="like.cfg.folderActive"
+          :key="`${like.cfg.folderActive}-${treeNum}`"
           :props="{ label: 'label', isLeaf: 'leaf' }"
           :load="loadNode"
+          :current-node-key="editor.active"
+          highlight-current
           lazy
           node-key="value"
           @node-click="openNode"
@@ -34,37 +50,47 @@
                 <div class="t">{{ node.label }}</div>
               </div>
 
-              <div class="edit" v-show="data.dir && node.expanded">
+              <div class="edit" v-if="data.dir" v-show="node.expanded">
                 <el-tooltip content="刷新目录" placement="top">
                   <el-icon @click.stop="refreshNode(node)"><Refresh /></el-icon>
+                </el-tooltip>
+
+                <el-tooltip content="上传文件" placement="top">
+                  <el-icon @click.stop="uploadFile(node)"><Upload /></el-icon>
                 </el-tooltip>
 
                 <el-tooltip content="创建文件" placement="top">
                   <el-icon @click.stop="addFile(node)"><DocumentAdd /></el-icon>
                 </el-tooltip>
               </div>
+              <div class="edit" v-else>
+                <!-- <el-tooltip content="删除文件" placement="top">
+                  <el-icon><DocumentAdd /></el-icon>
+                </el-tooltip> -->
+              </div>
             </div>
           </template>
         </el-tree>
       </div>
     </div>
+
+    <input class="node-upload" ref="upload" type="file" @change="uploadFileChange" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import axios from 'axios'
-import { dayjs, ElMessageBox } from 'element-plus'
-import { Files, Folder, FolderOpened, Refresh, DocumentAdd } from '@element-plus/icons-vue'
+import { nextTick, ref, useTemplateRef } from 'vue'
+import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
+import { Switch, Folder, FolderOpened, Refresh, Upload, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
-
-import { HOST } from '@/utils/env'
 
 import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
+
+import { readPath, saveFile } from '@/utils/file'
 
 import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
@@ -73,7 +99,11 @@ const like = useLikeStore()
 const user = useUserStore()
 const open = useOpenStore()
 
+const uploadRef = useTemplateRef('upload')
+const uploadInfo = ref<RenderContentContext['node']>()
+
 const treeRef = ref<TreeInstance>()
+const treeNum = ref(0)
 
 const openDir = async () => {
   open.show = 'dir'
@@ -81,16 +111,20 @@ const openDir = async () => {
 
 const addFile = async (node: RenderContentContext['node']) => {
   try {
-    const { value } = await ElMessageBox.prompt(`${node.data.value}/`, '创建文件', {
+    const basePath = node.data.value || like.cfg.folderActive
+
+    const { value } = await ElMessageBox.prompt(`${basePath}/`, '创建文件', {
       inputValidator: (v) => (v ? true : '请输入文件名'),
       inputPlaceholder: '文件名+后缀',
       confirmButtonText: '确认',
       cancelButtonText: '取消',
     })
 
-    const path = `${node.data.value}/${value}`
+    const path = `${basePath}/${value}`
 
-    await axios.post(HOST, { encode: 'utf-8', path, value: '', force: 1 }, { params: { _api: 'save' } })
+    await saveFile({ path, force: true, file: new Blob([new TextEncoder().encode(' ')]) })
+
+    ElMessage({ type: 'success', message: '操作成功' })
 
     editor.add(path, { keep: false })
 
@@ -100,8 +134,59 @@ const addFile = async (node: RenderContentContext['node']) => {
   }
 }
 
+const uploadFile = (node: RenderContentContext['node']) => {
+  uploadInfo.value = node
+  uploadRef.value?.click()
+}
+
+const uploadFileChange = async (e: any) => {
+  if (!uploadInfo.value) {
+    return
+  }
+
+  const [file] = e?.target?.files || []
+  if (!file) {
+    return
+  }
+
+  const children = uploadInfo.value.childNodes.map((i) => i.data.label)
+  if (children.includes(file.name)) {
+    try {
+      await ElMessageBox.confirm(`当前目录存在同名文件：【${file.name}】，继续上传将覆盖该文件，是否继续？`, '提示', {
+        confirmButtonText: '继续',
+        cancelButtonText: '取消',
+        type: 'info',
+      })
+    } catch {
+      return
+    }
+  }
+
+  const path = `${uploadInfo.value.data.value || like.cfg.folderActive}/${file.name}`
+
+  await saveFile({ path, force: true, file })
+
+  ElMessage({ type: 'success', message: '操作成功' })
+
+  refreshNode(uploadInfo.value)
+
+  editor.remove(path, true)
+
+  e.target.value = ''
+  uploadInfo.value = undefined
+
+  nextTick(() => {
+    editor.add(path, { keep: false })
+  })
+}
+
 const refreshNode = (node: RenderContentContext['node']) => {
-  loadNode(node, (data) => node.key && treeRef.value?.updateKeyChildren(node.key, data))
+  const key = node.key
+  if (key) {
+    loadNode(node, (data) => treeRef.value?.updateKeyChildren(key, data))
+  } else {
+    treeNum.value++
+  }
 }
 
 const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeData) => void) => {
@@ -111,12 +196,7 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
     return resolve([])
   }
 
-  const { data: result } = await axios.get<{
-    code: number
-    data: { dirs: { name: string }[]; files: { name: string; size: number; updateDate: string }[] }
-  }>(HOST, {
-    params: { _api: 'dir', path: root },
-  })
+  const { data: result } = await readPath<{ code: number; data: DirModel }>({ path: root, dir: true })
 
   if (result.code !== 200) {
     return resolve([])
@@ -197,5 +277,15 @@ const openNode = (data: TreeNodeData) => {
     align-items: center;
     gap: 8px;
   }
+}
+
+.node-upload {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
 }
 </style>

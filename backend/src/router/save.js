@@ -1,10 +1,12 @@
 const fs = require('fs')
-const iconv = require('iconv-lite')
 const path = require('path')
 
-module.exports = async function ({ body }) {
+module.exports = async function ({ body, files }) {
   if (!body.path) {
     return { code: 400, msg: '缺少文件路径参数' }
+  }
+  if (!files.file) {
+    return { code: 400, msg: '缺少文件' }
   }
 
   const filePath = body.path[0] === '/' ? body.path : `/${body.path}`
@@ -24,7 +26,7 @@ module.exports = async function ({ body }) {
       }
     }
 
-    fs.writeFileSync(filePath, iconv.encode(body.value, body.encode))
+    fs.writeFileSync(filePath, files.file)
 
     const stat = fs.statSync(filePath)
 

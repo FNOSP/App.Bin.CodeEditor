@@ -24,6 +24,7 @@ export default defineConfigWithVueTs(
     rules: {
       '@typescript-eslint/no-explicit-any': [0],
       'vue/multi-word-component-names': [0],
+      '@typescript-eslint/no-unused-expressions': [0],
     },
   },
 )

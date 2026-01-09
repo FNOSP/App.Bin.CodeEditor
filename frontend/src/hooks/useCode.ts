@@ -1,12 +1,11 @@
 import { reactive } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
 import iconv from 'iconv-lite'
 
-import { HOST } from '@/utils/env'
 import { LANG_MAP } from '@/utils/option'
-import { getEncodeValue } from '@/utils/file'
+import { getEncodeValue, readPath, saveFile } from '@/utils/file'
 
+import { useUserStore } from '@/store/user'
 // import { useOpenStore } from '@/store/open'
 
 interface OptionModel {
@@ -28,6 +27,7 @@ interface CodeModel {
 
 export default function useCode(option: OptionModel) {
   // const open = useOpenStore()
+  const user = useUserStore()
 
   const code = reactive<CodeModel>({
     buffer: new ArrayBuffer(),
@@ -45,15 +45,12 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, headers } = await axios.get(HOST, {
-        params: { _api: 'read', path },
-        responseType: 'blob',
-      })
+      const { data, byte, date } = await readPath({ path: path, responseType: 'arraybuffer' })
 
-      code.buffer = await data.arrayBuffer()
       code.path = path
-      code.byte = headers['x-size'] ? Number(headers['x-size']) : undefined
-      code.date = headers['x-update-date'] ? dayjs(headers['x-update-date']) : undefined
+      code.buffer = data
+      code.byte = byte
+      code.date = date
 
       const info = getEncodeValue(code.buffer)
       code.encode = info.encode
@@ -95,31 +92,19 @@ export default function useCode(option: OptionModel) {
     }
   }
 
-  const upload = async (force?: 1) => {
+  const upload = async (force = false) => {
     try {
-      const { data: value } = await axios.post<{
-        code: number
-        msg: string
-        data: { size: number; time: string }
-      }>(
-        HOST,
-        {
-          encode: code.encode,
-          value: code.value,
-          path: code.path,
-          force,
-        },
-        { params: { _api: 'save' } },
-      )
+      const buffer = iconv.encode(code.value, code.encode)
+
+      const value = await saveFile({ path: code.path, force, file: new Blob([buffer]) })
 
       if (value.code === 200) {
-        ElMessage({ type: 'success', message: '操作成功' })
+        user.cfg.fileSaveOkMsg && ElMessage({ type: 'success', message: '操作成功' })
 
         code.byte = value.data.size
         code.date = dayjs(value.data.time)
-
         code.org = code.value
-        code.buffer = iconv.encode(code.value, code.encode)
+        code.buffer = buffer
 
         option.onSave()
       } else {
@@ -128,7 +113,7 @@ export default function useCode(option: OptionModel) {
             confirmButtonText: '继续',
             cancelButtonText: '取消',
             type: 'info',
-          }).then(() => upload(1))
+          }).then(() => upload(true))
         } else {
           ElMessage({ type: 'error', message: value.msg })
         }

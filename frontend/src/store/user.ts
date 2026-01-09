@@ -1,10 +1,10 @@
-import { ref, toRaw, watch } from 'vue'
+import { ref, toRaw } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import { cloneDeep, debounce } from 'lodash'
 
 import localStorage from '@/utils/localStorage'
-import { HOST, IS_DEV, APP_DIR_PATH } from '@/utils/env'
+import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
+import { readPath, saveFile } from '@/utils/file'
 
 import { useLikeStore } from '@/store/like'
 
@@ -22,6 +22,7 @@ interface LikeModel {
   fileCameraUseConfirm: boolean // 切换快照时询问
   fileCameraUseDoSave: boolean // 切换快照立即保存
   fileEncodeFromOrg: boolean // 切换编码忽略编辑
+  fileSaveOkMsg: boolean // 保存成功提示
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -41,7 +42,7 @@ const dir = IS_DEV ? ['/Users/flex/Downloads'] : ['/vol1/1000']
 
 const getDef = (): LikeModel => ({
   // 全局配置
-  theme: 'vs-dark', // 主题
+  theme: 'vs', // 主题
   startOpen: true, // 启动时询问
   leftWidth: 300, // 侧边栏宽度
 
@@ -53,6 +54,7 @@ const getDef = (): LikeModel => ({
   fileCameraUseConfirm: true, // 切换快照时询问
   fileCameraUseDoSave: false, // 切换快照立即保存
   fileEncodeFromOrg: false, // 切换编码忽略编辑
+  fileSaveOkMsg: true, // 保存成功提示
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小
@@ -78,15 +80,13 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data: result1 } = await axios.get(HOST, {
-      params: { _api: 'read', path: USER_CONFIG_PATH },
-    })
+    const { data } = await readPath({ path: USER_CONFIG_PATH })
 
-    if (result1.code === 404) {
+    if (data.code === 404) {
       await update()
     } else {
-      org.value = Object.assign(org.value, cloneDeep(result1) as LikeModel)
-      cfg.value = Object.assign(cfg.value, cloneDeep(result1) as LikeModel)
+      org.value = Object.assign(org.value, cloneDeep(data) as LikeModel)
+      cfg.value = Object.assign(cfg.value, cloneDeep(data) as LikeModel)
     }
 
     like.cfg.folderActive = cfg.value.folderDefOpen || cfg.value.dir[0] || ''
@@ -95,32 +95,25 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const update = debounce(async () => {
-    await axios.post(
-      HOST,
-      {
-        encode: 'utf-8',
-        path: USER_CONFIG_PATH,
-        value: JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }),
-        force: 1,
-      },
-      {
-        params: { _api: 'save' },
-      },
-    )
+    await saveFile({
+      path: USER_CONFIG_PATH,
+      force: true,
+      file: new Blob([new TextEncoder().encode(JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }))]),
+    })
 
     org.value = cloneDeep(toRaw(cfg.value))
   }, 300)
 
-  watch(
-    () => cfg.value.fileAllOpen,
-    () => {
-      if (!initialized.value) {
-        return
-      }
+  // watch(
+  //   () => cfg.value.fileAllOpen,
+  //   () => {
+  //     if (!initialized.value) {
+  //       return
+  //     }
 
-      axios.post(HOST, { open: Number(cfg.value.fileAllOpen) }, { params: { _api: 'def' } })
-    },
-  )
+  //     api.post('/def', { open: Number(cfg.value.fileAllOpen) })
+  //   },
+  // )
 
   return { initialized, cfg, load, update }
 })

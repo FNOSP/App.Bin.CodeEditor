@@ -6,7 +6,7 @@ import { LANG_MAP } from '@/utils/option'
 import { getEncodeValue, readPath, saveFile } from '@/utils/file'
 
 import { useUserStore } from '@/store/user'
-// import { useOpenStore } from '@/store/open'
+import { useOpenStore } from '@/store/open'
 
 interface OptionModel {
   confirm: () => boolean
@@ -26,7 +26,7 @@ interface CodeModel {
 }
 
 export default function useCode(option: OptionModel) {
-  // const open = useOpenStore()
+  const open = useOpenStore()
   const user = useUserStore()
 
   const code = reactive<CodeModel>({
@@ -53,14 +53,15 @@ export default function useCode(option: OptionModel) {
       code.date = date
 
       const info = getEncodeValue(code.buffer)
-      code.encode = info.encode
-      code.org = code.value = info.value
 
-      // if (await isBinaryContent(data)) {
-      //   option.onError('不支持二进制文件的编辑')
-      //   open.removeHistory(path)
-      //   return
-      // }
+      if (info.encode) {
+        code.encode = info.encode
+        code.org = code.value = info.value
+      } else {
+        option.onError('不支持二进制文件的编辑')
+        open.removeHistory(path)
+        return
+      }
 
       const filename = path.split('/').pop() || ''
 

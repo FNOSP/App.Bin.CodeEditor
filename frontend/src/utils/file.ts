@@ -54,12 +54,15 @@ export const getKey = (path: string) =>
     .replace(/\./g, '_')
 
 export const getEncodeValue = (buffer: ArrayBuffer) => {
-  let encode = 'utf-8'
+  // 取前 1M 的文件进行编码判断
+  const match = buffer.slice(0, 1024 * 1024)
+
+  let encode = ''
 
   for (const item of ENCODING_OPTIONS) {
     try {
       const decoder = new TextDecoder(item.value)
-      const text = decoder.decode(buffer)
+      const text = decoder.decode(match)
 
       if (text.includes('�')) {
         continue
@@ -78,7 +81,26 @@ export const getEncodeValue = (buffer: ArrayBuffer) => {
     }
   }
 
-  return { encode, value: new TextDecoder(encode).decode(buffer) }
+  if (!encode && !isBinaryContent(buffer)) {
+    encode = 'utf-8'
+  }
+
+  return { encode, value: encode ? new TextDecoder(encode).decode(buffer) : '' }
+}
+
+export const isBinaryContent = (buffer: ArrayBuffer) => {
+  const bytes = new Uint8Array(buffer)
+
+  if (bytes.length === 0) {
+    return false
+  }
+
+  // 检查是否有 null 字节（文本文件中罕见）
+  if (bytes.includes(0)) {
+    return true
+  }
+
+  return bytes.reduce((sum, i) => sum + Number(i && i < 32 && i !== 9 && i !== 10 && i !== 13), 0) / bytes.length > 0.1
 }
 
 export const readPath = async <T = any>(opt: { path: string; responseType?: 'json' | 'arraybuffer' | 'text'; dir?: boolean }) => {

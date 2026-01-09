@@ -87,7 +87,7 @@ export const THEME_OPTIONS: { label: string; value: string; dark: boolean }[] = 
 const codeMatch = (v: string) => {
   const sum = v.length
   const err = v.split('').filter((i) => i.charCodeAt(0) > 191).length
-  return err / sum < 0.1
+  return err / sum < 0.05
 }
 
 export const ENCODING_OPTIONS = [
@@ -105,10 +105,4 @@ export const ENCODING_OPTIONS = [
   { value: 'ascii', label: 'ASCII', match: codeMatch },
   { value: 'latin1', label: 'ISO-8859-1', match: codeMatch },
   { value: 'windows-1252', label: 'Windows-1252', match: codeMatch },
-
-  // 日韩编码
-  { value: 'shift_jis', label: 'Shift_JIS' },
-  { value: 'euc-jp', label: 'EUC-JP' },
-  { value: 'euc-kr', label: 'EUC-KR' },
-  { value: 'windows-949', label: 'Windows-949' },
 ]

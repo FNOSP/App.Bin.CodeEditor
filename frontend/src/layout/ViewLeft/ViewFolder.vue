@@ -4,15 +4,29 @@
       <div class="title">目录</div>
 
       <el-tooltip content="切换目录" placement="bottom">
-        <el-icon class="icon" @click="openDir()"><Files /></el-icon>
+        <el-icon class="icon" @click="openDir()"><Switch /></el-icon>
       </el-tooltip>
+
+      <template v-if="treeRef">
+        <el-tooltip content="刷新目录" placement="top">
+          <el-icon class="icon" @click.stop="refreshNode(treeRef.root)"><Refresh /></el-icon>
+        </el-tooltip>
+
+        <el-tooltip content="上传文件" placement="top">
+          <el-icon class="icon" @click.stop="uploadFile(treeRef.root)"><Upload /></el-icon>
+        </el-tooltip>
+
+        <el-tooltip content="创建文件" placement="top">
+          <el-icon class="icon" @click.stop="addFile(treeRef.root)"><DocumentAdd /></el-icon>
+        </el-tooltip>
+      </template>
     </div>
 
     <div class="content">
       <div class="list">
         <el-tree
           ref="treeRef"
-          :key="like.cfg.folderActive"
+          :key="`${like.cfg.folderActive}-${treeNum}`"
           :props="{ label: 'label', isLeaf: 'leaf' }"
           :load="loadNode"
           lazy
@@ -65,7 +79,7 @@
 <script lang="ts" setup>
 import { nextTick, ref, useTemplateRef } from 'vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
-import { Files, Folder, FolderOpened, Refresh, Upload, DocumentAdd } from '@element-plus/icons-vue'
+import { Switch, Folder, FolderOpened, Refresh, Upload, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
 
@@ -87,6 +101,7 @@ const uploadRef = useTemplateRef('upload')
 const uploadInfo = ref<RenderContentContext['node']>()
 
 const treeRef = ref<TreeInstance>()
+const treeNum = ref(0)
 
 const openDir = async () => {
   open.show = 'dir'
@@ -94,14 +109,16 @@ const openDir = async () => {
 
 const addFile = async (node: RenderContentContext['node']) => {
   try {
-    const { value } = await ElMessageBox.prompt(`${node.data.value}/`, '创建文件', {
+    const basePath = node.data.value || like.cfg.folderActive
+
+    const { value } = await ElMessageBox.prompt(`${basePath}/`, '创建文件', {
       inputValidator: (v) => (v ? true : '请输入文件名'),
       inputPlaceholder: '文件名+后缀',
       confirmButtonText: '确认',
       cancelButtonText: '取消',
     })
 
-    const path = `${node.data.value}/${value}`
+    const path = `${basePath}/${value}`
 
     await saveFile({ path, force: true, file: new Blob([new TextEncoder().encode(' ')]) })
 
@@ -143,7 +160,7 @@ const uploadFileChange = async (e: any) => {
     }
   }
 
-  const path = `${uploadInfo.value.data.value}/${file.name}`
+  const path = `${uploadInfo.value.data.value || like.cfg.folderActive}/${file.name}`
 
   await saveFile({ path, force: true, file })
 
@@ -162,7 +179,12 @@ const uploadFileChange = async (e: any) => {
 }
 
 const refreshNode = (node: RenderContentContext['node']) => {
-  loadNode(node, (data) => node.key && treeRef.value?.updateKeyChildren(node.key, data))
+  const key = node.key
+  if (key) {
+    loadNode(node, (data) => treeRef.value?.updateKeyChildren(key, data))
+  } else {
+    treeNum.value++
+  }
 }
 
 const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeData) => void) => {

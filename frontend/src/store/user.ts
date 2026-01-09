@@ -22,6 +22,7 @@ interface LikeModel {
   fileCameraUseConfirm: boolean // 切换快照时询问
   fileCameraUseDoSave: boolean // 切换快照立即保存
   fileEncodeFromOrg: boolean // 切换编码忽略编辑
+  fileSaveOkMsg: boolean // 保存成功提示
   editorOption: {
     // 编辑器配置
     fontSize: number // 字体大小
@@ -53,6 +54,7 @@ const getDef = (): LikeModel => ({
   fileCameraUseConfirm: true, // 切换快照时询问
   fileCameraUseDoSave: false, // 切换快照立即保存
   fileEncodeFromOrg: false, // 切换编码忽略编辑
+  fileSaveOkMsg: true, // 保存成功提示
   editorOption: {
     // 编辑器配置
     fontSize: 14, // 字体大小

@@ -30,12 +30,41 @@
       <el-tab-pane label="文件" name="editor">
         <div class="item">
           <div class="label">
-            <div class="t">保存时确认</div>
+            <div class="t">保存时询问</div>
           </div>
           <div class="value">
             <el-switch v-model="cfg.confirm" />
           </div>
         </div>
+        <div class="item">
+          <div class="label">
+            <div class="t">保存成功提示</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileSaveOkMsg" />
+          </div>
+        </div>
+
+        <div class="line"></div>
+
+        <div class="item">
+          <div class="label">
+            <div class="t">切换快照时询问</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileCameraUseConfirm" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="label">
+            <div class="t">切换快照立即保存</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileCameraUseDoSave" />
+          </div>
+        </div>
+
+        <div class="line"></div>
 
         <div class="item">
           <div class="label">
@@ -45,7 +74,6 @@
             <el-input-number v-model="cfg.editorOption.fontSize" :min="8" :max="100" size="small" />
           </div>
         </div>
-
         <div class="item">
           <div class="label">
             <div class="t">自动换行</div>
@@ -57,10 +85,46 @@
 
         <div class="item">
           <div class="label">
-            <div class="t">MD 打开时预览</div>
+            <div class="t">Markdown 默认预览</div>
           </div>
           <div class="value">
             <el-switch v-model="cfg.fileMdView" />
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="label">
+            <el-popover placement="top" :width="200">
+              <template #reference>
+                <el-icon><Warning /></el-icon>
+              </template>
+              <div>未编辑时切换编码将正常切换；编辑后切换编码将不会触发，保存时以切换后的编码保存。</div>
+              <div>启用此配置后，编辑后切换编码将忽略编辑内容直接从未编辑状态切换编码。</div>
+            </el-popover>
+            <div class="t">切换编码忽略编辑</div>
+          </div>
+          <div class="value">
+            <el-switch v-model="cfg.fileEncodeFromOrg" />
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="label">
+            <el-popover
+              title="文件加载询问"
+              content="避免加载大文件浪费带宽，设置超限数值，单位 B，设置为 0 则关闭此功能"
+              placement="top"
+              :width="220"
+            >
+              <template #reference>
+                <el-icon><Warning /></el-icon>
+              </template>
+            </el-popover>
+            <div class="t">大文件加载询问</div>
+          </div>
+          <div class="value">
+            <el-input-number v-model="cfg.fileBigWait" :min="0" />
+            <div v-if="cfg.fileBigWait > 0">超出 {{ getSize(cfg.fileBigWait) }} 时询问开启</div>
           </div>
         </div>
 
@@ -83,60 +147,6 @@
             <el-switch v-model="cfg.fileAllOpen" />
           </div>
         </div> -->
-
-        <div class="item">
-          <div class="label">
-            <el-popover
-              title="文件加载询问"
-              content="避免加载大文件浪费带宽，设置超限数值，单位 B，设置为 0 则关闭此功能"
-              placement="top"
-              :width="220"
-            >
-              <template #reference>
-                <el-icon><Warning /></el-icon>
-              </template>
-            </el-popover>
-            <div class="t">文件加载询问</div>
-          </div>
-          <div class="value">
-            <el-input-number v-model="cfg.fileBigWait" :min="0" />
-            <div v-if="cfg.fileBigWait > 0">超出 {{ getSize(cfg.fileBigWait) }} 将询问</div>
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="label">
-            <div class="t">切换快照时询问</div>
-          </div>
-          <div class="value">
-            <el-switch v-model="cfg.fileCameraUseConfirm" />
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="label">
-            <div class="t">切换快照立即保存</div>
-          </div>
-          <div class="value">
-            <el-switch v-model="cfg.fileCameraUseDoSave" />
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="label">
-            <el-popover placement="top" :width="200">
-              <template #reference>
-                <el-icon><Warning /></el-icon>
-              </template>
-              <div>未编辑时切换编码将正常切换；编辑后切换编码将不会触发，保存时以切换后的编码保存。</div>
-              <div>启用此配置后，编辑后切换编码将忽略编辑内容直接从未编辑状态切换编码。</div>
-            </el-popover>
-            <div class="t">切换编码忽略编辑</div>
-          </div>
-          <div class="value">
-            <el-switch v-model="cfg.fileEncodeFromOrg" />
-          </div>
-        </div>
       </el-tab-pane>
       <el-tab-pane label="目录" name="folder">
         <div class="item">
@@ -262,7 +272,7 @@ watch(cfg, user.update, { deep: true })
 
       > .line {
         height: 1px;
-        background-color: var(--el-border-color);
+        background-color: var(--el-border-color-lighter);
       }
     }
   }

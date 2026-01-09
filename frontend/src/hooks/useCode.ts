@@ -5,6 +5,7 @@ import iconv from 'iconv-lite'
 import { LANG_MAP } from '@/utils/option'
 import { getEncodeValue, readPath, saveFile } from '@/utils/file'
 
+import { useUserStore } from '@/store/user'
 // import { useOpenStore } from '@/store/open'
 
 interface OptionModel {
@@ -26,6 +27,7 @@ interface CodeModel {
 
 export default function useCode(option: OptionModel) {
   // const open = useOpenStore()
+  const user = useUserStore()
 
   const code = reactive<CodeModel>({
     buffer: new ArrayBuffer(),
@@ -97,7 +99,7 @@ export default function useCode(option: OptionModel) {
       const value = await saveFile({ path: code.path, force, file: new Blob([buffer]) })
 
       if (value.code === 200) {
-        ElMessage({ type: 'success', message: '操作成功' })
+        user.cfg.fileSaveOkMsg && ElMessage({ type: 'success', message: '操作成功' })
 
         code.byte = value.data.size
         code.date = dayjs(value.data.time)

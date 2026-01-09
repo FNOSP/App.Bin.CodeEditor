@@ -158,6 +158,8 @@ const uploadFileChange = async (e: any) => {
         type: 'info',
       })
     } catch {
+      e.target.value = ''
+      uploadInfo.value = undefined
       return
     }
   }

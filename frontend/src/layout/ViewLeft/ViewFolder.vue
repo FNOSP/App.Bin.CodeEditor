@@ -34,27 +34,38 @@
                 <div class="t">{{ node.label }}</div>
               </div>
 
-              <div class="edit" v-show="data.dir && node.expanded">
+              <div class="edit" v-if="data.dir" v-show="node.expanded">
                 <el-tooltip content="刷新目录" placement="top">
                   <el-icon @click.stop="refreshNode(node)"><Refresh /></el-icon>
+                </el-tooltip>
+
+                <el-tooltip content="上传文件" placement="top">
+                  <el-icon @click.stop="uploadFile(node)"><Upload /></el-icon>
                 </el-tooltip>
 
                 <el-tooltip content="创建文件" placement="top">
                   <el-icon @click.stop="addFile(node)"><DocumentAdd /></el-icon>
                 </el-tooltip>
               </div>
+              <div class="edit" v-else>
+                <!-- <el-tooltip content="删除文件" placement="top">
+                  <el-icon><DocumentAdd /></el-icon>
+                </el-tooltip> -->
+              </div>
             </div>
           </template>
         </el-tree>
       </div>
     </div>
+
+    <input class="node-upload" ref="upload" type="file" @change="uploadFileChange" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { dayjs, ElMessageBox } from 'element-plus'
-import { Files, Folder, FolderOpened, Refresh, DocumentAdd } from '@element-plus/icons-vue'
+import { Files, Folder, FolderOpened, Refresh, Upload, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
 
@@ -71,6 +82,9 @@ const editor = useEditorStore()
 const like = useLikeStore()
 const user = useUserStore()
 const open = useOpenStore()
+
+const uploadRef = useTemplateRef('upload')
+const uploadInfo = ref<RenderContentContext['node']>()
 
 const treeRef = ref<TreeInstance>()
 
@@ -97,6 +111,42 @@ const addFile = async (node: RenderContentContext['node']) => {
   } catch {
     return
   }
+}
+
+const uploadFile = (node: RenderContentContext['node']) => {
+  uploadInfo.value = node
+  uploadRef.value?.click()
+}
+
+const uploadFileChange = async (e: any) => {
+  if (!uploadInfo.value) {
+    return
+  }
+
+  const [file] = e?.target?.files || []
+  if (!file) {
+    return
+  }
+
+  const children = uploadInfo.value.childNodes.map((i) => i.data.label)
+  if (children.includes(file.name)) {
+    try {
+      await ElMessageBox.confirm(`当前目录存在同名文件：【${file.name}】，继续上传将覆盖该文件，是否继续？`, '提示', {
+        confirmButtonText: '继续',
+        cancelButtonText: '取消',
+        type: 'info',
+      })
+    } catch {
+      return
+    }
+  }
+
+  await saveFile({ path: `${uploadInfo.value.data.value}/${file.name}`, force: true, file })
+
+  refreshNode(uploadInfo.value)
+
+  e.target.value = ''
+  uploadInfo.value = undefined
 }
 
 const refreshNode = (node: RenderContentContext['node']) => {
@@ -191,5 +241,15 @@ const openNode = (data: TreeNodeData) => {
     align-items: center;
     gap: 8px;
   }
+}
+
+.node-upload {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
 }
 </style>

@@ -42,7 +42,7 @@ const dir = IS_DEV ? ['/Users/flex/Downloads'] : ['/vol1/1000']
 
 const getDef = (): LikeModel => ({
   // 全局配置
-  theme: 'vs-dark', // 主题
+  theme: 'vs', // 主题
   startOpen: true, // 启动时询问
   leftWidth: 300, // 侧边栏宽度
 

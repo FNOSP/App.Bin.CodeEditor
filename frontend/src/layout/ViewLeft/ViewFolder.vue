@@ -29,6 +29,8 @@
           :key="`${like.cfg.folderActive}-${treeNum}`"
           :props="{ label: 'label', isLeaf: 'leaf' }"
           :load="loadNode"
+          :current-node-key="editor.active"
+          highlight-current
           lazy
           node-key="value"
           @node-click="openNode"

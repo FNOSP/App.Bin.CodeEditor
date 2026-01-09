@@ -121,6 +121,8 @@ async function main() {
         console.log(`Expires: ${new Date(Date.now() + maxAge * 1000).toUTCString()}`)
         console.log(`ETag: "${body.size}-${body.mtime.getTime()}"`)
         console.log(`Last-Modified: ${body.mtime.toUTCString()}`)
+      } else {
+        console.log('Cache-Control: no-store')
       }
 
       // 自定义响应头

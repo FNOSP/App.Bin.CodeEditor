@@ -63,8 +63,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, useTemplateRef } from 'vue'
-import { dayjs, ElMessageBox } from 'element-plus'
+import { nextTick, ref, useTemplateRef } from 'vue'
+import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import { Files, Folder, FolderOpened, Refresh, Upload, DocumentAdd } from '@element-plus/icons-vue'
 
 import FileView from '@/components/FileView.vue'
@@ -105,6 +105,8 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     await saveFile({ path, force: true, file: new Blob([new TextEncoder().encode(' ')]) })
 
+    ElMessage({ type: 'success', message: '操作成功' })
+
     editor.add(path, { keep: false })
 
     refreshNode(node)
@@ -141,12 +143,22 @@ const uploadFileChange = async (e: any) => {
     }
   }
 
-  await saveFile({ path: `${uploadInfo.value.data.value}/${file.name}`, force: true, file })
+  const path = `${uploadInfo.value.data.value}/${file.name}`
+
+  await saveFile({ path, force: true, file })
+
+  ElMessage({ type: 'success', message: '操作成功' })
 
   refreshNode(uploadInfo.value)
 
+  editor.remove(path, true)
+
   e.target.value = ''
   uploadInfo.value = undefined
+
+  nextTick(() => {
+    editor.add(path, { keep: false })
+  })
 }
 
 const refreshNode = (node: RenderContentContext['node']) => {

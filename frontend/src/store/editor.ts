@@ -78,11 +78,11 @@ export const useEditorStore = defineStore('editor', () => {
     }
   }
 
-  const remove = async (path: string) => {
+  const remove = async (path: string, force = false) => {
     const index = view.findIndex((i) => i.path === path)
     const item = view[index]
     if (item) {
-      if (item.diff) {
+      if (item.diff && !force) {
         const value = await ElMessageBox.confirm('文件未保存，你的更改将丢失，确认关闭？', '提示', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',

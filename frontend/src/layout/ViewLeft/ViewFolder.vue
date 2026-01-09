@@ -63,8 +63,7 @@ import { useLikeStore } from '@/store/like'
 import { useOpenStore } from '@/store/open'
 import { useUserStore } from '@/store/user'
 
-import { axios } from '@/utils/api'
-import { getFullPath, saveFile } from '@/utils/file'
+import { readPath, saveFile } from '@/utils/file'
 
 import type { TreeInstance, TreeData, TreeNodeData, RenderContentContext } from 'element-plus'
 
@@ -90,7 +89,7 @@ const addFile = async (node: RenderContentContext['node']) => {
 
     const path = `${node.data.value}/${value}`
 
-    await saveFile({ path, force: 1, file: new Blob([new TextEncoder().encode(' ')]) })
+    await saveFile({ path, force: true, file: new Blob([new TextEncoder().encode(' ')]) })
 
     editor.add(path, { keep: false })
 
@@ -111,10 +110,7 @@ const loadNode = async (node: RenderContentContext['node'], resolve: (v: TreeDat
     return resolve([])
   }
 
-  const { data: result } = await axios<{
-    code: number
-    data: { dirs: { name: string }[]; files: { name: string; size: number; updateDate: string }[] }
-  }>(getFullPath(root), { params: { dir: 1 } })
+  const { data: result } = await readPath<{ code: number; data: DirModel }>({ path: root, dir: true })
 
   if (result.code !== 200) {
     return resolve([])

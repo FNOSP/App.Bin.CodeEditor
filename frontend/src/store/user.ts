@@ -4,7 +4,7 @@ import { cloneDeep, debounce } from 'lodash'
 
 import localStorage from '@/utils/localStorage'
 import { IS_DEV, APP_DIR_PATH } from '@/utils/env'
-import { readFile, saveFile } from '@/utils/file'
+import { readPath, saveFile } from '@/utils/file'
 
 import { useLikeStore } from '@/store/like'
 
@@ -78,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
   const cfg = ref(Object.assign({}, getDef(), localStorage.get(key)))
 
   const load = async () => {
-    const { data } = await readFile(USER_CONFIG_PATH)
+    const { data } = await readPath({ path: USER_CONFIG_PATH })
 
     if (data.code === 404) {
       await update()
@@ -95,7 +95,7 @@ export const useUserStore = defineStore('user', () => {
   const update = debounce(async () => {
     await saveFile({
       path: USER_CONFIG_PATH,
-      force: 1,
+      force: true,
       file: new Blob([new TextEncoder().encode(JSON.stringify({ ...cfg.value, folderDefOpen: cfg.value.folderDefOpen || '' }))]),
     })
 

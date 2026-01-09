@@ -3,7 +3,7 @@ import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import iconv from 'iconv-lite'
 
 import { LANG_MAP } from '@/utils/option'
-import { getEncodeValue, readFile, saveFile } from '@/utils/file'
+import { getEncodeValue, readPath, saveFile } from '@/utils/file'
 
 // import { useOpenStore } from '@/store/open'
 
@@ -43,7 +43,7 @@ export default function useCode(option: OptionModel) {
         return ''
       }
 
-      const { data, byte, date } = await readFile(path, 'arraybuffer')
+      const { data, byte, date } = await readPath({ path: path, responseType: 'arraybuffer' })
 
       code.path = path
       code.buffer = data
@@ -90,11 +90,11 @@ export default function useCode(option: OptionModel) {
     }
   }
 
-  const upload = async (force?: 1) => {
+  const upload = async (force = false) => {
     try {
       const buffer = iconv.encode(code.value, code.encode)
 
-      const value = await saveFile({ path: code.path, force: force ? 1 : 0, file: new Blob([buffer]) })
+      const value = await saveFile({ path: code.path, force, file: new Blob([buffer]) })
 
       if (value.code === 200) {
         ElMessage({ type: 'success', message: '操作成功' })
@@ -111,7 +111,7 @@ export default function useCode(option: OptionModel) {
             confirmButtonText: '继续',
             cancelButtonText: '取消',
             type: 'info',
-          }).then(() => upload(1))
+          }).then(() => upload(true))
         } else {
           ElMessage({ type: 'error', message: value.msg })
         }

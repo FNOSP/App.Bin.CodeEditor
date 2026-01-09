@@ -2,19 +2,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 
-import api, { axios } from '@/utils/api'
+import api from '@/utils/api'
 import { APP_DIR_PATH } from '@/utils/env'
-import { getFullPath, getKey, readFile } from '@/utils/file'
+import { getKey, readPath, saveFile } from '@/utils/file'
 
 import { useUserStore } from './user'
 
 const CAMERA_DIR_PATH = `${APP_DIR_PATH}/camera`
-
-interface ValueModel {
-  name: string
-  size: number
-  createDate: string
-}
 
 interface OpenModel {
   path: string
@@ -31,7 +25,7 @@ export const useCameraStore = defineStore('camera', () => {
 
   const option = ref<OpenModel>()
 
-  const data = ref<ValueModel[]>([])
+  const data = ref<DirModel['files']>([])
 
   const open = (opt: { path: string; value: string; callback?: (v: string) => void }) => {
     option.value = opt
@@ -45,9 +39,10 @@ export const useCameraStore = defineStore('camera', () => {
       return
     }
 
-    const filePath = `${CAMERA_DIR_PATH}/${getKey(option.value.path)}`
-
-    const { data: result } = await axios<{ code: number; data: { files: ValueModel[] } }>(getFullPath(filePath), { params: { dir: 1 } })
+    const { data: result } = await readPath<{ code: number; data: DirModel }>({
+      path: `${CAMERA_DIR_PATH}/${getKey(option.value.path)}`,
+      dir: true,
+    })
 
     if (result.code === 404) {
       data.value = []
@@ -68,12 +63,11 @@ export const useCameraStore = defineStore('camera', () => {
       return
     }
 
-    const formData = new FormData()
-    formData.append('path', `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`)
-    formData.append('force', '1')
-    formData.append('file', new Blob([new TextEncoder().encode(option.value.value)]))
-
-    await api.post<{ code: number; msg: string; data: { size: number; time: string } }>('/save', formData)
+    await saveFile({
+      path: `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${input.value}.txt`,
+      force: true,
+      file: new Blob([new TextEncoder().encode(option.value.value)]),
+    })
 
     input.value = ''
 
@@ -133,7 +127,7 @@ export const useCameraStore = defineStore('camera', () => {
       }
     }
 
-    const result = await readFile(`${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`, 'text')
+    const result = await readPath({ path: `${CAMERA_DIR_PATH}/${getKey(option.value.path)}/${item.name}`, responseType: 'text' })
 
     option.value.callback?.(result.data)
 

@@ -15,6 +15,10 @@
 
       <PdfView v-else-if="fileType === 'pdf'" :src="$props.value.path" />
 
+      <AudioView v-else-if="fileType === 'audio'" :src="$props.value.path" />
+
+      <VideoView v-else-if="fileType === 'video'" :src="$props.value.path" />
+
       <MonacoEditor v-else ref="editorRef" :path="$props.value.path" @diff="(v) => $emit('diff', v)" @error="(v) => v && (error = v)" />
     </template>
   </template>
@@ -26,6 +30,8 @@ import { computed, ref } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import ImageView from '@/components/ImageView.vue'
 import PdfView from '@/components/PdfView.vue'
+import AudioView from '@/components/AudioView.vue'
+import VideoView from '@/components/VideoView.vue'
 
 import { FILE_MAP } from '@/utils/option'
 import { getFileSuffix, getSize } from '@/utils/file'
@@ -44,7 +50,7 @@ const editorRef = ref<{ save: () => void }>()
 
 const error = ref('')
 const fileType = computed(() => FILE_MAP[getFileSuffix($props.value.path)])
-const isBinaryFile = computed(() => fileType.value && !['img', 'pdf'].includes(fileType.value))
+const isBinaryFile = computed(() => fileType.value && !['img', 'pdf', 'audio', 'video'].includes(fileType.value))
 </script>
 
 <style lang="scss" scoped>

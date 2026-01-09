@@ -12,6 +12,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AudioView: typeof import('./src/components/AudioView.vue')['default']
     ClickMove: typeof import('./src/components/ClickMove.vue')['default']
     Code: typeof import('./src/components/icons/Code.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -42,12 +43,14 @@ declare module 'vue' {
     OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
     Pdf: typeof import('./src/components/icons/Pdf.vue')['default']
     PdfView: typeof import('./src/components/PdfView.vue')['default']
+    VideoView: typeof import('./src/components/VideoView.vue')['default']
     Zip: typeof import('./src/components/icons/Zip.vue')['default']
   }
 }
 
 // For TSX support
 declare global {
+  const AudioView: typeof import('./src/components/AudioView.vue')['default']
   const ClickMove: typeof import('./src/components/ClickMove.vue')['default']
   const Code: typeof import('./src/components/icons/Code.vue')['default']
   const ElButton: typeof import('element-plus/es')['ElButton']
@@ -78,5 +81,6 @@ declare global {
   const OfficeWord: typeof import('./src/components/icons/OfficeWord.vue')['default']
   const Pdf: typeof import('./src/components/icons/Pdf.vue')['default']
   const PdfView: typeof import('./src/components/PdfView.vue')['default']
+  const VideoView: typeof import('./src/components/VideoView.vue')['default']
   const Zip: typeof import('./src/components/icons/Zip.vue')['default']
 }

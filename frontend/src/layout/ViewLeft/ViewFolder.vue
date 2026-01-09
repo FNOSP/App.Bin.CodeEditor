@@ -149,8 +149,7 @@ const uploadFileChange = async (e: any) => {
     return
   }
 
-  const children = uploadInfo.value.childNodes.map((i) => i.data.label)
-  if (children.includes(file.name)) {
+  if (uploadInfo.value.childNodes.some((i) => i.data.label === file.name)) {
     try {
       await ElMessageBox.confirm(`当前目录存在同名文件：【${file.name}】，继续上传将覆盖该文件，是否继续？`, '提示', {
         confirmButtonText: '继续',

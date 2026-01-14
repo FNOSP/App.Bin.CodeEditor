@@ -82,6 +82,8 @@ import { useEditorStore } from '@/store/editor'
 import { useLikeStore } from '@/store/like'
 import { useMenuStore } from '@/store/menu'
 
+import api from '@/utils/api'
+
 const user = useUserStore()
 const open = useOpenStore()
 const menu = useMenuStore()
@@ -94,10 +96,26 @@ const { cfg } = storeToRefs(user)
 onMounted(async () => {
   const query = new URLSearchParams(window.location.search).get('path') || ''
   if (query) {
-    editor.add(query)
+    const {
+      data: { data },
+    } = await api.get<{ data: { isDirectory: boolean } }>('/type', { params: { path: query } })
+
+    if (data.isDirectory) {
+      changeDir(query)
+    } else {
+      editor.add(query)
+
+      if (!user.cfg.folderNotOpenInQuery) {
+        menu.toggle('folder')
+      }
+    }
   } else {
     if (cfg.value.startOpen) {
       show.value = 'file'
+    }
+
+    if (user.cfg.folderDefOpen) {
+      menu.toggle('folder')
     }
   }
 })

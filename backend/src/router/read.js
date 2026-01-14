@@ -28,8 +28,8 @@ module.exports = async function ({ query }) {
         stream: fs.createReadStream(filePath),
       },
     }
-  } catch (error) {
-    if (error.code === 'EACCES' || error.code === 'EPERM') {
+  } catch (err) {
+    if (err.code === 'EACCES' || err.code === 'EPERM') {
       return { code: 401, msg: '权限不足，无法读取文件', query }
     } else if (err.code === 'ENOENT') {
       return { code: 400, msg: '文件不存在', query }

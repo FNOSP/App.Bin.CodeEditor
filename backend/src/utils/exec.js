@@ -5,6 +5,7 @@ const router = {
   '/save': { run: require('../router/save') },
   '/del': { run: require('../router/del') },
   '/dir': { run: require('../router/dir') },
+  '/type': { run: require('../router/type') },
 }
 
 module.exports = async function exec(data) {

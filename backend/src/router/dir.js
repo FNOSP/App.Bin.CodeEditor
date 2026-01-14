@@ -37,8 +37,8 @@ module.exports = async function ({ query }) {
     result.dirs.sort((i, j) => ((i.name || '').toLocaleLowerCase() > (j.name || '').toLocaleLowerCase() ? 1 : -1))
 
     return { code: 200, msg: '操作成功', data: result }
-  } catch (error) {
-    if (error.code === 'EACCES' || error.code === 'EPERM') {
+  } catch (err) {
+    if (err.code === 'EACCES' || err.code === 'EPERM') {
       return { code: 401, msg: '权限不足，无法读取目录', query }
     } else if (err.code === 'ENOENT') {
       return { code: 400, msg: '目录不存在', query }

@@ -42,3 +42,7 @@ npm run build
 - 代码编辑：[monaco-editor](https://github.com/microsoft/monaco-editor)、[monaco-editor-vue3](https://github.com/bazingaedward/monaco-editor-vue3)
 - PDF 阅览：[pdfjs](https://github.com/mozilla/pdf.js)
 - Markdown 阅览：[marked](https://github.com/markedjs/marked)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=FNOSP/App.Bin.CodeEditor&type=timeline&legend=top-left)](https://www.star-history.com/#FNOSP/App.Bin.CodeEditor&type=timeline&legend=top-left)

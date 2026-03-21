@@ -1,6 +1,6 @@
 {
   "name": "code.editor",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "changelog": "",
   "scripts": {
     "dev": "node src/app.js",

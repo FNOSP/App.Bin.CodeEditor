@@ -38,7 +38,12 @@ export const getSize = (byte: number) => {
     return `${Number(MB.toFixed(2))} MB`
   }
 
-  const TB = MB / 1024
+  const GB = MB / 1024
+  if (GB < 1024) {
+    return `${Number(GB.toFixed(2))} GB`
+  }
+
+  const TB = GB / 1024
   if (TB < 1024) {
     return `${Number(TB.toFixed(2))} TB`
   }

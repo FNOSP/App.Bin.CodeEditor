@@ -1,7 +1,7 @@
 {
   "name": "code.editor",
-  "version": "1.5.7",
-  "changelog": "",
+  "version": "1.5.8",
+  "changelog": "<div>优化：当 path 为目录时，打开目录</div><div>修复：当大文件加载提示超过1G错误展示成1T</div><div>其他：修改权限为管理员可用，且禁止修改权限，防止权限越权</div>",
   "scripts": {
     "dev": "node src/app.js",
     "install": "npm i --prefix=backend && npm i --prefix=frontend",

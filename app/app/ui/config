@@ -7,7 +7,11 @@
       "url": "/cgi/ThirdParty/code.editor/index.cgi/",
       "allUsers": false,
       "noDisplay": false,
-      "accessPerm": "readonly",
+      "control": {
+        "accessPerm": "readonly",
+        "portPerm": "readonly",
+        "pathPerm": "readonly"
+      },
       "fileTypes": [
         "text",
         "txt",
